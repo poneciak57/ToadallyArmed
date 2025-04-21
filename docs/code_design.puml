@@ -1,0 +1,156 @@
+@startuml
+
+abstract class Game {
+    LibGDX class.
+}
+
+class Main extends Game {
+    batch: SpriteBatch
+    viewport: Viewport
+    -- Overrides --
+    void create()
+    void render()
+    void dispose()
+    -- Screens --
+    mainMenuScreen
+    gameScreen
+}
+
+class MainMenuScreen implements Screen
+Main::mainMenuScreen --> MainMenuScreen: First screen
+MainMenuScreen -> GameScreen: Switches screen
+MainMenuScreen <- GameScreen: Switches screen back
+
+class GameScreen implements Screen {
+    main: final Main
+    constructor()
+    -- Overrides --
+    void show()
+    void hide()
+    void render()
+    void resize()
+    void pause()
+    void resume()
+    void dispose()
+    --
+    void input()
+    void logic()
+    void draw()
+}
+GameScreen --> GameplayModel
+GameScreen --> GameplayView
+
+newpage
+
+GameplayModel -[hidden]--> Entity
+
+interface Command {
+    [[https://gameprogrammingpatterns.com/command.html Command pattern]]
+    execute()
+}
+
+interface Observable {
+    [[https://gameprogrammingpatterns.com/observer.html Observer pattern]]
+    addObserver()
+}
+Observable --> Observer
+
+interface PlayableCharacterState implements Observable {
+}
+
+class PlacedState implements PlayableCharacterState {
+    Placed on the board.
+}
+
+abstract class PerformActionState extends PlacedState
+
+class FightState extends PerformActionState
+
+class ShieldState extends PerformActionState
+
+class DragAndDropState implements PlayableCharacterState {
+    Player is picking a position.
+    Follows the cursor.
+}
+
+abstract class Entity {
+    -- State --
+    * [[https://gameprogrammingpatterns.com/state.html Finite state machine]]
+      pattern is used.
+    * Properties such as position
+      etc. implement Observable
+      interface.
+}
+
+abstract class EnemyCharacter extends Entity {
+    -- Properties --
+    Contains generalized properties
+    allowing a specialization
+    of this class to specify
+    behavior as fully as possible.
+}
+
+abstract class PlayableCharacter extends Entity {
+    -- Properties --
+    Contains generalized properties
+    allowing a specialization
+    of this class to specify
+    behavior as fully as possible.
+    -- Commands --
+    enterDragAndDrop
+    placeAt
+}
+PlayableCharacter ..> Command
+
+together {
+    class FrogA extends PlayableCharacter {
+        * Sets properties and
+        tweaks general behavior.
+        * May override finite state
+        machine to adjust behavior.
+    }
+    FrogA .[hidden] FrogB
+    class FrogB extends PlayableCharacter {
+        Same as FrogA.
+    }
+    FrogB .[hidden] FrogC
+    class FrogC extends PlayableCharacter {
+        Same as FrogA.
+    }
+}
+class GameplayModel
+
+class GameplayView
+GameplayView --> GameplayModel
+
+interface Observer
+
+together {
+    class FrogAView extends EntityView {
+        Creates an Observer
+        to follow the entity state
+        to pick the right texture.
+        --
+        TextureRegion textureRegion
+    }
+    note left of FrogAView::textureRegion
+    It is better not to use Sprites,
+    because basically all they do is
+    adding some minor fields like position
+    to TextureRegion, so it is not useful.
+    end note
+
+    FrogAView ..> FrogA
+
+    FrogAView -[hidden] FrogBView
+
+    class FrogBView extends EntityView
+    FrogBView ..> FrogB
+
+    FrogBView -[hidden] FrogCView
+
+    class FrogCView extends EntityView
+    FrogCView ..> FrogC
+}
+
+@enduml
