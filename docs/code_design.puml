@@ -36,121 +36,116 @@ class GameScreen implements Screen {
     void input()
     void logic()
     void draw()
+    -- Fields --
+    ConcurrentList<Entity> entities;
+    EventQueue;
 }
-GameScreen --> GameplayModel
-GameScreen --> GameplayView
 
 newpage
 
-GameplayModel -[hidden]--> Entity
-
-interface Command {
-    [[https://gameprogrammingpatterns.com/command.html Command pattern]]
-    execute()
+interface Renderer {
+    virtual void render(Renderable render, Vector2 pos, ...)
+    virtual void flush()
+}
+class LibGDXRenderer implements Renderer {
+    SpriteBatch batch;
 }
 
-interface Observable {
-    [[https://gameprogrammingpatterns.com/observer.html Observer pattern]]
-    addObserver()
-}
-Observable --> Observer
-
-interface PlayableCharacterState implements Observable {
+abstract class Sprite {
+    Global for each entity type.
 }
 
-class PlacedState implements PlayableCharacterState {
-    Placed on the board.
+class SpriteGDX extends Sprite {
+    TextureRegion textureRegion;
 }
 
-abstract class PerformActionState extends PlacedState
-
-class FightState extends PerformActionState
-
-class ShieldState extends PerformActionState
-
-class DragAndDropState implements PlayableCharacterState {
-    Player is picking a position.
-    Follows the cursor.
+class SpriteView implements Renderable {
+    Sprite sprite;
 }
+SpriteView --> Sprite
+
+class Event {
+}
+class EventQueue {
+    void addEvent(Event event)
+    Optional<Event> pollEvent()
+    EventDispatcher getDispatcher()
+    -- private --
+    BlockingQueue<Event> queue;
+}
+EventQueue -> Event
+class EventDispatcher {
+    void addEvent(Event event)
+    -- private --
+    EventQueue eventBus;
+}
+EventDispatcher::eventBus -> EventQueue
+EventDispatcher::addEvent -> Event
+
+class DraggableEntity {
+    screenPos;
+    Entity entity;
+}
+DraggableEntity --> Entity
 
 abstract class Entity {
-    -- State --
-    * [[https://gameprogrammingpatterns.com/state.html Finite state machine]]
-      pattern is used.
-    * Properties such as position
-      etc. implement Observable
-      interface.
-}
-
-abstract class EnemyCharacter extends Entity {
+    E.g. Frog, Hedgehog, Bullets, Fireballs etc.
+    -- Fields --
+    position;
+    health;
+    speed;
+    width;
     -- Properties --
     Contains generalized properties
     allowing a specialization
     of this class to specify
     behavior as fully as possible.
+    ---
+    virtual void update(EventDispatcher)
+    virtual Renderable getRenderable()
+    virtual void onCollision(Entity other, EventDispatcher)
+}
+note left of Entity::speed
+    Frogs have speed of 0.
+end note
+
+class Fireball extends Entity {
+    SpriteView;
 }
 
-abstract class PlayableCharacter extends Entity {
-    -- Properties --
-    Contains generalized properties
-    allowing a specialization
-    of this class to specify
-    behavior as fully as possible.
-    -- Commands --
-    enterDragAndDrop
-    placeAt
+class Hedgehog extends Entity {
+    -- Fields --
+    damage;
+    HedgehogState state;
+    SpriteView;
 }
-PlayableCharacter ..> Command
+
+
+abstract class Frog extends Entity {
+    -- Fields --
+    volatile PlayableCharacterState generalState;
+    boolean isAttached;
+    -- Each implementation should --
+    * Set properties and
+    tweak general behavior.
+}
+enum PlayableCharacterState {
+    IDLE,
+    ACTION,
+    SHIELD,
+    DYING
+}
+Frog::generalState --> PlayableCharacterState
 
 together {
-    class FrogA extends PlayableCharacter {
-        * Sets properties and
-        tweaks general behavior.
-        * May override finite state
-        machine to adjust behavior.
+    class TankyFrog extends Frog {
     }
-    FrogA .[hidden] FrogB
-    class FrogB extends PlayableCharacter {
-        Same as FrogA.
+    class WizardFrog extends Frog {
     }
-    FrogB .[hidden] FrogC
-    class FrogC extends PlayableCharacter {
-        Same as FrogA.
+    class BardFrog extends Frog {
     }
-}
-class GameplayModel
-
-class GameplayView
-GameplayView --> GameplayModel
-
-interface Observer
-
-together {
-    class FrogAView extends EntityView {
-        Creates an Observer
-        to follow the entity state
-        to pick the right texture.
-        --
-        TextureRegion textureRegion
+    class KnightFrog extends Frog {
     }
-    note left of FrogAView::textureRegion
-    It is better not to use Sprites,
-    because basically all they do is
-    adding some minor fields like position
-    to TextureRegion, so it is not useful.
-    end note
-
-    FrogAView ..> FrogA
-
-    FrogAView -[hidden] FrogBView
-
-    class FrogBView extends EntityView
-    FrogBView ..> FrogB
-
-    FrogBView -[hidden] FrogCView
-
-    class FrogCView extends EntityView
-    FrogCView ..> FrogC
 }
 
 @enduml
