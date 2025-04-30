@@ -1,0 +1,151 @@
+@startuml
+
+abstract class Game {
+    LibGDX class.
+}
+
+class Main extends Game {
+    batch: SpriteBatch
+    viewport: Viewport
+    -- Overrides --
+    void create()
+    void render()
+    void dispose()
+    -- Screens --
+    mainMenuScreen
+    gameScreen
+}
+
+class MainMenuScreen implements Screen
+Main::mainMenuScreen --> MainMenuScreen: First screen
+MainMenuScreen -> GameScreen: Switches screen
+MainMenuScreen <- GameScreen: Switches screen back
+
+class GameScreen implements Screen {
+    main: final Main
+    constructor()
+    -- Overrides --
+    void show()
+    void hide()
+    void render()
+    void resize()
+    void pause()
+    void resume()
+    void dispose()
+    --
+    void input()
+    void logic()
+    void draw()
+    -- Fields --
+    ConcurrentList<Entity> entities;
+    EventQueue;
+}
+
+newpage
+
+interface Renderer {
+    virtual void render(Renderable render, Vector2 pos, ...)
+    virtual void flush()
+}
+class LibGDXRenderer implements Renderer {
+    SpriteBatch batch;
+}
+
+abstract class Sprite {
+    Global for each entity type.
+}
+
+class SpriteGDX extends Sprite {
+    TextureRegion textureRegion;
+}
+
+class SpriteView implements Renderable {
+    Sprite sprite;
+}
+SpriteView --> Sprite
+
+class Event {
+}
+class EventQueue {
+    void addEvent(Event event)
+    Optional<Event> pollEvent()
+    EventDispatcher getDispatcher()
+    -- private --
+    BlockingQueue<Event> queue;
+}
+EventQueue -> Event
+class EventDispatcher {
+    void addEvent(Event event)
+    -- private --
+    EventQueue eventBus;
+}
+EventDispatcher::eventBus -> EventQueue
+EventDispatcher::addEvent -> Event
+
+class DraggableEntity {
+    screenPos;
+    Entity entity;
+}
+DraggableEntity --> Entity
+
+abstract class Entity {
+    E.g. Frog, Hedgehog, Bullets, Fireballs etc.
+    -- Fields --
+    position;
+    health;
+    speed;
+    width;
+    -- Properties --
+    Contains generalized properties
+    allowing a specialization
+    of this class to specify
+    behavior as fully as possible.
+    ---
+    virtual void update(EventDispatcher)
+    virtual Renderable getRenderable()
+    virtual void onCollision(Entity other, EventDispatcher)
+}
+note left of Entity::speed
+    Frogs have speed of 0.
+end note
+
+class Fireball extends Entity {
+    SpriteView;
+}
+
+class Hedgehog extends Entity {
+    -- Fields --
+    damage;
+    HedgehogState state;
+    SpriteView;
+}
+
+
+abstract class Frog extends Entity {
+    -- Fields --
+    volatile PlayableCharacterState generalState;
+    boolean isAttached;
+    -- Each implementation should --
+    * Set properties and
+    tweak general behavior.
+}
+enum PlayableCharacterState {
+    IDLE,
+    ACTION,
+    SHIELD,
+    DYING
+}
+Frog::generalState --> PlayableCharacterState
+
+together {
+    class TankyFrog extends Frog {
+    }
+    class WizardFrog extends Frog {
+    }
+    class BardFrog extends Frog {
+    }
+    class KnightFrog extends Frog {
+    }
+}
+
+@enduml
