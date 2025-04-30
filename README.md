@@ -1,2 +1,2 @@
-![Baner](.banner.jpg)
+![Baner](banner.jpg)
 Tower defense game
