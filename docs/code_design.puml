@@ -5,8 +5,8 @@ abstract class Game {
 }
 
 class Main extends Game {
-    batch: SpriteBatch
-    viewport: Viewport
+    SpriteBatch spritebatch
+    ViewPort viewport
     -- Overrides --
     void create()
     void render()
@@ -22,8 +22,6 @@ MainMenuScreen -> GameScreen: Switches screen
 MainMenuScreen <- GameScreen: Switches screen back
 
 class GameScreen implements Screen {
-    main: final Main
-    constructor()
     -- Overrides --
     void show()
     void hide()
@@ -33,119 +31,218 @@ class GameScreen implements Screen {
     void resume()
     void dispose()
     --
+    constructor()
     void input()
     void logic()
     void draw()
     -- Fields --
+    final Main main
+    gameState
     ConcurrentList<Entity> entities;
-    EventQueue;
 }
 
 newpage
 
-interface Renderer {
-    virtual void render(Renderable render, Vector2 pos, ...)
-    virtual void flush()
+together {
+    usecase header as "
+    **General Entity Component System**
+    "
+
+    abstract class Entity {
+        E.g. Frog, Hedgehog, Bullets, Fireballs etc.
+        -- Components --
+        HashMap<Class, Component> components;
+        -- Fields --
+        boolean doesExist;
+    }
+    abstract class Component {
+        Entity entity;
+        getEntity()
+    }
 }
-class LibGDXRenderer implements Renderer {
+
+class Renderer {
     SpriteBatch batch;
 }
-
-abstract class Sprite {
-    Global for each entity type.
-}
-
-class SpriteGDX extends Sprite {
-    TextureRegion textureRegion;
-}
-
-class SpriteView implements Renderable {
-    Sprite sprite;
-}
-SpriteView --> Sprite
-
-class Event {
-}
-class EventQueue {
-    void addEvent(Event event)
-    Optional<Event> pollEvent()
-    EventDispatcher getDispatcher()
-    -- private --
-    BlockingQueue<Event> queue;
-}
-EventQueue -> Event
-class EventDispatcher {
-    void addEvent(Event event)
-    -- private --
-    EventQueue eventBus;
-}
-EventDispatcher::eventBus -> EventQueue
-EventDispatcher::addEvent -> Event
-
-class DraggableEntity {
-    screenPos;
-    Entity entity;
-}
-DraggableEntity --> Entity
-
-abstract class Entity {
-    E.g. Frog, Hedgehog, Bullets, Fireballs etc.
-    -- Fields --
-    position;
+class HealthComponent extends Component {
     health;
-    speed;
-    width;
-    -- Properties --
-    Contains generalized properties
-    allowing a specialization
-    of this class to specify
-    behavior as fully as possible.
-    ---
-    virtual void update(EventDispatcher)
-    virtual Renderable getRenderable()
-    virtual void onCollision(Entity other, EventDispatcher)
 }
-note left of Entity::speed
+class TransformComponent extends Component {
+    position;
+    speed;
+    getSpeed()
+    getPosition()
+    getAdvancedPosition(timeOffset)
+    setPosition()
+}
+note right of TransformComponent::speed
     Frogs have speed of 0.
 end note
-
-class Fireball extends Entity {
-    SpriteView;
+note right of TransformComponent::getAdvancedPosition
+    Uses speed and timeOffset to calculate
+    new position. It is useful to predict new
+    position in render thread for smooth movement.
+end note
+class BoxComponent extends Component {
+    width;
+    height;
 }
 
-class Hedgehog extends Entity {
-    -- Fields --
-    damage;
-    HedgehogState state;
-    SpriteView;
+class Sprite {
+    TextureRegion textureRegion;
+}
+abstract class RenderComponent extends Component {
+    virtual void render(Renderer)
+}
+RenderComponent::render --> Renderer
+note right of RenderComponent
+    Rendering is handled in rendering
+    thread with high frequency.
+end note
+abstract class UpdateComponent extends Component {
+    virtual void update(deltaTime)
+}
+note right of UpdateComponent
+    Updating is handled in logic
+    thread with low frequency.
+end note
+
+newpage
+
+usecase header as "
+**Frog Entities**
+"
+
+abstract class Component {
+    Entity entity;
+    getEntity()
+}
+abstract class CollisionHandlerComponent extends Component {
+    virtual void onCollision()
+}
+class KnightFrogCollisionHandlerComponent extends CollisionHandlerComponent {
+}
+class BardFrogCollisionHandlerComponent extends CollisionHandlerComponent {
+}
+class WizardFrogCollisionHandlerComponent extends CollisionHandlerComponent {
+}
+class TankyFrogCollisionHandlerComponent extends CollisionHandlerComponent {
 }
 
-
-abstract class Frog extends Entity {
-    -- Fields --
-    volatile PlayableCharacterState generalState;
-    boolean isAttached;
-    -- Each implementation should --
-    * Set properties and
-    tweak general behavior.
+class FrogStateComponent extends Component {
+    volatile FrogState generalState;
+    volatile boolean isAttacked;
 }
-enum PlayableCharacterState {
+enum FrogState {
     IDLE,
     ACTION,
     SHIELD,
     DYING
 }
-Frog::generalState --> PlayableCharacterState
+FrogStateComponent::generalState --> FrogState
 
-together {
-    class TankyFrog extends Frog {
-    }
-    class WizardFrog extends Frog {
-    }
-    class BardFrog extends Frog {
-    }
-    class KnightFrog extends Frog {
-    }
+class Sprite {
+    TextureRegion textureRegion;
+}
+abstract class RenderComponent extends Component {
+    virtual void render(Renderer)
+}
+RenderComponent::render --> Renderer
+class FrogRenderComponent extends RenderComponent {
+    constructor(Sprite)
+    --
+    Sprite sprite;
+    --
+    Queries state to decide which
+    animation to render.
+}
+FrogRenderComponent --> FrogStateComponent
+FrogRenderComponent::sprite -> Sprite
+
+abstract class UpdateComponent extends Component {
+    virtual void update()
+}
+class KnightFrogUpdateComponent extends UpdateComponent {
+}
+class BardFrogUpdateComponent extends UpdateComponent {
+}
+class WizardFrogUpdateComponent extends UpdateComponent {
+}
+class TankyFrogUpdateComponent extends UpdateComponent {
+}
+
+class FrogFactory {
+    Creates Frog Entity and necessary Components.
+    --
+    Entity createKnightFrog()
+    Entity createBardFrog()
+    Entity createWizardFrog()
+    Entity createTankyFrog()
+}
+
+newpage
+
+usecase header as "
+**Hedgehog Entities**
+"
+
+abstract class Component {
+    Entity entity;
+    getEntity()
+}
+abstract class CollisionHandlerComponent extends Component {
+    virtual void onCollision()
+}
+class HedgehogCollisionHandlerComponent extends CollisionHandlerComponent {
+}
+
+class HedgehogStateComponent extends Component {
+    volatile HedgehogState generalState;
+    volatile boolean isAttacked;
+    final Color color;
+    damage;
+}
+enum HedgehogState {
+    IDLE,
+    ACTION,
+    SHIELD,
+    DYING
+}
+HedgehogStateComponent::generalState --> HedgehogState
+
+class Sprite {
+    TextureRegion textureRegion;
+}
+abstract class RenderComponent extends Component {
+    virtual void render(Renderer)
+}
+RenderComponent::render --> Renderer
+class HedgehogRenderComponent extends RenderComponent {
+    constructor(Sprite)
+    --
+    Sprite sprite;
+    --
+    Queries state to decide which
+    animation to render.
+}
+HedgehogRenderComponent --> HedgehogStateComponent
+HedgehogRenderComponent::sprite -> Sprite
+
+abstract class UpdateComponent extends Component {
+    virtual void update()
+}
+class HedgehogUpdateComponent extends UpdateComponent {
+}
+
+class HedgehogFactory {
+    Creates Hedgehog Entity and necessary Components.
+    --
+    Picks the following (possibly randomizes):
+        * Color for newly created Hedgehog.
+        * Picks damage.
+        * Picks speed.
+    --
+    Entity createHedgehog()
 }
 
 @enduml
