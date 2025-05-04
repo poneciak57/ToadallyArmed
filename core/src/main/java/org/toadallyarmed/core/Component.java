@@ -1,4 +1,4 @@
-package toadallyarmed.core;
+package org.toadallyarmed.core;
 
 public interface Component {
 }
