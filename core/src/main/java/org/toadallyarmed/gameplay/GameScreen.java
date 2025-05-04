@@ -1,4 +1,4 @@
-package org.toadallyarmed;
+package org.toadallyarmed.gameplay;
 
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import org.toadallyarmed.Main;
 
 public class GameScreen implements Screen {
     final Main main;
@@ -15,7 +16,7 @@ public class GameScreen implements Screen {
     Texture testFrogTexture;
     TextureRegion testFrogTextureRegion;
 
-    GameScreen(Main main) {
+    public GameScreen(Main main) {
         this.main = main;
 
         viewport = new FitViewport(12, 6);

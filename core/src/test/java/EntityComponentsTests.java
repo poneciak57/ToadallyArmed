@@ -1,5 +1,5 @@
 import org.junit.Test;
-import org.toadallyarmed.core.Component;
+import org.toadallyarmed.core.components.Component;
 import org.toadallyarmed.core.Entity;
 
 import static org.junit.Assert.assertEquals;

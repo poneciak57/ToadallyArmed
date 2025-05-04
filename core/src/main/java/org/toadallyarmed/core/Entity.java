@@ -1,5 +1,7 @@
 package org.toadallyarmed.core;
 
+import org.toadallyarmed.core.components.Component;
+
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
