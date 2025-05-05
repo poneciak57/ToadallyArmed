@@ -13,18 +13,37 @@ public class GameScreen implements Screen {
     FitViewport viewport;
 
     Texture backgroundTexture;
-    Texture testFrogTexture;
-    TextureRegion testFrogTextureRegion;
+    Texture moneyFrogTexture, tankFrogTexture, knightFrogTexture, basicFrogTexture, wizardFrogTexture;
+    Texture randomHedgehogTexture;
+    Texture coinTexture;
+    TextureRegion moneyFrogTextureRegion, tankFrogTextureRegion, knightFrogTextureRegion, basicFrogTextureRegion, wizardFrogTextureRegion;
+    TextureRegion randomHedgehogTextureRegion;
+    TextureRegion coinTextureRegion;
+
+    //BitmapFont pixelFont;
 
     public GameScreen(Main main) {
         this.main = main;
 
-        viewport = new FitViewport(12, 6);
+        viewport = new FitViewport(10.66F, 6);
         this.main.updateFontScale(viewport);
 
         backgroundTexture = new Texture("GameScreen/background.jpg");
-        testFrogTexture = new Texture("GameScreen/Frogs/Wizard/FrogWizardAttack.png");
-        testFrogTextureRegion = new TextureRegion(testFrogTexture, 0, 0, 86, 66);
+        moneyFrogTexture = new Texture("GameScreen/Frogs/moneyFrog.png");
+        tankFrogTexture = new Texture("GameScreen/Frogs/tankFrog.png");
+        knightFrogTexture = new Texture("GameScreen/Frogs/knightFrog.png");
+        basicFrogTexture= new Texture("GameScreen/Frogs/basicFrog.png");
+        wizardFrogTexture = new Texture("GameScreen/Frogs/wizardFrog.png");
+        randomHedgehogTexture= new Texture("GameScreen/Hedgehogs/purpleHedgehog.png");
+        coinTexture = new Texture("GameScreen/Coins/coin.png");
+
+        moneyFrogTextureRegion = new TextureRegion(moneyFrogTexture, 0, 0, 44, 33);
+        tankFrogTextureRegion = new TextureRegion(tankFrogTexture, 0, 0, 44, 33);
+        knightFrogTextureRegion = new TextureRegion(knightFrogTexture, 0, 0, 44, 33);
+        basicFrogTextureRegion = new TextureRegion(basicFrogTexture, 0, 0, 44, 33);
+        wizardFrogTextureRegion = new TextureRegion(wizardFrogTexture, 0, 0, 44, 33);
+        randomHedgehogTextureRegion= new TextureRegion(randomHedgehogTexture, 120, 80, 24, 16);
+        coinTextureRegion=new TextureRegion(coinTexture, 0, 0, 16, 16);
     }
 
     @Override
@@ -43,11 +62,20 @@ public class GameScreen implements Screen {
 
         float worldWidth = viewport.getWorldWidth();
         float worldHeight = viewport.getWorldHeight();
-
         main.spriteBatch.draw(backgroundTexture, 0, 0, worldWidth, worldHeight);
-        main.spriteBatch.draw(testFrogTextureRegion, 0, 0, 1, 1);
 
-        main.font.draw(main.spriteBatch, "Hello World!", 0, worldHeight);
+        main.spriteBatch.draw(moneyFrogTextureRegion,  -0.3F, 0.1F, 1.5F, 1.5F);
+        main.spriteBatch.draw(tankFrogTextureRegion,  -0.3F, 1.1F, 1.5F, 1.5F);
+        main.spriteBatch.draw(wizardFrogTextureRegion, -0.3F, 2.1F, 1.5F, 1.5F);
+        main.spriteBatch.draw(knightFrogTextureRegion, -0.3F, 3.1F, 1.5F, 1.5F);
+        main.spriteBatch.draw(basicFrogTextureRegion, -0.3F, 4.1F, 1.5F, 1.5F);
+        main.spriteBatch.draw(randomHedgehogTextureRegion, 1, 1.1F, 0.9F, 0.9F);
+        main.spriteBatch.draw(coinTextureRegion,  0.15F, 5.15F, 0.7F, 0.7F);
+
+
+        //tryna get it to work
+        //pixelFont=new BitmapFont(Gdx.files.internal("GameScreen/Fonts/2.fnt"));
+        main.font.draw(main.spriteBatch, "You broke hehe", 1, worldHeight-0.5F);
 
         main.spriteBatch.end();
     }
@@ -78,6 +106,12 @@ public class GameScreen implements Screen {
     public void dispose() {
         // Destroy screen's assets here.
         backgroundTexture.dispose();
-        testFrogTexture.dispose();
+        moneyFrogTexture.dispose();
+        tankFrogTexture.dispose();
+        knightFrogTexture.dispose();
+        basicFrogTexture.dispose();
+        wizardFrogTexture.dispose();
+        coinTexture.dispose();
+        randomHedgehogTexture.dispose();
     }
 }
