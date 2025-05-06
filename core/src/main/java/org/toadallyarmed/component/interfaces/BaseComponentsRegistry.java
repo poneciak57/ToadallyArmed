@@ -1,0 +1,11 @@
+package org.toadallyarmed.component.interfaces;
+
+import java.util.List;
+
+public class BaseComponentsRegistry {
+    public static List<Class<? extends Component>> BASE_COMPONENTS = List.of(
+        BehaviourComponent.class,
+        RenderComponent.class,
+        TransformComponent.class
+    );
+}

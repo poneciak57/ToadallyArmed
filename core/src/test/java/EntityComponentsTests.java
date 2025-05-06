@@ -1,16 +1,16 @@
 import org.junit.Test;
-import org.toadallyarmed.core.components.Component;
-import org.toadallyarmed.core.Entity;
+import org.toadallyarmed.component.interfaces.Component;
+import org.toadallyarmed.entity.Entity;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 public class EntityComponentsTests {
 
-    static class TestComponent1 extends Component {}
-    static class TestComponent2 extends Component {}
+    static class TestComponent1 implements Component {}
+    static class TestComponent2 implements Component {}
 
-    static abstract class SuperComponent extends Component {}
+    static abstract class SuperComponent implements Component {}
     static class TestSuperComponent1 extends SuperComponent {}
     static class TestSuperComponent2 extends SuperComponent {}
 

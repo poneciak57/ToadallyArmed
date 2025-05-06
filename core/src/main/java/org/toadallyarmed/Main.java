@@ -22,7 +22,6 @@ public class Main extends Game {
     public void create() {
         spriteBatch = new SpriteBatch();
         font = new BitmapFont();
-
         setScreen(new GameScreen(this));
     }
 
