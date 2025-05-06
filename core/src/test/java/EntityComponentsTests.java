@@ -1,12 +1,14 @@
 import org.junit.Test;
+import org.toadallyarmed.component.interfaces.BaseComponentsRegistry;
 import org.toadallyarmed.component.interfaces.Component;
 import org.toadallyarmed.entity.Entity;
+import org.toadallyarmed.exception.NotBaseComponentException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 public class EntityComponentsTests {
-
     static class TestComponent1 implements Component {}
     static class TestComponent2 implements Component {}
 
@@ -15,7 +17,16 @@ public class EntityComponentsTests {
     static class TestSuperComponent2 extends SuperComponent {}
 
     @Test
+    public void testNotBaseComponent() {
+        BaseComponentsRegistry.BASE_COMPONENTS = List.of();
+        Entity e = new Entity();
+        TestComponent1 c = new TestComponent1();
+        assertThrows(NotBaseComponentException.class ,() -> e.put(TestComponent1.class, c));
+    }
+
+    @Test
     public void testSimpleCase() {
+        BaseComponentsRegistry.BASE_COMPONENTS = List.of(Component.class);
         Entity e = new Entity() {};
         Component c = new Component() {};
         e.put(Component.class, c);
@@ -25,6 +36,7 @@ public class EntityComponentsTests {
 
     @Test
     public void testMoreAdvancedCase() {
+        BaseComponentsRegistry.BASE_COMPONENTS = List.of(TestComponent1.class, TestComponent2.class);
         Entity e = new Entity() {};
         TestComponent1 c1 = new TestComponent1();
         TestComponent2 c2 = new TestComponent2();
@@ -36,6 +48,7 @@ public class EntityComponentsTests {
 
     @Test
     public void testAdvancedCase() {
+        BaseComponentsRegistry.BASE_COMPONENTS = List.of(SuperComponent.class);
         Entity e = new Entity() {};
         TestSuperComponent1 c1 = new TestSuperComponent1();
         TestSuperComponent2 c2 = new TestSuperComponent2();
