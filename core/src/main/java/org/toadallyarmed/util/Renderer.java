@@ -1,4 +1,4 @@
-package org.toadallyarmed.core;
+package org.toadallyarmed.util;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Disposable;
