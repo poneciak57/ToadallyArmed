@@ -7,12 +7,12 @@ import static org.junit.Assert.assertFalse;
 
 public class EntityComponentsTests {
 
-    static class TestComponent1 implements Component {}
-    static class TestComponent2 implements Component {}
+    static class TestComponent1 extends Component {}
+    static class TestComponent2 extends Component {}
 
-    interface SuperComponent extends Component {}
-    static class TestSuperComponent1 implements SuperComponent {}
-    static class TestSuperComponent2 implements SuperComponent {}
+    static abstract class SuperComponent extends Component {}
+    static class TestSuperComponent1 extends SuperComponent {}
+    static class TestSuperComponent2 extends SuperComponent {}
 
     @Test
     public void testSimpleCase() {
