@@ -6,6 +6,11 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import org.toadallyarmed.gameplay.GameScreen;
+import org.toadallyarmed.util.logger.LogLevel;
+import org.toadallyarmed.util.logger.Logger;
+import org.toadallyarmed.util.logger.TerminalLoggerBackend;
+
+import java.util.List;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends Game {
@@ -22,6 +27,7 @@ public class Main extends Game {
     public void create() {
         spriteBatch = new SpriteBatch();
         font = new BitmapFont();
+        Logger.init(List.of(new TerminalLoggerBackend(LogLevel.DEBUG)), LogLevel.DEBUG);
         setScreen(new GameScreen(this));
     }
 
