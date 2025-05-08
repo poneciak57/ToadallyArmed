@@ -1,8 +1,10 @@
 package org.toadallyarmed.gameplay;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -20,7 +22,7 @@ public class DraftScreen implements Screen {
     TextureRegion randomHedgehogTextureRegion;
     TextureRegion coinTextureRegion;
 
-    //BitmapFont pixelFont;
+    BitmapFont pixelFont, font;
 
     public DraftScreen(Main main) {
         this.main = main;
@@ -29,6 +31,11 @@ public class DraftScreen implements Screen {
         this.main.updateFontScale(viewport);
 
         backgroundTexture = new Texture("GameScreen/background.jpg");
+        setFrogTextures();
+        setFonts();
+    }
+    private void setFrogTextures(){
+        //upload files
         moneyFrogTexture = new Texture("GameScreen/Frogs/moneyFrog.png");
         tankFrogTexture = new Texture("GameScreen/Frogs/tankFrog.png");
         knightFrogTexture = new Texture("GameScreen/Frogs/knightFrog.png");
@@ -37,6 +44,7 @@ public class DraftScreen implements Screen {
         randomHedgehogTexture= new Texture("GameScreen/Hedgehogs/purpleHedgehog.png");
         coinTexture = new Texture("GameScreen/Coins/coin.png");
 
+        //set right frames
         moneyFrogTextureRegion = new TextureRegion(moneyFrogTexture, 0, 0, 44, 33);
         tankFrogTextureRegion = new TextureRegion(tankFrogTexture, 0, 0, 44, 33);
         knightFrogTextureRegion = new TextureRegion(knightFrogTexture, 0, 0, 44, 33);
@@ -44,6 +52,17 @@ public class DraftScreen implements Screen {
         wizardFrogTextureRegion = new TextureRegion(wizardFrogTexture, 0, 0, 44, 33);
         randomHedgehogTextureRegion= new TextureRegion(randomHedgehogTexture, 120, 80, 24, 16);
         coinTextureRegion=new TextureRegion(coinTexture, 0, 0, 16, 16);
+    }
+    private void setFonts(){
+        font=new BitmapFont();
+        pixelFont=new BitmapFont(Gdx.files.internal("GameScreen/Fonts/font.fnt"));
+        float targetFontHeight = 0.7F;
+        float scale = targetFontHeight/pixelFont.getCapHeight();
+        pixelFont.getData().setScale(scale);
+        pixelFont.setUseIntegerPositions(false);
+        font.getData().setScale(scale);
+        font.setColor(Color.RED);
+        font.setUseIntegerPositions(false);
     }
 
     @Override
@@ -54,10 +73,10 @@ public class DraftScreen implements Screen {
     @Override
     public void render(float delta) {
         // Draw your screen here. "delta" is the time since last render in seconds.
-
         ScreenUtils.clear(Color.BLACK);
         viewport.apply();
         main.spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
+
         main.spriteBatch.begin();
 
         float worldWidth = viewport.getWorldWidth();
@@ -72,10 +91,8 @@ public class DraftScreen implements Screen {
         main.spriteBatch.draw(randomHedgehogTextureRegion, 1, 1.1F, 0.9F, 0.9F);
         main.spriteBatch.draw(coinTextureRegion,  0.15F, 5.15F, 0.7F, 0.7F);
 
-
-        //tryna get it to work
-        //pixelFont=new BitmapFont(Gdx.files.internal("GameScreen/Fonts/2.fnt"));
-        main.font.draw(main.spriteBatch, "You broke hehe", 1, worldHeight-0.5F);
+        font.draw(main.spriteBatch, "jest w pyte", 1, 1);
+        pixelFont.draw(main.spriteBatch, "Money", 1, 6);
 
         main.spriteBatch.end();
     }
@@ -85,6 +102,7 @@ public class DraftScreen implements Screen {
         // Resize your screen here. The parameters represent the new window size.
         viewport.update(width, height, true);
         main.updateFontScale(viewport);
+
     }
 
     @Override
@@ -113,5 +131,7 @@ public class DraftScreen implements Screen {
         wizardFrogTexture.dispose();
         coinTexture.dispose();
         randomHedgehogTexture.dispose();
+        pixelFont.dispose();
+        font.dispose();
     }
 }
