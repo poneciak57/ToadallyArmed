@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import org.toadallyarmed.Main;
 
-public class GameScreen implements Screen {
+public class DraftScreen implements Screen {
     final Main main;
     FitViewport viewport;
 
@@ -22,7 +22,7 @@ public class GameScreen implements Screen {
 
     //BitmapFont pixelFont;
 
-    public GameScreen(Main main) {
+    public DraftScreen(Main main) {
         this.main = main;
 
         viewport = new FitViewport(10.66F, 6);
