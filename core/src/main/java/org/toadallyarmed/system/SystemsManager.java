@@ -4,44 +4,86 @@ import org.toadallyarmed.entity.Entity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.*;
+import java.util.concurrent.locks.LockSupport;
 
 public class SystemsManager {
-    private final List<System> systems = new ArrayList<>();
-    private final Map<System, Float> systemTimeAccumulators = new ConcurrentHashMap<>();
+    private final List<System> systems;
+    private final int tickRate;
     private final ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     private final ConcurrentLinkedQueue<Entity> entities;
 
-    public SystemsManager(ConcurrentLinkedQueue<Entity> entities) {
+    private volatile boolean running = false;
+    private volatile boolean paused = false;
+
+    private Thread tickThread;
+
+    SystemsManager(int tickRate, List<System> systems, ConcurrentLinkedQueue<Entity> entities) {
         this.entities = entities;
+        this.systems = systems;
+        this.tickRate = tickRate;
     }
 
-    /// Adds system to the manager
-    /// Should be called before ever calling tick
-    public void addSystem(System system) {
-        systems.add(system);
-        systemTimeAccumulators.put(system, 0f);
+    public void start() {
+        if (running) return;
+        running = true;
+
+        tickThread = new Thread(this::tickLoop);
+        tickThread.start();
     }
 
-    /// # Tick method
-    /// run tick method on all registered systems if their their accumulated time has reached their tickrate
+    public void stop() {
+        running = false;
+        resume(); // Unpark if paused
+
+        if (tickThread != null && tickThread != Thread.currentThread()) {
+            try {
+                tickThread.join();
+            } catch (InterruptedException e) {
+                tickThread.interrupt();
+            }
+        }
+
+        dispose();
+    }
+
+    public void pause() {
+        paused = true;
+    }
+
+    public void resume() {
+        paused = false;
+        LockSupport.unpark(tickThread);
+    }
+
+    private void tickLoop() {
+        final long tickIntervalNanos = 1_000_000_000L / tickRate;
+        long lastTime = java.lang.System.nanoTime();
+
+        while (running) {
+            if (paused) {
+                LockSupport.park();
+                lastTime = java.lang.System.nanoTime();
+                continue;
+            }
+
+            long now = java.lang.System.nanoTime();
+            float delta = (now - lastTime) / 1_000_000_000f;
+            lastTime = now;
+
+            tick(delta);
+
+            long elapsed = java.lang.System.nanoTime() - now;
+            long sleepTime = tickIntervalNanos - elapsed;
+            if (sleepTime > 0) {
+                LockSupport.parkNanos(sleepTime);
+            }
+        }
+    }
+
     public void tick(float delta) {
         for (System system : systems) {
-            float accumulated = systemTimeAccumulators.get(system);
-            accumulated += delta;
-
-            float interval = 1f / system.getTickRate();
-
-            if (accumulated >= interval) {
-                float remainder = accumulated % interval;
-                systemTimeAccumulators.put(system, remainder);
-
-                float finalAccumulated = accumulated;
-                executor.submit(() -> system.tick(finalAccumulated, this.entities));
-            } else {
-                systemTimeAccumulators.put(system, accumulated);
-            }
+            executor.submit(() -> system.tick(delta, this.entities));
         }
     }
 
@@ -54,6 +96,28 @@ public class SystemsManager {
             }
         } catch (InterruptedException e) {
             executor.shutdownNow();
+        }
+    }
+
+    public static class Builder {
+        int tickRate = 60;
+        List<System> systems = new ArrayList<>();
+        public Builder() {}
+
+        public Builder addSystem(System system) {
+            systems.add(system);
+            return this;
+        }
+        public Builder addThrottledSystem(int tickRate, System system) {
+            return addSystem(new ThrottledSystem(tickRate, system));
+        }
+        public Builder tickRate(int tickRate) {
+            this.tickRate = tickRate;
+            return this;
+        }
+
+        public SystemsManager build(ConcurrentLinkedQueue<Entity> entities) {
+            return new SystemsManager(tickRate, systems, entities);
         }
     }
 }
