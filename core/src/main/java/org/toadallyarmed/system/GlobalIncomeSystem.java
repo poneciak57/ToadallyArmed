@@ -15,6 +15,6 @@ public class GlobalIncomeSystem implements System {
 
     @Override
     public void tick(float deltaTime, ConcurrentLinkedQueue<Entity> entities) {
-        gameState.getWallet().access().addAndGet()
+        gameState.getWallet().access().addAndGet(gameState.getGameConfig().GlobalIncomeDelta());
     }
 }
