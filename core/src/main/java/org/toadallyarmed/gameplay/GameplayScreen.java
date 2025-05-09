@@ -31,7 +31,7 @@ public class GameplayScreen implements Screen {
 
         backgroundTexture = new Texture("GameScreen/background.jpg");
 
-        frogFactory = new FrogFactory();
+        frogFactory = FrogFactory.get();
         Entity basicFrog = frogFactory.createBasicFrog();
         basicFrog.get(TransformComponent.class).get().setPosition(new Vector2(3, 2));
         entities.add(basicFrog);

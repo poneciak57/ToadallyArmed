@@ -93,8 +93,8 @@ public class DraftScreen implements Screen {
         spriteBatch.draw(randomHedgehogTextureRegion, 1, 1.1F, 0.9F, 0.9F);
         spriteBatch.draw(coinTextureRegion,  0.15F, 5.15F, 0.7F, 0.7F);
 
-        font.draw(main.spriteBatch, "jest w pyte", 1, 1);
-        pixelFont.draw(main.spriteBatch, "Money", 1, 6);
+        font.draw(spriteBatch, "jest w pyte", 1, 1);
+        pixelFont.draw(spriteBatch, "Money", 1, 6);
 
         spriteBatch.end();
     }

@@ -16,14 +16,18 @@ public class FrogFactory implements Disposable {
     private TextureRegion basicFrogTextureRegion;
 
     private Sprite basicFrogSprite;
-
-    public FrogFactory() {
+    private static final FrogFactory frogFactory = new FrogFactory();
+    private FrogFactory() {
         basicFrogTexture= new Texture("GameScreen/Frogs/basicFrog.png");
         basicFrogTextureRegion = new TextureRegion(basicFrogTexture, 0, 0, 44, 33);
         basicFrogSprite = new Sprite(
             basicFrogTextureRegion,
             new Vector2( -0.3F, 0.1F),
             new Vector2(1.5F, 1.5F));
+    }
+
+    public static FrogFactory get() {
+        return frogFactory;
     }
 
     public Entity createBasicFrog() {
