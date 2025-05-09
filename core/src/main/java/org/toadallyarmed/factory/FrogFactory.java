@@ -14,10 +14,10 @@ import org.toadallyarmed.util.Sprite;
 import org.toadallyarmed.util.logger.Logger;
 
 public class FrogFactory implements Disposable {
-    private Texture basicFrogTexture, knightFrogTexture, moneyFrogTexture, tankFrogTexture, wizardFrogTexture;
-    private TextureRegion basicFrogTextureRegion, knightFrogTextureRegion, moneyFrogTextureRegion, tankFrogTextureRegion, wizardFrogTextureRegion;
+    private final Texture basicFrogTexture, knightFrogTexture, moneyFrogTexture, tankFrogTexture, wizardFrogTexture;
+    private final TextureRegion basicFrogTextureRegion, knightFrogTextureRegion, moneyFrogTextureRegion, tankFrogTextureRegion, wizardFrogTextureRegion;
 
-    private Sprite basicFrogSprite, knightFrogSprite, moneyFrogSprite, tankFrogSprite, wizardFrogSprite;
+    private final Sprite basicFrogSprite, knightFrogSprite, moneyFrogSprite, tankFrogSprite, wizardFrogSprite;
     private static final FrogFactory frogFactory = new FrogFactory();
     private FrogFactory() {
         Logger.trace("Initializing FrogFactory");

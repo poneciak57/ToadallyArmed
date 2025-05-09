@@ -14,10 +14,10 @@ import org.toadallyarmed.util.Sprite;
 import org.toadallyarmed.util.logger.Logger;
 
 public class HedgehogFactory implements Disposable {
-    private Texture basicHedgehogTexture, fastHedgehogTexture, strongHedgehogTexture, healthyHedgehogTexture;
-    private TextureRegion basicHedgehogTextureRegion, fastHedgehogTextureRegion, strongHedgehogTextureRegion, healthyHedgehogTextureRegion;
+    private final Texture basicHedgehogTexture, fastHedgehogTexture, strongHedgehogTexture, healthyHedgehogTexture;
+    private final TextureRegion basicHedgehogTextureRegion, fastHedgehogTextureRegion, strongHedgehogTextureRegion, healthyHedgehogTextureRegion;
 
-    private Sprite basicHedgehogSprite, fastHedgehogSprite, strongHedgehogSprite, healthyHedgehogSprite;
+    private final Sprite basicHedgehogSprite, fastHedgehogSprite, strongHedgehogSprite, healthyHedgehogSprite;
     private static final HedgehogFactory frogFactory = new HedgehogFactory();
     private HedgehogFactory() {
         Logger.trace("Initializing FrogFactory");
