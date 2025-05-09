@@ -1,6 +1,7 @@
 import org.junit.Test;
 import org.toadallyarmed.component.HealthComponent;
 import org.toadallyarmed.entity.Entity;
+import org.toadallyarmed.entity.EntityType;
 import org.toadallyarmed.system.HealthSystem;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -12,7 +13,7 @@ public class HealthSystemTests {
     @Test
     public void testBasicHealthSystem() {
         ConcurrentLinkedQueue<Entity> entities = new ConcurrentLinkedQueue<>();
-        Entity e = new Entity();
+        Entity e = new Entity.EntityBuilder(EntityType.OTHER).build();
         HealthComponent healthComponent = new HealthComponent(100);
         HealthSystem healthSystem = new HealthSystem();
         e.put(HealthComponent.class, healthComponent);

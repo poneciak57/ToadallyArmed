@@ -9,6 +9,7 @@ import org.toadallyarmed.component.frog.FrogRenderableComponent;
 import org.toadallyarmed.component.interfaces.RenderableComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
 import org.toadallyarmed.entity.Entity;
+import org.toadallyarmed.entity.EntityType;
 import org.toadallyarmed.util.Sprite;
 import org.toadallyarmed.util.logger.Logger;
 
@@ -35,12 +36,12 @@ public class FrogFactory implements Disposable {
 
     public Entity createBasicFrog() {
         Logger.trace("Creating Frog Entity in factory");
-        Entity entity = new Entity();
         WorldTransformComponent transform = new WorldTransformComponent();
         FrogRenderableComponent renderable = new FrogRenderableComponent(transform, basicFrogSprite);
-        entity.put(TransformComponent.class, transform);
-        entity.put(RenderableComponent.class, renderable);
-        return entity;
+        return new Entity.EntityBuilder(EntityType.FROG)
+            .add(TransformComponent.class, transform)
+            .add(RenderableComponent.class, renderable)
+            .build();
     }
 
     @Override
