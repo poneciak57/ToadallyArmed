@@ -4,6 +4,7 @@ public record GameConfig(
     // -- TickRates -- //
     int SystemManagerTickRate,
     int GlobalIncomeTickRate,
+    int HealthTickRate,
 
     // -- Values -- //
 
