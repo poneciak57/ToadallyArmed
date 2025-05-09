@@ -5,3 +5,8 @@ But these weren’t just any frogs. No, these were the Avengers of the Pond, the
 And so, the frogs leapt into battle to defend their tadpoles, etching their saga into the annals of history — and into the repository of our OOP project.
 
 🎮 Toadally Armed is a cozy, pixel-art strategy game that lovingly recycles the iconic “Plants vs. Zombies” concept — but with frogs. Lots of frogs. Armed frogs.
+
+Authors:
+* Natalia Ignatowicz
+* Kacper Poneta
+* Kacper Orszulak

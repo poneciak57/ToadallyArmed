@@ -1,8 +1,10 @@
 package org.toadallyarmed.gameplay;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -11,6 +13,7 @@ import org.toadallyarmed.component.interfaces.RenderableComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
 import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.factory.FrogFactory;
+import org.toadallyarmed.factory.HedgehogFactory;
 import org.toadallyarmed.util.logger.Logger;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -22,7 +25,11 @@ public class GameplayScreen implements Screen {
     Texture backgroundTexture;
 
     FrogFactory frogFactory;
+    HedgehogFactory hedgehogFactory;
     ConcurrentLinkedQueue<Entity> entities = new ConcurrentLinkedQueue<>();
+
+    BitmapFont pixelFont, font;
+    Integer money=1000000;
 
     public GameplayScreen(Main main) {
         Logger.info("creating a new gameplay screen");
@@ -34,10 +41,28 @@ public class GameplayScreen implements Screen {
         backgroundTexture = new Texture("GameScreen/background.jpg");
 
         frogFactory = FrogFactory.get();
-        Entity basicFrog = frogFactory.createBasicFrog();
+        Entity basicFrog = frogFactory.createMoneyFrog();
         basicFrog.get(TransformComponent.class).get().setPosition(new Vector2(3, 2));
         entities.add(basicFrog);
+        hedgehogFactory = HedgehogFactory.get();
+        Entity basicHedgehog = hedgehogFactory.createFastHedgehog();
+        basicHedgehog.get(TransformComponent.class).get().setPosition(new Vector2(1, 1));
+        entities.add(basicHedgehog);
+
+        setFonts();
+
         Logger.info("created a new gameplay screen successfully");
+    }
+    private void setFonts(){
+        font=new BitmapFont();
+        pixelFont=new BitmapFont(Gdx.files.internal("GameScreen/Fonts/font.fnt"));
+        float targetFontHeight = 0.7F;
+        float scale = targetFontHeight/pixelFont.getCapHeight();
+        pixelFont.getData().setScale(scale);
+        pixelFont.setUseIntegerPositions(false);
+        font.getData().setScale(scale);
+        font.setColor(Color.RED);
+        font.setUseIntegerPositions(false);
     }
 
     @Override
@@ -65,6 +90,9 @@ public class GameplayScreen implements Screen {
             var renderable = renderableOptional.get();
             renderable.render(main.renderer);
         }
+
+        //font.draw(main.renderer.getSpriteBatch(), "jest w pyte", 1, 1);
+        pixelFont.draw(main.renderer.getSpriteBatch(), Integer.toString(money), 1, 6);
 
         main.renderer.getSpriteBatch().end();
     }
