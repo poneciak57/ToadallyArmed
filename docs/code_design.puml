@@ -129,15 +129,36 @@ class WizardFrogCollisionHandlerComponent extends CollisionHandlerComponent {
 class TankyFrogCollisionHandlerComponent extends CollisionHandlerComponent {
 }
 
-class FrogStateComponent extends Component {
-    volatile FrogState generalState;
-    volatile boolean isAttacked;
+class StateMachine<State extends Enum<State>> {
+    State state;
+    HashMap<State, StateNode> states;
+
+    State getState()
+    void advanceState()
+    void setNextStateFrom(State from, State to)
+    void setNextTmpStateFrom(State from, State to)
 }
+StateMachine -> StateNode
+class StateNode <State> {
+    StateNode<State> next;
+    Optional<StateNode<State>> tmpNext;
+}
+
+class FrogStateComponent extends Component {
+    final StateMachine<FrogState> generalStateMachine;
+    boolean isAttacked;
+
+    boolean getIsAttacked()
+    boolean setIsAttacked(boolean newIsAttacked)
+    FrogState getGeneralState()
+    void setNextGeneralState(FrogState nextState)
+}
+FrogStateComponent::generalStateMachine -> StateMachine
 enum FrogState {
     IDLE,
     ACTION,
-    SHIELD,
-    DYING
+    DYING,
+    NONEXISTENT
 }
 FrogStateComponent::generalState --> FrogState
 
@@ -149,9 +170,9 @@ abstract class RenderComponent extends Component {
 }
 RenderComponent::render --> Renderer
 class FrogRenderComponent extends RenderComponent {
-    constructor(Sprite)
+    constructor(HashMap<FrogState, Animation>)
     --
-    Sprite sprite;
+    HashMap<FrogState, Animation> animations;
     --
     Queries state to decide which
     animation to render.
@@ -171,7 +192,7 @@ class WizardFrogUpdateComponent extends UpdateComponent {
 class TankyFrogUpdateComponent extends UpdateComponent {
 }
 
-class FrogFactory {
+class FrogFactory << Singleton >> {
     Creates Frog Entity and necessary Components.
     --
     Entity createKnightFrog()
@@ -203,10 +224,10 @@ class HedgehogStateComponent extends Component {
     damage;
 }
 enum HedgehogState {
-    IDLE,
-    ACTION,
-    SHIELD,
-    DYING
+    IDLE = 0,
+    WALKING = 1,
+    ACTION = 2,
+    DYING = 4
 }
 HedgehogStateComponent::generalState --> HedgehogState
 
@@ -234,7 +255,7 @@ abstract class UpdateComponent extends Component {
 class HedgehogUpdateComponent extends UpdateComponent {
 }
 
-class HedgehogFactory {
+class HedgehogFactory << Singleton >> {
     Creates Hedgehog Entity and necessary Components.
     --
     Picks the following (possibly randomizes):

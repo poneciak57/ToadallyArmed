@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import org.toadallyarmed.component.WorldTransformComponent;
 import org.toadallyarmed.component.frog.FrogRenderableComponent;
+import org.toadallyarmed.component.frog.FrogStateComponent;
 import org.toadallyarmed.component.interfaces.RenderableComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
 import org.toadallyarmed.entity.Entity;
@@ -37,7 +38,8 @@ public class FrogFactory implements Disposable {
         Logger.trace("Creating Frog Entity in factory");
         Entity entity = new Entity();
         WorldTransformComponent transform = new WorldTransformComponent();
-        FrogRenderableComponent renderable = new FrogRenderableComponent(transform, basicFrogSprite);
+        FrogStateComponent frogState = new FrogStateComponent();
+        FrogRenderableComponent renderable = new FrogRenderableComponent(transform, frogState, basicFrogSprite);
         entity.put(TransformComponent.class, transform);
         entity.put(RenderableComponent.class, renderable);
         return entity;
