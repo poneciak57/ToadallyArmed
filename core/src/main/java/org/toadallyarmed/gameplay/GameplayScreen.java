@@ -9,7 +9,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import org.toadallyarmed.Main;
+import org.toadallyarmed.component.frog.FrogState;
+import org.toadallyarmed.component.frog.FrogStateComponent;
 import org.toadallyarmed.component.interfaces.RenderableComponent;
+import org.toadallyarmed.component.interfaces.StateComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
 import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.factory.FrogFactory;
@@ -27,6 +30,7 @@ public class GameplayScreen implements Screen {
     FrogFactory frogFactory;
     HedgehogFactory hedgehogFactory;
     ConcurrentLinkedQueue<Entity> entities = new ConcurrentLinkedQueue<>();
+    Entity basicFrog;
 
     BitmapFont pixelFont, font;
     Integer money=1000000;
@@ -41,7 +45,7 @@ public class GameplayScreen implements Screen {
         backgroundTexture = new Texture("GameScreen/background.jpg");
 
         frogFactory = FrogFactory.get();
-        Entity basicFrog = frogFactory.createBasicFrog();
+        basicFrog = frogFactory.createBasicFrog();
         basicFrog.get(TransformComponent.class).get().setPosition(new Vector2(3, 2));
         entities.add(basicFrog);
         hedgehogFactory = HedgehogFactory.get();
@@ -70,9 +74,28 @@ public class GameplayScreen implements Screen {
         // Prepare your screen here.
     }
 
+    float stateSwitchTimer = 0f;
+    int frogStateID = 0;
+    void updateBasicFrogState(float deltaTime) {
+        FrogStateComponent frogStateComponent = (FrogStateComponent) basicFrog.get(StateComponent.class).get();
+        stateSwitchTimer += deltaTime;
+        if (stateSwitchTimer >= 2f) {
+            stateSwitchTimer = 0f;
+            frogStateID = (frogStateID + 1) % 3;
+            switch(frogStateID) {
+                case 0: frogStateComponent.setNextGeneralState(FrogState.IDLE); break;
+                case 1: frogStateComponent.setNextGeneralState(FrogState.ACTION); break;
+                case 2: frogStateComponent.setNextGeneralState(FrogState.DYING); break;
+                default: break;
+            }
+        }
+    }
+
     @Override
     public void render(float delta) {
         // Draw your screen here. "delta" is the time since last render in seconds.
+
+        updateBasicFrogState(delta);
 
         ScreenUtils.clear(Color.BLACK);
         viewport.apply();

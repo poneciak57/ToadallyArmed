@@ -1,5 +1,7 @@
 package org.toadallyarmed.util;
 
+import org.toadallyarmed.util.logger.Logger;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -11,7 +13,7 @@ public class StateMachine<State extends Enum<State>> {
         }
 
         State next;
-        Optional<State> tmpNext;
+        State tmpNext = null;
     }
 
     State curState;
@@ -27,10 +29,11 @@ public class StateMachine<State extends Enum<State>> {
     }
 
     public void advanceState() {
+        Logger.trace("advanceState()");
         final StateNode<State> curStateNode = getStateNode(curState);
-        if (curStateNode.tmpNext.isPresent()) {
-            curState = curStateNode.tmpNext.get();
-            curStateNode.tmpNext = Optional.empty();
+        if (curStateNode.tmpNext != null) {
+            curState = curStateNode.tmpNext;
+            curStateNode.tmpNext = null;
         } else {
             curState = curStateNode.next;
         }
@@ -42,11 +45,13 @@ public class StateMachine<State extends Enum<State>> {
     }
 
     public void setNextTmpStateFrom(State from, State to) {
+        Logger.trace("setNextTmpStateFrom(" + from + ", " + to + ")");
         StateNode<State> fromStateNode = getStateNode(from);
-        fromStateNode.next = to;
+        fromStateNode.tmpNext = to;
     }
 
     private StateNode<State> getStateNode(State state) {
-        return states.getOrDefault(state, new StateNode<>(state));
+        states.putIfAbsent(state, new StateNode<>(state));
+        return states.get(state);
     }
 }

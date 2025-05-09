@@ -1,17 +1,14 @@
 package org.toadallyarmed.component.frog;
 
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import org.toadallyarmed.component.interfaces.RenderableComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
 import org.toadallyarmed.util.AnimatedSprite;
 import org.toadallyarmed.util.Renderer;
-import org.toadallyarmed.util.Sprite;
 import org.toadallyarmed.util.logger.Logger;
 
 import java.util.Map;
 
-// WARNING: This is temporary class. Its functionality should be moved to FrogRenderableComponent
+// WARNING: This is temporary class. Its functionality should be moved to FrogRenderableComponent!
 public class AnimatedFrogRenderableComponent implements RenderableComponent {
     final TransformComponent transformComponent;
     final FrogStateComponent fullStateComponent;
@@ -33,23 +30,37 @@ public class AnimatedFrogRenderableComponent implements RenderableComponent {
     }
 
     FrogState getAndUpdateState() {
-        FrogState newState = fullStateComponent.getGeneralState();
-        if (newState != prevGeneralState) {
+        if (stateElapsedTime >= getAnimationDurationForState(prevGeneralState)) {
             stateElapsedTime = 0f;
-            prevGeneralState = newState;
+            fullStateComponent.advanceState();
+            prevGeneralState = fullStateComponent.getGeneralState();
         }
-        return newState;
+        return prevGeneralState;
     }
 
     @Override
     public void render(Renderer renderer, float deltaTime) {
-        FrogState state = getAndUpdateState();
         stateElapsedTime += deltaTime;
-        AnimatedSprite animatedSprite = animations.get(prevGeneralState);
-        if (animatedSprite == null) {
-            Logger.error("AnimationSprite not supplied for state " + state);
-        } else {
+        FrogState state = getAndUpdateState();
+        AnimatedSprite animatedSprite = getAnimatedSpriteForState(state);
+        if (animatedSprite != null) {
             animatedSprite.render(renderer, transformComponent.getPosition(), stateElapsedTime);
         }
+    }
+
+    AnimatedSprite getAnimatedSpriteForState(FrogState state) {
+        AnimatedSprite animatedSprite = animations.get(state);
+        if (animatedSprite == null) {
+            Logger.error("AnimationSprite not supplied for state " + state);
+            return null;
+        } else {
+            return animatedSprite;
+        }
+    }
+
+    float getAnimationDurationForState(FrogState state) {
+        AnimatedSprite animatedSprite = getAnimatedSpriteForState(state);
+        if (animatedSprite == null) { return 0f; }
+        else return animatedSprite.getAnimationDuration();
     }
 }
