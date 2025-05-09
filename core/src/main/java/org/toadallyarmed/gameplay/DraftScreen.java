@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -11,10 +12,14 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import org.toadallyarmed.Main;
 
+import java.util.Arrays;
+
 public class DraftScreen implements Screen {
     final Main main;
     final SpriteBatch spriteBatch;
     FitViewport viewport;
+
+    float animationTimer = 0f;
 
     Texture backgroundTexture;
     Texture moneyFrogTexture, tankFrogTexture, knightFrogTexture, basicFrogTexture, wizardFrogTexture;
@@ -23,6 +28,7 @@ public class DraftScreen implements Screen {
     TextureRegion moneyFrogTextureRegion, tankFrogTextureRegion, knightFrogTextureRegion, basicFrogTextureRegion, wizardFrogTextureRegion;
     TextureRegion randomHedgehogTextureRegion;
     TextureRegion coinTextureRegion;
+    Animation<TextureRegion> basicFrogAnimation;
 
     BitmapFont pixelFont, font;
 
@@ -35,6 +41,7 @@ public class DraftScreen implements Screen {
 
         backgroundTexture = new Texture("GameScreen/background.jpg");
         setFrogTextures();
+        setFrogAnimations();
         setFonts();
     }
     private void setFrogTextures(){
@@ -56,6 +63,20 @@ public class DraftScreen implements Screen {
         randomHedgehogTextureRegion= new TextureRegion(randomHedgehogTexture, 120, 80, 24, 16);
         coinTextureRegion=new TextureRegion(coinTexture, 0, 0, 16, 16);
     }
+    private void setFrogAnimations() {
+        TextureRegion[][] tmp = TextureRegion.split(basicFrogTexture,
+            basicFrogTexture.getWidth() / 9,
+            basicFrogTexture.getHeight() / 5);
+        TextureRegion[] frames = Arrays.copyOfRange(tmp[0], 0, 8);
+        basicFrogAnimation = new Animation<>(0.04f, frames);
+    }
+    private void drawAnimations(float deltaTime) {
+        animationTimer += deltaTime;
+        TextureRegion currentFrame = basicFrogAnimation.getKeyFrame(animationTimer, true);
+        // spriteBatch.draw(currentFrame, 0, 0);
+        spriteBatch.draw(currentFrame, -0.3F, 0.1F, 1.5F, 1.5F);
+    }
+
     private void setFonts(){
         font=new BitmapFont();
         pixelFont=new BitmapFont(Gdx.files.internal("GameScreen/Fonts/font.fnt"));
@@ -85,13 +106,15 @@ public class DraftScreen implements Screen {
         float worldHeight = viewport.getWorldHeight();
         spriteBatch.draw(backgroundTexture, 0, 0, worldWidth, worldHeight);
 
-        spriteBatch.draw(moneyFrogTextureRegion,  -0.3F, 0.1F, 1.5F, 1.5F);
-        spriteBatch.draw(tankFrogTextureRegion,  -0.3F, 1.1F, 1.5F, 1.5F);
-        spriteBatch.draw(wizardFrogTextureRegion, -0.3F, 2.1F, 1.5F, 1.5F);
-        spriteBatch.draw(knightFrogTextureRegion, -0.3F, 3.1F, 1.5F, 1.5F);
-        spriteBatch.draw(basicFrogTextureRegion, -0.3F, 4.1F, 1.5F, 1.5F);
-        spriteBatch.draw(randomHedgehogTextureRegion, 1, 1.1F, 0.9F, 0.9F);
-        spriteBatch.draw(coinTextureRegion,  0.15F, 5.15F, 0.7F, 0.7F);
+        // spriteBatch.draw(moneyFrogTextureRegion,  -0.3F, 0.1F, 1.5F, 1.5F);
+        // spriteBatch.draw(tankFrogTextureRegion,  -0.3F, 1.1F, 1.5F, 1.5F);
+        // spriteBatch.draw(wizardFrogTextureRegion, -0.3F, 2.1F, 1.5F, 1.5F);
+        // spriteBatch.draw(knightFrogTextureRegion, -0.3F, 3.1F, 1.5F, 1.5F);
+        // spriteBatch.draw(basicFrogTextureRegion, -0.3F, 4.1F, 1.5F, 1.5F);
+        // spriteBatch.draw(randomHedgehogTextureRegion, 1, 1.1F, 0.9F, 0.9F);
+        // spriteBatch.draw(coinTextureRegion,  0.15F, 5.15F, 0.7F, 0.7F);
+
+        drawAnimations(delta);
 
         font.draw(spriteBatch, "jest w pyte", 1, 1);
         pixelFont.draw(spriteBatch, "Money", 1, 6);
