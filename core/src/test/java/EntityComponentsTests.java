@@ -2,6 +2,7 @@ import org.junit.Test;
 import org.toadallyarmed.component.interfaces.BaseComponentsRegistry;
 import org.toadallyarmed.component.interfaces.Component;
 import org.toadallyarmed.entity.Entity;
+import org.toadallyarmed.entity.EntityType;
 import org.toadallyarmed.exception.NotBaseComponentException;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public class EntityComponentsTests {
     @Test
     public void testNotBaseComponent() {
         BaseComponentsRegistry.BASE_COMPONENTS = List.of();
-        Entity e = new Entity();
+        Entity e = new Entity.EntityBuilder(EntityType.OTHER).build();
         TestComponent1 c = new TestComponent1();
         assertThrows(NotBaseComponentException.class ,() -> e.put(TestComponent1.class, c));
     }
@@ -27,7 +28,7 @@ public class EntityComponentsTests {
     @Test
     public void testSimpleCase() {
         BaseComponentsRegistry.BASE_COMPONENTS = List.of(Component.class);
-        Entity e = new Entity() {};
+        Entity e = new Entity.EntityBuilder(EntityType.OTHER).build();
         Component c = new Component() {};
         e.put(Component.class, c);
 
@@ -37,7 +38,7 @@ public class EntityComponentsTests {
     @Test
     public void testMoreAdvancedCase() {
         BaseComponentsRegistry.BASE_COMPONENTS = List.of(TestComponent1.class, TestComponent2.class);
-        Entity e = new Entity() {};
+        Entity e = new Entity.EntityBuilder(EntityType.OTHER).build();
         TestComponent1 c1 = new TestComponent1();
         TestComponent2 c2 = new TestComponent2();
         e.put(TestComponent1.class, c1);
@@ -49,7 +50,7 @@ public class EntityComponentsTests {
     @Test
     public void testAdvancedCase() {
         BaseComponentsRegistry.BASE_COMPONENTS = List.of(SuperComponent.class);
-        Entity e = new Entity() {};
+        Entity e = new Entity.EntityBuilder(EntityType.OTHER).build();
         TestSuperComponent1 c1 = new TestSuperComponent1();
         TestSuperComponent2 c2 = new TestSuperComponent2();
         assertFalse(e.get(TestSuperComponent1.class).isPresent());
