@@ -14,10 +14,10 @@ import org.toadallyarmed.util.Sprite;
 import org.toadallyarmed.util.logger.Logger;
 
 public class FrogFactory implements Disposable {
-    private Texture basicFrogTexture, knightFrogTexture, moneyFrogTexture, tankFrogTexture, wizardFrogTexture;
-    private TextureRegion basicFrogTextureRegion, knightFrogTextureRegion, moneyFrogTextureRegion, tankFrogTextureRegion, wizardFrogTextureRegion;
+    private final Texture basicFrogTexture, knightFrogTexture, moneyFrogTexture, tankFrogTexture, wizardFrogTexture;
+    private final TextureRegion basicFrogTextureRegion, knightFrogTextureRegion, moneyFrogTextureRegion, tankFrogTextureRegion, wizardFrogTextureRegion;
 
-    private Sprite basicFrogSprite, knightFrogSprite, moneyFrogSprite, tankFrogSprite, wizardFrogSprite;
+    private final Sprite basicFrogSprite, knightFrogSprite, moneyFrogSprite, tankFrogSprite, wizardFrogSprite;
     private static final FrogFactory frogFactory = new FrogFactory();
     private FrogFactory() {
         Logger.trace("Initializing FrogFactory");
@@ -61,6 +61,7 @@ public class FrogFactory implements Disposable {
 
     public Entity createBasicFrog() {
         Logger.trace("Creating Frog Entity in factory");
+        Entity entity = new Entity();
         WorldTransformComponent transform = new WorldTransformComponent();
         FrogRenderableComponent renderable = new FrogRenderableComponent(transform, basicFrogSprite);
         return new Entity.EntityBuilder(EntityType.FROG)

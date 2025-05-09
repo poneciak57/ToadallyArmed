@@ -5,7 +5,7 @@ import org.lwjgl.Sys;
 import java.util.List;
 
 public class Logger {
-    static List<LoggerBackend> backends;
+    static List<LoggerBackend> backends = List.of();
     static LogLevel overallLevelFilter = LogLevel.INFO;
     static boolean initialized = false;
 
