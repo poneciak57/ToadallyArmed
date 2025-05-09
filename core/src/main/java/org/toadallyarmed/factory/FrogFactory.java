@@ -1,23 +1,33 @@
 package org.toadallyarmed.factory;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import org.toadallyarmed.component.WorldTransformComponent;
+import org.toadallyarmed.component.frog.AnimatedFrogRenderableComponent;
 import org.toadallyarmed.component.frog.FrogRenderableComponent;
+import org.toadallyarmed.component.frog.FrogState;
+import org.toadallyarmed.component.frog.FrogStateComponent;
 import org.toadallyarmed.component.interfaces.RenderableComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
 import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.entity.EntityType;
+import org.toadallyarmed.util.AnimatedSprite;
 import org.toadallyarmed.util.Sprite;
 import org.toadallyarmed.util.logger.Logger;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FrogFactory implements Disposable {
     private final Texture basicFrogTexture, knightFrogTexture, moneyFrogTexture, tankFrogTexture, wizardFrogTexture;
     private final TextureRegion basicFrogTextureRegion, knightFrogTextureRegion, moneyFrogTextureRegion, tankFrogTextureRegion, wizardFrogTextureRegion;
 
     private final Sprite basicFrogSprite, knightFrogSprite, moneyFrogSprite, tankFrogSprite, wizardFrogSprite;
+    Map<FrogState, AnimatedSprite> basicFrogAnimations;
     private static final FrogFactory frogFactory = new FrogFactory();
     private FrogFactory() {
         Logger.trace("Initializing FrogFactory");
@@ -52,6 +62,8 @@ public class FrogFactory implements Disposable {
             new Vector2( -0.3F, 0.1F),
             new Vector2(1.5F, 1.5F));
 
+        setupAnimations();
+
         Logger.debug("Initialized FrogFactory successfully");
     }
 
@@ -59,10 +71,26 @@ public class FrogFactory implements Disposable {
         return frogFactory;
     }
 
+    private void setupAnimations() {
+        TextureRegion[][] tmp = TextureRegion.split(basicFrogTexture,
+            basicFrogTexture.getWidth() / 9,
+            basicFrogTexture.getHeight() / 5);
+        TextureRegion[] frames = Arrays.copyOfRange(tmp[0], 0, 7);
+        Animation<TextureRegion> basicFrogIdleAnimation = new Animation<>(0.08f, frames);
+
+        basicFrogAnimations = new HashMap<>();
+        basicFrogAnimations.put(FrogState.IDLE, new AnimatedSprite(
+            basicFrogIdleAnimation,
+            new Vector2(-0.4f, -0.4f),
+            new Vector2(2F, 2F)
+        ));
+    }
+
     public Entity createBasicFrog() {
         Logger.trace("Creating Frog Entity in factory");
         WorldTransformComponent transform = new WorldTransformComponent();
-        FrogRenderableComponent renderable = new FrogRenderableComponent(transform, basicFrogSprite);
+        FrogStateComponent frogState = new FrogStateComponent();
+        AnimatedFrogRenderableComponent renderable = new AnimatedFrogRenderableComponent(transform, frogState, basicFrogAnimations);
         return new Entity.EntityBuilder(EntityType.FROG)
             .add(TransformComponent.class, transform)
             .add(RenderableComponent.class, renderable)

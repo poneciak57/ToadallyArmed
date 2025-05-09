@@ -41,7 +41,7 @@ public class GameplayScreen implements Screen {
         backgroundTexture = new Texture("GameScreen/background.jpg");
 
         frogFactory = FrogFactory.get();
-        Entity basicFrog = frogFactory.createMoneyFrog();
+        Entity basicFrog = frogFactory.createBasicFrog();
         basicFrog.get(TransformComponent.class).get().setPosition(new Vector2(3, 2));
         entities.add(basicFrog);
         hedgehogFactory = HedgehogFactory.get();
@@ -88,7 +88,7 @@ public class GameplayScreen implements Screen {
             if (renderableOptional.isEmpty())
                 continue;
             var renderable = renderableOptional.get();
-            renderable.render(main.renderer);
+            renderable.render(main.renderer, delta);
         }
 
         //font.draw(main.renderer.getSpriteBatch(), "jest w pyte", 1, 1);

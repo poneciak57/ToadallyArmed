@@ -31,6 +31,7 @@ public class Main extends Game {
         font = new BitmapFont();
         Logger.init(List.of(new TerminalLoggerBackend(LogLevel.TRACE)), LogLevel.TRACE);
         setScreen(new GameplayScreen(this));
+        // setScreen(new DraftScreen(this));
     }
 
     @Override

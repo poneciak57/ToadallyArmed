@@ -14,19 +14,20 @@ public class FrogStateComponent implements Component {
         generalStateMachine.setNextStateFrom(FrogState.NONEXISTENT, FrogState.NONEXISTENT);
     }
 
-    boolean getIsAttacked() {
+    public boolean getIsAttacked() {
         return isAttacked;
     }
 
-    void setIsAttacked(boolean isAttacked) {
+    public void setIsAttacked(boolean isAttacked) {
         this.isAttacked = isAttacked;
     }
 
-    FrogState getGeneralState() {
+    public FrogState getGeneralState() {
         return generalStateMachine.getCurState();
     }
 
-    void setNextGeneralState(FrogState nextState) {
+    public void setNextGeneralState(FrogState nextState) {
         generalStateMachine.setNextTmpStateFrom(getGeneralState(), nextState);
+        generalStateMachine.advanceState();
     }
 }

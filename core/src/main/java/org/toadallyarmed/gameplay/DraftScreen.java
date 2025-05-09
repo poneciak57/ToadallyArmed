@@ -8,9 +8,11 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import org.toadallyarmed.Main;
+import org.toadallyarmed.util.AnimatedSprite;
 
 import java.util.Arrays;
 
@@ -29,6 +31,7 @@ public class DraftScreen implements Screen {
     TextureRegion randomHedgehogTextureRegion;
     TextureRegion coinTextureRegion;
     Animation<TextureRegion> basicFrogAnimation;
+    AnimatedSprite basicFrogAnimationSprite;
 
     BitmapFont pixelFont, font;
 
@@ -69,12 +72,21 @@ public class DraftScreen implements Screen {
             basicFrogTexture.getHeight() / 5);
         TextureRegion[] frames = Arrays.copyOfRange(tmp[0], 0, 8);
         basicFrogAnimation = new Animation<>(0.04f, frames);
+        basicFrogAnimationSprite = new AnimatedSprite(
+            basicFrogAnimation,
+            new Vector2(-0.3F, 0.1F),
+            new Vector2(1.5F, 1.5F)
+        );
     }
     private void drawAnimations(float deltaTime) {
         animationTimer += deltaTime;
         TextureRegion currentFrame = basicFrogAnimation.getKeyFrame(animationTimer, true);
         // spriteBatch.draw(currentFrame, 0, 0);
         spriteBatch.draw(currentFrame, -0.3F, 0.1F, 1.5F, 1.5F);
+        basicFrogAnimationSprite.render(
+            main.renderer,
+            new Vector2(0, 1),
+            animationTimer);
     }
 
     private void setFonts(){
