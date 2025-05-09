@@ -47,8 +47,16 @@ public class SystemsManager {
                 tickThread.interrupt();
             }
         }
-
-        dispose();
+        Logger.trace("Shutting down executor");
+        executor.shutdown();
+        try {
+            if (!executor.awaitTermination(5, TimeUnit.SECONDS)) {
+                executor.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            executor.shutdownNow();
+        }
+        Logger.trace("SystemsManager stopped successfully");
     }
 
     public void pause() {
@@ -92,20 +100,6 @@ public class SystemsManager {
         for (System system : systems) {
             executor.submit(() -> system.tick(delta, this.entities));
         }
-    }
-
-    /// Stops all tasks that are being currently executed with timeout of 5 seconds
-    public void dispose() {
-        Logger.trace("Disposing SystemsManager");
-        executor.shutdown();
-        try {
-            if (!executor.awaitTermination(5, TimeUnit.SECONDS)) {
-                executor.shutdownNow();
-            }
-        } catch (InterruptedException e) {
-            executor.shutdownNow();
-        }
-        Logger.debug("Disposed SystemsManager successfully");
     }
 
     public static class Builder {
