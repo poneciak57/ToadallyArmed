@@ -30,7 +30,7 @@ public class Main extends Game {
         renderer = new Renderer();
         font = new BitmapFont();
         Logger.init(List.of(new TerminalLoggerBackend(LogLevel.TRACE)), LogLevel.TRACE);
-        setScreen(new DraftScreen(this));
+        setScreen(new GameplayScreen(this));
     }
 
     @Override

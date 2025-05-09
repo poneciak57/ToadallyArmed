@@ -1,15 +1,15 @@
-package org.toadallyarmed.component.frog;
+package org.toadallyarmed.component.hedgehog;
 
 import org.toadallyarmed.component.interfaces.RenderableComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
 import org.toadallyarmed.util.Renderer;
 import org.toadallyarmed.util.Sprite;
 
-public class FrogRenderableComponent implements RenderableComponent {
+public class HedgehogRenderableComponent implements RenderableComponent {
     final TransformComponent transform;
     final Sprite sprite;
 
-    public FrogRenderableComponent(TransformComponent transform, Sprite sprite) {
+    public HedgehogRenderableComponent(TransformComponent transform, Sprite sprite) {
         this.transform = transform;
         this.sprite = sprite;
     }

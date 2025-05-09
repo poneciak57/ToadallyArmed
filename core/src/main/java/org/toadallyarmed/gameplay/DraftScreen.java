@@ -51,7 +51,7 @@ public class DraftScreen implements Screen {
         knightFrogTexture = new Texture("GameScreen/Frogs/knightFrog.png");
         basicFrogTexture= new Texture("GameScreen/Frogs/basicFrog.png");
         wizardFrogTexture = new Texture("GameScreen/Frogs/wizardFrog.png");
-        randomHedgehogTexture= new Texture("GameScreen/Hedgehogs/purpleHedgehog.png");
+        randomHedgehogTexture= new Texture("GameScreen/Hedgehogs/basicHedgehog.png");
         coinTexture = new Texture("GameScreen/Coins/coin.png");
 
         //set right frames
