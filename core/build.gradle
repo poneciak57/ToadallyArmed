@@ -1,5 +1,6 @@
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 eclipse.project.name = appName + '-core'
+ext.gdxVersion = '1.12.0'
 
 dependencies {
   api "com.badlogicgames.gdx:gdx:$gdxVersion"
@@ -7,4 +8,10 @@ dependencies {
   if(enableGraalNative == 'true') {
     implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"
   }
+
+  implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+  implementation "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"  // dla desktopa
+  implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"  // dodaj zależność dla FreeType
+
+
 }
