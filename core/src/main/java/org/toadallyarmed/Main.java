@@ -29,7 +29,7 @@ public class Main extends Game {
     public void create() {
         renderer = new Renderer();
         font = new BitmapFont();
-        Logger.init(List.of(new TerminalLoggerBackend(LogLevel.DEBUG)), LogLevel.DEBUG);
+        Logger.init(List.of(new TerminalLoggerBackend(LogLevel.TRACE)), LogLevel.TRACE);
         setScreen(new GameplayScreen(this));
     }
 
