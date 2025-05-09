@@ -2,7 +2,6 @@ import org.junit.Test;
 import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.system.System;
 import org.toadallyarmed.system.SystemsManager;
-
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static org.junit.Assert.assertEquals;
@@ -12,11 +11,6 @@ public class SystemsManagerTests {
         public int counter = 0;
 
         @Override
-        public int getTickRate() {
-            return 5;
-        }
-
-        @Override
         public void tick(float deltaTime, ConcurrentLinkedQueue<Entity> __) {
             counter++;
         }
@@ -24,10 +18,6 @@ public class SystemsManagerTests {
 
     public static class SleepingSystem implements System {
         public int counter = 0;
-        @Override
-        public int getTickRate() {
-            return 1;
-        }
 
         @Override
         public void tick(float deltaTime, ConcurrentLinkedQueue<Entity> __) {
@@ -50,14 +40,16 @@ public class SystemsManagerTests {
 
     @Test
     public void testCorrectTickRatesWithSimpleTickRate() throws InterruptedException {
-        SystemsManager systemsManager = new SystemsManager(null);
         TestBehaviorSystem testBehaviorSystem = new TestBehaviorSystem();
         TestRenderSystem testRenderSystem = new TestRenderSystem();
-        systemsManager.addSystem(testBehaviorSystem);
-        systemsManager.addSystem(testRenderSystem);
+        SystemsManager systemsManager = new SystemsManager.Builder()
+            .addThrottledSystem(5, testBehaviorSystem)
+            .addSystem(testRenderSystem)
+            .tickRate(60)
+            .build(null);
 
         // 60hz, 2 seconds
-        simulate(1f / 60f, 2f, systemsManager);
+        simulate(2, systemsManager);
 
         assertEquals(2 * 5, testBehaviorSystem.counter, 1);
         assertEquals(2 * 60, testRenderSystem.counter, 1);
@@ -65,14 +57,16 @@ public class SystemsManagerTests {
 
     @Test
     public void testCorrectTickRatesWithHighTickRate() throws InterruptedException {
-        SystemsManager systemsManager = new SystemsManager(null);
         TestBehaviorSystem testBehaviorSystem = new TestBehaviorSystem();
         TestRenderSystem testRenderSystem = new TestRenderSystem();
-        systemsManager.addSystem(testBehaviorSystem);
-        systemsManager.addSystem(testRenderSystem);
+        SystemsManager systemsManager = new SystemsManager.Builder()
+            .addThrottledSystem(5, testBehaviorSystem)
+            .addThrottledSystem(60, testRenderSystem)
+            .tickRate(120)
+            .build(null);
 
         // 120hz, 3 seconds
-        simulate(1f / 120f, 3f, systemsManager);
+        simulate(3, systemsManager);
 
         assertEquals(3 * 5, testBehaviorSystem.counter, 1);
         assertEquals(3 * 60, testRenderSystem.counter, 1);
@@ -80,31 +74,56 @@ public class SystemsManagerTests {
 
     @Test
     public void testCorrectTickRatesWithSleeping() throws InterruptedException {
-        SystemsManager systemsManager = new SystemsManager(null);
         TestBehaviorSystem testBehaviorSystem = new TestBehaviorSystem();
         SleepingSystem sleepingSystem = new SleepingSystem();
         TestRenderSystem testRenderSystem = new TestRenderSystem();
-        systemsManager.addSystem(testBehaviorSystem);
-        systemsManager.addSystem(testRenderSystem);
-        systemsManager.addSystem(sleepingSystem);
+        SystemsManager systemsManager = new SystemsManager.Builder()
+            .addThrottledSystem(5, testBehaviorSystem)
+            .addThrottledSystem(1, sleepingSystem)
+            .addThrottledSystem(60, testRenderSystem)
+            .tickRate(120)
+            .build(null);
 
         // 120hz, 3 seconds
-        simulate(1f / 120f, 3f, systemsManager);
+        simulate(3, systemsManager);
 
         assertEquals(3 * 5, testBehaviorSystem.counter, 1);
         assertEquals(3 * 60, testRenderSystem.counter, 1);
         assertEquals(3, sleepingSystem.counter, 1);
     }
 
-    void simulate(float tickRate, float simulatedTime, SystemsManager systemsManager) throws InterruptedException {
-        float elapsed = 0f;
+    @Test
+    public void testPause() throws InterruptedException {
+        TestBehaviorSystem testBehaviorSystem = new TestBehaviorSystem();
+        SleepingSystem sleepingSystem = new SleepingSystem();
+        TestRenderSystem testRenderSystem = new TestRenderSystem();
+        SystemsManager systemsManager = new SystemsManager.Builder()
+            .addThrottledSystem(5, testBehaviorSystem)
+            .addThrottledSystem(1, sleepingSystem)
+            .addThrottledSystem(60, testRenderSystem)
+            .tickRate(120)
+            .build(null);
 
-        while (elapsed < simulatedTime) {
-            systemsManager.tick(tickRate);
-            Thread.sleep((long) (tickRate * 1000));
-            elapsed += tickRate;
-        }
-        systemsManager.dispose();
+        systemsManager.start();
+        Thread.sleep(2 * 1000);
+        systemsManager.pause();
 
+        Thread.sleep(2 * 1000);
+
+        systemsManager.resume();
+        Thread.sleep(1000);
+        systemsManager.stop();
+
+        assertEquals(3 * 5, testBehaviorSystem.counter, 1);
+        assertEquals(3 * 60, testRenderSystem.counter, 1);
+        assertEquals(3, sleepingSystem.counter, 1);
     }
+
+    void simulate(long simulatedTime, SystemsManager systemsManager) throws InterruptedException {
+        systemsManager.start();
+        Thread.sleep(simulatedTime * 1000);
+        systemsManager.stop();
+    }
+
+
 }
