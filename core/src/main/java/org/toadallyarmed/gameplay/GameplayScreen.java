@@ -11,6 +11,7 @@ import org.toadallyarmed.component.interfaces.RenderableComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
 import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.factory.FrogFactory;
+import org.toadallyarmed.util.logger.Logger;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -24,6 +25,7 @@ public class GameplayScreen implements Screen {
     ConcurrentLinkedQueue<Entity> entities = new ConcurrentLinkedQueue<>();
 
     public GameplayScreen(Main main) {
+        Logger.info("creating a new gameplay screen");
         this.main = main;
 
         viewport = new FitViewport(10.66F, 6);
@@ -35,6 +37,7 @@ public class GameplayScreen implements Screen {
         Entity basicFrog = frogFactory.createBasicFrog();
         basicFrog.get(TransformComponent.class).get().setPosition(new Vector2(3, 2));
         entities.add(basicFrog);
+        Logger.info("created a new gameplay screen successfully");
     }
 
     @Override
@@ -90,6 +93,7 @@ public class GameplayScreen implements Screen {
 
     @Override
     public void dispose() {
+        Logger.info("disposing a gameplay screen");
         // Destroy screen's assets here.
         backgroundTexture.dispose();
         frogFactory.dispose();

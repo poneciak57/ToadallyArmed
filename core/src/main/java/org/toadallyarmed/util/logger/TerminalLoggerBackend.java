@@ -6,6 +6,7 @@ import java.util.Date;
 public class TerminalLoggerBackend implements LoggerBackend {
     // ANSI escape codes for colors
     private static final String RESET = "\u001B[0m";
+    private static final String GRAY = "\u001B[90m";
     private static final String RED = "\u001B[31m";
     private static final String YELLOW = "\u001B[33m";
     private static final String BLUE = "\u001B[34m";
@@ -24,6 +25,7 @@ public class TerminalLoggerBackend implements LoggerBackend {
         String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
         String threadName = Thread.currentThread().getName();
         String color = switch (level) {
+            case TRACE -> GRAY;
             case DEBUG -> CYAN;
             case INFO -> BLUE;
             case WARN -> YELLOW;
@@ -36,5 +38,6 @@ public class TerminalLoggerBackend implements LoggerBackend {
         );
 
         System.out.println(formatted);
+        System.out.flush();
     }
 }

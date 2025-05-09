@@ -1,6 +1,7 @@
 package org.toadallyarmed.system;
 
 import org.toadallyarmed.entity.Entity;
+import org.toadallyarmed.util.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +23,11 @@ public class SystemsManager {
         this.entities = entities;
         this.systems = systems;
         this.tickRate = tickRate;
+        Logger.debug("Initialized SystemsManager successfully");
     }
 
     public void start() {
+        Logger.debug("Starting SystemsManager");
         if (running) return;
         running = true;
 
@@ -33,6 +36,7 @@ public class SystemsManager {
     }
 
     public void stop() {
+        Logger.debug("Stopping SystemsManager");
         running = false;
         resume(); // Unpark if paused
 
@@ -48,10 +52,13 @@ public class SystemsManager {
     }
 
     public void pause() {
+        Logger.debug("Pausing SystemsManager");
         paused = true;
     }
 
     public void resume() {
+        Logger.debug("Resuming SystemsManager");
+        if (!paused) return;
         paused = false;
         LockSupport.unpark(tickThread);
     }
@@ -89,6 +96,7 @@ public class SystemsManager {
 
     /// Stops all tasks that are being currently executed with timeout of 5 seconds
     public void dispose() {
+        Logger.trace("Disposing SystemsManager");
         executor.shutdown();
         try {
             if (!executor.awaitTermination(5, TimeUnit.SECONDS)) {
@@ -97,6 +105,7 @@ public class SystemsManager {
         } catch (InterruptedException e) {
             executor.shutdownNow();
         }
+        Logger.debug("Disposed SystemsManager successfully");
     }
 
     public static class Builder {

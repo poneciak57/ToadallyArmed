@@ -23,6 +23,10 @@ public class Logger {
         }
     }
 
+    public static void trace(String msg) {
+        log(LogLevel.TRACE, msg);
+    }
+
     public static void debug(String msg) {
         log(LogLevel.DEBUG, msg);
     }

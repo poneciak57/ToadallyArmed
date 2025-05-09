@@ -10,6 +10,7 @@ import org.toadallyarmed.component.interfaces.RenderableComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
 import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.util.Sprite;
+import org.toadallyarmed.util.logger.Logger;
 
 public class FrogFactory implements Disposable {
     private Texture basicFrogTexture;
@@ -18,12 +19,14 @@ public class FrogFactory implements Disposable {
     private Sprite basicFrogSprite;
     private static final FrogFactory frogFactory = new FrogFactory();
     private FrogFactory() {
+        Logger.trace("Initializing FrogFactory");
         basicFrogTexture= new Texture("GameScreen/Frogs/basicFrog.png");
         basicFrogTextureRegion = new TextureRegion(basicFrogTexture, 0, 0, 44, 33);
         basicFrogSprite = new Sprite(
             basicFrogTextureRegion,
             new Vector2( -0.3F, 0.1F),
             new Vector2(1.5F, 1.5F));
+        Logger.debug("Initialized FrogFactory successfully");
     }
 
     public static FrogFactory get() {
@@ -31,6 +34,7 @@ public class FrogFactory implements Disposable {
     }
 
     public Entity createBasicFrog() {
+        Logger.trace("Creating Frog Entity in factory");
         Entity entity = new Entity();
         WorldTransformComponent transform = new WorldTransformComponent();
         FrogRenderableComponent renderable = new FrogRenderableComponent(transform, basicFrogSprite);
@@ -41,6 +45,7 @@ public class FrogFactory implements Disposable {
 
     @Override
     public void dispose() {
+        Logger.trace("Disposing FrogFactory");
         basicFrogTexture.dispose();
     }
 }

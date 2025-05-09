@@ -1,6 +1,7 @@
 package org.toadallyarmed.util.logger;
 
 public enum LogLevel {
+    TRACE(-1),
     DEBUG(0),
     INFO(1),
     WARN(2),
