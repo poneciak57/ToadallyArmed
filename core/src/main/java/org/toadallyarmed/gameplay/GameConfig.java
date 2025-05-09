@@ -6,6 +6,15 @@ public record GameConfig(
     int GlobalIncomeTickRate,
 
     // -- Values -- //
+    FrogConfig knightFrog,
+    FrogConfig moneyFrog,
+    FrogConfig tankFrog,
+    FrogConfig wizardFrog,
+
+    HedgehogConfig basicHedgehog,
+    HedgehogConfig fastHedgehog,
+    HedgehogConfig strongHedgehog,
+    HedgehogConfig healthyHedgehog,
 
     // how much player will earn periodically
     int GlobalIncomeDelta
