@@ -61,7 +61,6 @@ public class FrogFactory implements Disposable {
 
     public Entity createBasicFrog() {
         Logger.trace("Creating Frog Entity in factory");
-        Entity entity = new Entity();
         WorldTransformComponent transform = new WorldTransformComponent();
         FrogRenderableComponent renderable = new FrogRenderableComponent(transform, basicFrogSprite);
         return new Entity.EntityBuilder(EntityType.FROG)
