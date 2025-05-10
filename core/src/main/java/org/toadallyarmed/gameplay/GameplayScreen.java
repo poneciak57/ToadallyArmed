@@ -19,6 +19,7 @@ import org.toadallyarmed.factory.FrogFactory;
 import org.toadallyarmed.factory.HedgehogFactory;
 import org.toadallyarmed.util.logger.Logger;
 
+import java.time.Instant;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class GameplayScreen implements Screen {
@@ -106,6 +107,7 @@ public class GameplayScreen implements Screen {
     @Override
     public void render(float delta) {
         // Draw your screen here. "delta" is the time since last render in seconds.
+        final float currentTimestamp = Instant.now().toEpochMilli();
 
         stateSwitchComponentTimer += delta;
         if (stateSwitchComponentTimer >= 2f) {
@@ -135,7 +137,7 @@ public class GameplayScreen implements Screen {
             if (renderableOptional.isEmpty())
                 continue;
             var renderable = renderableOptional.get();
-            renderable.render(main.renderer, delta);
+            renderable.render(main.renderer, delta, currentTimestamp);
         }
 
         pixelFont.draw(main.renderer.getSpriteBatch(), Integer.toString(money), 1, 6);

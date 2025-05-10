@@ -15,7 +15,7 @@ public class HedgehogRenderableComponent implements RenderableComponent {
     }
 
     @Override
-    public void render(Renderer renderer, float deltaTime) {
-        sprite.render(renderer, transform.getPosition());
+    public void render(Renderer renderer, float deltaTime, float currentTimestamp) {
+        sprite.render(renderer, transform.getAdvancedPosition(currentTimestamp));
     }
 }
