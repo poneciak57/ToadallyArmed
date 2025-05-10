@@ -12,7 +12,7 @@ public class SystemsManagerFactory {
         return new SystemsManager.Builder()
             .tickRate(gameState.getGameConfig().SystemManagerTickRate())
             .addThrottledSystem(
-                gameState.getGameConfig().GlobalIncomeTickRate(),
+                gameState.getGameConfig().GlobalIncomeSystemTickRate(),
                 new GlobalIncomeSystem(
                     gameState.getWallet(),
                     gameState.getGameConfig().GlobalIncomeDelta())

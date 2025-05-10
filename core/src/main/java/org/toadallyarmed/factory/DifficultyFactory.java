@@ -6,7 +6,10 @@ import org.toadallyarmed.config.GameConfig;
 public class DifficultyFactory {
     public GameConfig defaultGameConfig() {
         return new GameConfig(
-            60, 25, 5,
+            60,
+            25,
+            5,
+            5,
             new CharacterConfig( //knight
                 300, 20, 1, 0, 75
             ), new CharacterConfig( //money
