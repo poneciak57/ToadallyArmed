@@ -3,7 +3,9 @@ package org.toadallyarmed.config;
 public record GameConfig(
     // -- TickRates -- //
     int SystemManagerTickRate,
-    int GlobalIncomeTickRate,
+    int GlobalIncomeSystemTickRate,
+    int CollisionSystemTickRate,
+    int PhysicsSystemTickRate,
     int HealthSystemTickRate,
 
     // -- Values -- //
