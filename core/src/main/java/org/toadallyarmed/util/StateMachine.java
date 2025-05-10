@@ -30,28 +30,36 @@ public class StateMachine<State extends Enum<State>> {
 
     public void advanceState() {
         Logger.trace("advanceState()");
-        final StateNode<State> curStateNode = getStateNode(curState);
-        if (curStateNode.tmpNext != null) {
-            curState = curStateNode.tmpNext;
-            curStateNode.tmpNext = null;
-        } else {
-            curState = curStateNode.next;
+        synchronized (this) {
+            final StateNode<State> curStateNode = getStateNode(curState);
+            if (curStateNode.tmpNext != null) {
+                curState = curStateNode.tmpNext;
+                curStateNode.tmpNext = null;
+            } else {
+                curState = curStateNode.next;
+            }
         }
     }
 
     public void setNextStateFrom(State from, State to) {
-        StateNode<State> fromStateNode = getStateNode(from);
-        fromStateNode.next = to;
+        synchronized (this) {
+            StateNode<State> fromStateNode = getStateNode(from);
+            fromStateNode.next = to;
+        }
     }
 
     public void setNextTmpStateFrom(State from, State to) {
         Logger.trace("setNextTmpStateFrom(" + from + ", " + to + ")");
-        StateNode<State> fromStateNode = getStateNode(from);
-        fromStateNode.tmpNext = to;
+        synchronized (this) {
+            StateNode<State> fromStateNode = getStateNode(from);
+            fromStateNode.tmpNext = to;
+        }
     }
 
     private StateNode<State> getStateNode(State state) {
-        states.putIfAbsent(state, new StateNode<>(state));
-        return states.get(state);
+        synchronized (this) {
+            states.putIfAbsent(state, new StateNode<>(state));
+            return states.get(state);
+        }
     }
 }

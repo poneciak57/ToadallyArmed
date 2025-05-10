@@ -5,7 +5,7 @@ import org.toadallyarmed.util.StateMachine;
 
 public class FrogStateComponent implements StateComponent {
     final StateMachine<FrogState> generalStateMachine = new StateMachine<>(FrogState.IDLE);
-    boolean isAttacked;
+    volatile boolean isAttacked;
 
     public FrogStateComponent() {
         generalStateMachine.setNextStateFrom(FrogState.IDLE, FrogState.IDLE);
