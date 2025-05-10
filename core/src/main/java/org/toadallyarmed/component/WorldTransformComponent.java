@@ -25,6 +25,7 @@ public class WorldTransformComponent implements TransformComponent {
         this.velocity.set(velocity);
     }
 
+    @Override
     public Vector2 getAdvancedPosition(float deltaTime) {
         return getPosition().add(getVelocity().scl(deltaTime));
     }

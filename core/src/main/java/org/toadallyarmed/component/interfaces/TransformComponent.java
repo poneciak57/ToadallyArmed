@@ -6,4 +6,6 @@ public interface TransformComponent extends Component {
     Vector2 getPosition();
 
     void setPosition(Vector2 position);
+
+    Vector2 getAdvancedPosition(float deltaTime);
 }
