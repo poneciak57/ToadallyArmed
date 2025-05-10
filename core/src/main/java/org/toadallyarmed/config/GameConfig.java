@@ -5,6 +5,7 @@ public record GameConfig(
     int SystemManagerTickRate,
     int GlobalIncomeSystemTickRate,
     int CollisionSystemTickRate,
+    int PhysicsSystemTickRate,
     int HealthSystemTickRate,
 
     // -- Values -- //

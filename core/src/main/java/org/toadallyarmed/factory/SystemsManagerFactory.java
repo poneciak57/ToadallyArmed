@@ -1,10 +1,7 @@
 package org.toadallyarmed.factory;
 
 import org.toadallyarmed.gameplay.GlobalGameState;
-import org.toadallyarmed.system.CollisionSystem;
-import org.toadallyarmed.system.GlobalIncomeSystem;
-import org.toadallyarmed.system.HealthSystem;
-import org.toadallyarmed.system.SystemsManager;
+import org.toadallyarmed.system.*;
 
 public class SystemsManagerFactory {
 
@@ -24,6 +21,10 @@ public class SystemsManagerFactory {
             .addThrottledSystem(
                 gameState.getGameConfig().CollisionSystemTickRate(),
                 new CollisionSystem()
+            )
+            .addThrottledSystem(
+                gameState.getGameConfig().PhysicsSystemTickRate(),
+                new PhysicsSystem()
             )
             .build(gameState.getEntities());
     }
