@@ -17,7 +17,7 @@ public class SystemsManagerFactory {
                     gameState.getGameConfig().GlobalIncomeDelta())
             )
             .addThrottledSystem(
-                gameState.getGameConfig().HealthTickRate(),
+                gameState.getGameConfig().HealthSystemTickRate(),
                 new HealthSystem()
             )
             .build(gameState.getEntities());
