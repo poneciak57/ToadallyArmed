@@ -30,7 +30,6 @@ public class GameplayScreen implements Screen {
     FrogFactory frogFactory;
     HedgehogFactory hedgehogFactory;
     ConcurrentLinkedQueue<Entity> entities = new ConcurrentLinkedQueue<>();
-    Entity basicFrog;
 
     BitmapFont pixelFont, font;
     Integer money=100;
@@ -45,9 +44,27 @@ public class GameplayScreen implements Screen {
         backgroundTexture = new Texture("GameScreen/background.jpg");
 
         frogFactory = FrogFactory.get();
-        basicFrog = frogFactory.createBasicFrog();
-        basicFrog.get(TransformComponent.class).get().setPosition(new Vector2(0, 0), 0);
+        // Entity basicFrog  = frogFactory.createBasicFrog();
+        // Entity knightFrog = frogFactory.createBasicFrog();
+        // Entity moneyFrog  = frogFactory.createBasicFrog();
+        // Entity tankFrog   = frogFactory.createBasicFrog();
+        // Entity wizardFrog = frogFactory.createBasicFrog();
+        Entity basicFrog  = frogFactory.createBasicFrog();
+        Entity knightFrog = frogFactory.createKnightFrog();
+        Entity moneyFrog  = frogFactory.createMoneyFrog();
+        Entity tankFrog   = frogFactory.createTankFrog();
+        Entity wizardFrog = frogFactory.createWizardFrog();
+        basicFrog   .get(TransformComponent.class).get().setPosition(new Vector2(0, 0), 0);
+        knightFrog  .get(TransformComponent.class).get().setPosition(new Vector2(0, 1), 0);
+        moneyFrog   .get(TransformComponent.class).get().setPosition(new Vector2(0, 2), 0);
+        tankFrog    .get(TransformComponent.class).get().setPosition(new Vector2(0, 3), 0);
+        wizardFrog  .get(TransformComponent.class).get().setPosition(new Vector2(0, 4), 0);
         entities.add(basicFrog);
+        entities.add(knightFrog);
+        entities.add(moneyFrog);
+        entities.add(tankFrog);
+        entities.add(wizardFrog);
+
         hedgehogFactory = HedgehogFactory.get();
         Entity basicHedgehog = hedgehogFactory.createFastHedgehog();
         basicHedgehog.get(TransformComponent.class).get().setPosition(new Vector2(10, 1), 0);
@@ -74,28 +91,35 @@ public class GameplayScreen implements Screen {
         // Prepare your screen here.
     }
 
-    float stateSwitchTimer = 0f;
     int frogStateID = 0;
-    void updateBasicFrogState(float deltaTime) {
-        FrogStateComponent frogStateComponent = (FrogStateComponent) basicFrog.get(StateComponent.class).get();
-        stateSwitchTimer += deltaTime;
-        if (stateSwitchTimer >= 2f) {
-            stateSwitchTimer = 0f;
-            frogStateID = (frogStateID + 1) % 3;
-            switch(frogStateID) {
-                case 0: frogStateComponent.setNextGeneralState(FrogState.IDLE); break;
-                case 1: frogStateComponent.setNextGeneralState(FrogState.ACTION); break;
-                case 2: frogStateComponent.setNextGeneralState(FrogState.DYING); break;
-                default: break;
-            }
+    void testFrogStateComponentChange(FrogStateComponent frogStateComponent) {
+        frogStateID = (frogStateID + 1) % 3;
+        switch(frogStateID) {
+            case 0: frogStateComponent.setNextGeneralState(FrogState.IDLE); break;
+            case 1: frogStateComponent.setNextGeneralState(FrogState.ACTION); break;
+            case 2: frogStateComponent.setNextGeneralState(FrogState.DYING); break;
+            default: break;
         }
     }
 
+    float stateSwitchComponentTimer = 0f;
     @Override
     public void render(float delta) {
         // Draw your screen here. "delta" is the time since last render in seconds.
 
-        updateBasicFrogState(delta);
+        stateSwitchComponentTimer += delta;
+        if (stateSwitchComponentTimer >= 2f) {
+            stateSwitchComponentTimer = 0f;
+            for (Entity entity : entities) {
+                var stateComponentOptional = entity.get(StateComponent.class);
+                if (stateComponentOptional.isEmpty())
+                    continue;
+                var stateComponent = stateComponentOptional.get();
+                if (!(stateComponent instanceof FrogStateComponent frogStateComponent))
+                    continue;
+                testFrogStateComponentChange(frogStateComponent);
+            }
+        }
 
         ScreenUtils.clear(Color.BLACK);
         viewport.apply();
@@ -114,7 +138,6 @@ public class GameplayScreen implements Screen {
             renderable.render(main.renderer, delta);
         }
 
-        //font.draw(main.renderer.getSpriteBatch(), "jest w pyte", 1, 1);
         pixelFont.draw(main.renderer.getSpriteBatch(), Integer.toString(money), 1, 6);
 
         main.renderer.getSpriteBatch().end();
