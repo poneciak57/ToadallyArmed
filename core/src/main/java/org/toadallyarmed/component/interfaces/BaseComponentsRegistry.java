@@ -10,6 +10,7 @@ public class BaseComponentsRegistry {
         BehaviourComponent.class,
         RenderableComponent.class,
         TransformComponent.class,
-        HealthComponent.class
+        HealthComponent.class,
+        ColliderComponent.class
     );
 }
