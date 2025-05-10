@@ -24,7 +24,7 @@ public class CollisionSystem implements System{
                 if (otherColliderComponent == null || otherTransformComponent == null) continue;
                 ConvexShape otherConvex = otherColliderComponent.getConvexShape(otherTransformComponent.getPosition());
                 if (GJK.intersects(convex, otherConvex))
-                    actionComponent.collide(otherEntity);
+                    actionComponent.collide(deltaTime, otherEntity);
             }
         }
     }
