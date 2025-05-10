@@ -22,6 +22,10 @@ public class FrogStateComponent implements StateComponent {
         this.isAttacked = isAttacked;
     }
 
+    public StateMachine<FrogState> getGeneralStateMachine() {
+        return generalStateMachine;
+    }
+
     public FrogState getGeneralState() {
         return generalStateMachine.getCurState();
     }

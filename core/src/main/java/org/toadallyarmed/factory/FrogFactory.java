@@ -16,6 +16,7 @@ import org.toadallyarmed.component.interfaces.TransformComponent;
 import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.entity.EntityType;
 import org.toadallyarmed.util.rendering.AnimatedSprite;
+import org.toadallyarmed.util.rendering.AnimatedStateSprite;
 import org.toadallyarmed.util.rendering.Sprite;
 import org.toadallyarmed.util.logger.Logger;
 
@@ -28,7 +29,7 @@ public class FrogFactory implements Disposable {
     private final TextureRegion basicFrogTextureRegion, knightFrogTextureRegion, moneyFrogTextureRegion, tankFrogTextureRegion, wizardFrogTextureRegion;
 
     private final Sprite basicFrogSprite, knightFrogSprite, moneyFrogSprite, tankFrogSprite, wizardFrogSprite;
-    Map<FrogState, AnimatedSprite> basicFrogAnimations;
+    AnimatedStateSprite<FrogState> basicFrogAnimatedStateSprite;
     private static final FrogFactory frogFactory = new FrogFactory();
     private FrogFactory() {
         Logger.trace("Initializing FrogFactory");
@@ -77,7 +78,7 @@ public class FrogFactory implements Disposable {
             basicFrogTexture.getWidth() / 9,
             basicFrogTexture.getHeight() / 5);
 
-        basicFrogAnimations = new HashMap<>();
+        Map<FrogState, AnimatedSprite> basicFrogAnimations = new HashMap<>();
 
         TextureRegion[] frames = Arrays.copyOfRange(tmp[0], 0, 7);
         Animation<TextureRegion> animation = new Animation<>(0.08f, frames);
@@ -104,13 +105,19 @@ public class FrogFactory implements Disposable {
         ));
 
         basicFrogAnimations.put(FrogState.NONEXISTENT, AnimatedSprite.empty());
+
+        basicFrogAnimatedStateSprite = new AnimatedStateSprite<>(basicFrogAnimations);
     }
 
     public Entity createBasicFrog() {
         Logger.trace("Creating Frog Entity in factory");
         WorldTransformComponent transform = new WorldTransformComponent();
         FrogStateComponent frogState = new FrogStateComponent();
-        AnimatedFrogRenderableComponent renderable = new AnimatedFrogRenderableComponent(transform, frogState, basicFrogAnimations);
+        AnimatedFrogRenderableComponent renderable =
+            new AnimatedFrogRenderableComponent(
+                transform,
+                frogState,
+                basicFrogAnimatedStateSprite);
         return new Entity.EntityBuilder(EntityType.FROG)
             .add(TransformComponent.class, transform)
             .add(StateComponent.class, frogState)
