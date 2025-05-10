@@ -46,11 +46,11 @@ public class GameplayScreen implements Screen {
 
         frogFactory = FrogFactory.get();
         basicFrog = frogFactory.createBasicFrog();
-        basicFrog.get(TransformComponent.class).get().setPosition(new Vector2(0, 0));
+        basicFrog.get(TransformComponent.class).get().setPosition(new Vector2(0, 0), 0);
         entities.add(basicFrog);
         hedgehogFactory = HedgehogFactory.get();
         Entity basicHedgehog = hedgehogFactory.createFastHedgehog();
-        basicHedgehog.get(TransformComponent.class).get().setPosition(new Vector2(10, 1));
+        basicHedgehog.get(TransformComponent.class).get().setPosition(new Vector2(10, 1), 0);
         entities.add(basicHedgehog);
 
         setFonts();
