@@ -29,7 +29,6 @@ public class GameplayScreen implements Screen {
 
     FrogFactory frogFactory;
     HedgehogFactory hedgehogFactory;
-    CoinFactory coinFactory;
     ConcurrentLinkedQueue<Entity> entities = new ConcurrentLinkedQueue<>();
     Entity basicFrog;
 
@@ -53,16 +52,6 @@ public class GameplayScreen implements Screen {
         Entity basicHedgehog = hedgehogFactory.createFastHedgehog();
         basicHedgehog.get(TransformComponent.class).get().setPosition(new Vector2(10, 1));
         entities.add(basicHedgehog);
-
-        coinFactory = CoinFactory.get();
-        Entity coin=coinFactory.createSpecialCoin();
-        coin.get(TransformComponent.class).get().setPosition(new Vector2(0, 5));
-        entities.add(coin);
-
-        coinFactory = CoinFactory.get();
-        coin=coinFactory.createBasicCoin();
-        coin.get(TransformComponent.class).get().setPosition(new Vector2(0, 1));
-        entities.add(coin);
 
         setFonts();
 
