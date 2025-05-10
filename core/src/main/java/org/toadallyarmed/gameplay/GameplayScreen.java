@@ -11,6 +11,8 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import org.toadallyarmed.Main;
 import org.toadallyarmed.component.frog.FrogState;
 import org.toadallyarmed.component.frog.FrogStateComponent;
+import org.toadallyarmed.component.hedgehog.HedgehogState;
+import org.toadallyarmed.component.hedgehog.HedgehogStateComponent;
 import org.toadallyarmed.component.interfaces.StateComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
 import org.toadallyarmed.entity.Entity;
@@ -44,11 +46,6 @@ public class GameplayScreen implements Screen {
         backgroundTexture = new Texture("GameScreen/background.jpg");
 
         frogFactory = FrogFactory.get();
-        // Entity basicFrog  = frogFactory.createBasicFrog();
-        // Entity knightFrog = frogFactory.createBasicFrog();
-        // Entity moneyFrog  = frogFactory.createBasicFrog();
-        // Entity tankFrog   = frogFactory.createBasicFrog();
-        // Entity wizardFrog = frogFactory.createBasicFrog();
         Entity basicFrog  = frogFactory.createBasicFrog();
         Entity knightFrog = frogFactory.createKnightFrog();
         Entity moneyFrog  = frogFactory.createMoneyFrog();
@@ -66,9 +63,18 @@ public class GameplayScreen implements Screen {
         entities.add(wizardFrog);
 
         hedgehogFactory = HedgehogFactory.get();
-        Entity basicHedgehog = hedgehogFactory.createFastHedgehog();
-        basicHedgehog.get(TransformComponent.class).get().setPosition(new Vector2(10, 1), 0);
+        Entity basicHedgehog = hedgehogFactory.createBasicHedgehog();
+        Entity fastHedgehog = hedgehogFactory.createFastHedgehog();
+        Entity strongHedgehog = hedgehogFactory.createStrongHedgehog();
+        Entity healthyHedgehog = hedgehogFactory.createHealthyHedgehog();
+        basicHedgehog.get(TransformComponent.class).get().setPosition(new Vector2(9, 1), 0);
+        fastHedgehog.get(TransformComponent.class).get().setPosition(new Vector2(9, 2), 0);
+        strongHedgehog.get(TransformComponent.class).get().setPosition(new Vector2(9, 3), 0);
+        healthyHedgehog.get(TransformComponent.class).get().setPosition(new Vector2(9, 4), 0);
         entities.add(basicHedgehog);
+        entities.add(fastHedgehog);
+        entities.add(strongHedgehog);
+        entities.add(healthyHedgehog);
 
         setFonts();
 
@@ -93,11 +99,21 @@ public class GameplayScreen implements Screen {
 
     int frogStateID = 0;
     void testFrogStateComponentChange(FrogStateComponent frogStateComponent) {
-        frogStateID = (frogStateID + 1) % 3;
         switch(frogStateID) {
             case 0: frogStateComponent.setNextGeneralState(FrogState.IDLE); break;
             case 1: frogStateComponent.setNextGeneralState(FrogState.ACTION); break;
             case 2: frogStateComponent.setNextGeneralState(FrogState.DYING); break;
+            default: break;
+        }
+    }
+
+    int hedgehogStateID = 0;
+    void testHedgehogStateComponentChange(HedgehogStateComponent hedgehogStateComponent) {
+        switch(hedgehogStateID) {
+            case 0: hedgehogStateComponent.setNextGeneralState(HedgehogState.IDLE); break;
+            case 1: hedgehogStateComponent.setNextGeneralState(HedgehogState.WALKING); break;
+            case 2: hedgehogStateComponent.setNextGeneralState(HedgehogState.ACTION); break;
+            case 3: hedgehogStateComponent.setNextGeneralState(HedgehogState.DYING); break;
             default: break;
         }
     }
@@ -111,14 +127,18 @@ public class GameplayScreen implements Screen {
         stateSwitchComponentTimer += delta;
         if (stateSwitchComponentTimer >= 2f) {
             stateSwitchComponentTimer = 0f;
+            frogStateID = (frogStateID + 1) % 3;
+            hedgehogStateID = (hedgehogStateID + 1) % 4;
             for (Entity entity : entities) {
                 var stateComponentOptional = entity.get(StateComponent.class);
                 if (stateComponentOptional.isEmpty())
                     continue;
                 var stateComponent = stateComponentOptional.get();
-                if (!(stateComponent instanceof FrogStateComponent frogStateComponent))
-                    continue;
-                testFrogStateComponentChange(frogStateComponent);
+                if (stateComponent instanceof FrogStateComponent frogStateComponent) {
+                    testFrogStateComponentChange(frogStateComponent);
+                } else if (stateComponent instanceof HedgehogStateComponent hedgehogStateComponent) {
+                    testHedgehogStateComponentChange(hedgehogStateComponent);
+                }
             }
         }
 

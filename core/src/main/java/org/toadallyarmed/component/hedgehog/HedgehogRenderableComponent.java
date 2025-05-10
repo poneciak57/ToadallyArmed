@@ -2,20 +2,30 @@ package org.toadallyarmed.component.hedgehog;
 
 import org.toadallyarmed.component.interfaces.RenderableComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
+import org.toadallyarmed.util.rendering.AnimatedStateMachineSpriteInstance;
+import org.toadallyarmed.util.rendering.AnimatedStateSprite;
 import org.toadallyarmed.util.rendering.Renderer;
-import org.toadallyarmed.util.rendering.Sprite;
 
 public class HedgehogRenderableComponent implements RenderableComponent {
-    final TransformComponent transform;
-    final Sprite sprite;
+    final TransformComponent transformComponent;
+    final HedgehogStateComponent fullStateComponent;
 
-    public HedgehogRenderableComponent(TransformComponent transform, Sprite sprite) {
-        this.transform = transform;
-        this.sprite = sprite;
+    AnimatedStateMachineSpriteInstance<HedgehogState> spriteInstance;
+
+    public HedgehogRenderableComponent(
+        TransformComponent transformComponent,
+        HedgehogStateComponent fullStateComponent,
+        AnimatedStateSprite<HedgehogState> animatedStateSprite) {
+        this.transformComponent = transformComponent;
+        this.fullStateComponent = fullStateComponent;
+        spriteInstance = new AnimatedStateMachineSpriteInstance<>(
+            animatedStateSprite,
+            fullStateComponent.getGeneralStateMachine()
+        );
     }
 
     @Override
     public void render(Renderer renderer, float deltaTime, float currentTimestamp) {
-        sprite.render(renderer, transform.getAdvancedPosition(currentTimestamp));
+        spriteInstance.render(renderer, transformComponent.getAdvancedPosition(currentTimestamp), deltaTime);
     }
 }
