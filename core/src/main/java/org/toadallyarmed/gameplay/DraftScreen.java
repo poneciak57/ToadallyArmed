@@ -27,9 +27,6 @@ public class DraftScreen implements Screen {
     Texture moneyFrogTexture, tankFrogTexture, knightFrogTexture, basicFrogTexture, wizardFrogTexture;
     Texture randomHedgehogTexture;
     Texture coinTexture;
-    TextureRegion moneyFrogTextureRegion, tankFrogTextureRegion, knightFrogTextureRegion, basicFrogTextureRegion, wizardFrogTextureRegion;
-    TextureRegion randomHedgehogTextureRegion;
-    TextureRegion coinTextureRegion;
     Animation<TextureRegion> basicFrogAnimation;
     AnimatedSprite basicFrogAnimationSprite;
 
@@ -56,15 +53,6 @@ public class DraftScreen implements Screen {
         wizardFrogTexture = new Texture("GameScreen/Frogs/wizardFrog.png");
         randomHedgehogTexture= new Texture("GameScreen/Hedgehogs/basicHedgehog.png");
         coinTexture = new Texture("GameScreen/Coins/coin.png");
-
-        //set right frames
-        moneyFrogTextureRegion = new TextureRegion(moneyFrogTexture, 0, 0, 44, 33);
-        tankFrogTextureRegion = new TextureRegion(tankFrogTexture, 0, 0, 44, 33);
-        knightFrogTextureRegion = new TextureRegion(knightFrogTexture, 0, 0, 44, 33);
-        basicFrogTextureRegion = new TextureRegion(basicFrogTexture, 0, 0, 44, 33);
-        wizardFrogTextureRegion = new TextureRegion(wizardFrogTexture, 0, 0, 44, 33);
-        randomHedgehogTextureRegion= new TextureRegion(randomHedgehogTexture, 120, 80, 24, 16);
-        coinTextureRegion=new TextureRegion(coinTexture, 0, 0, 16, 16);
     }
     private void setFrogAnimations() {
         TextureRegion[][] tmp = TextureRegion.split(basicFrogTexture,
@@ -117,14 +105,6 @@ public class DraftScreen implements Screen {
         float worldWidth = viewport.getWorldWidth();
         float worldHeight = viewport.getWorldHeight();
         spriteBatch.draw(backgroundTexture, 0, 0, worldWidth, worldHeight);
-
-        // spriteBatch.draw(moneyFrogTextureRegion,  -0.3F, 0.1F, 1.5F, 1.5F);
-        // spriteBatch.draw(tankFrogTextureRegion,  -0.3F, 1.1F, 1.5F, 1.5F);
-        // spriteBatch.draw(wizardFrogTextureRegion, -0.3F, 2.1F, 1.5F, 1.5F);
-        // spriteBatch.draw(knightFrogTextureRegion, -0.3F, 3.1F, 1.5F, 1.5F);
-        // spriteBatch.draw(basicFrogTextureRegion, -0.3F, 4.1F, 1.5F, 1.5F);
-        // spriteBatch.draw(randomHedgehogTextureRegion, 1, 1.1F, 0.9F, 0.9F);
-        // spriteBatch.draw(coinTextureRegion,  0.15F, 5.15F, 0.7F, 0.7F);
 
         drawAnimations(delta);
 

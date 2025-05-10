@@ -1,6 +1,7 @@
 package org.toadallyarmed.gameplay;
 
 import org.toadallyarmed.component.WalletComponent;
+import org.toadallyarmed.config.GameConfig;
 import org.toadallyarmed.entity.Entity;
 
 import java.util.concurrent.ConcurrentLinkedQueue;

@@ -33,7 +33,7 @@ public class GameplayScreen implements Screen {
     Entity basicFrog;
 
     BitmapFont pixelFont, font;
-    Integer money=1000000;
+    Integer money=100;
 
     public GameplayScreen(Main main) {
         Logger.info("creating a new gameplay screen");
