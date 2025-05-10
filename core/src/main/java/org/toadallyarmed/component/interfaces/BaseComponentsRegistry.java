@@ -11,6 +11,7 @@ public class BaseComponentsRegistry {
         RenderableComponent.class,
         TransformComponent.class,
         HealthComponent.class,
-        ColliderComponent.class
+        ColliderComponent.class,
+        CollisionActionComponent.class
     );
 }
