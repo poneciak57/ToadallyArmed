@@ -11,7 +11,6 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import org.toadallyarmed.Main;
 import org.toadallyarmed.component.frog.FrogState;
 import org.toadallyarmed.component.frog.FrogStateComponent;
-import org.toadallyarmed.component.interfaces.RenderableComponent;
 import org.toadallyarmed.component.interfaces.StateComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
 import org.toadallyarmed.entity.Entity;
@@ -132,13 +131,7 @@ public class GameplayScreen implements Screen {
         float worldHeight = viewport.getWorldHeight();
         main.renderer.getSpriteBatch().draw(backgroundTexture, 0, 0, worldWidth, worldHeight);
 
-        for (Entity entity : entities) {
-            var renderableOptional = entity.get(RenderableComponent.class);
-            if (renderableOptional.isEmpty())
-                continue;
-            var renderable = renderableOptional.get();
-            renderable.render(main.renderer, delta, currentTimestamp);
-        }
+        main.renderingSystem.tick(delta, entities);
 
         pixelFont.draw(main.renderer.getSpriteBatch(), Integer.toString(money), 1, 6);
 
