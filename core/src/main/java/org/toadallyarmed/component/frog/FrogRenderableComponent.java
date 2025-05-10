@@ -2,20 +2,30 @@ package org.toadallyarmed.component.frog;
 
 import org.toadallyarmed.component.interfaces.RenderableComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
+import org.toadallyarmed.util.rendering.AnimatedStateMachineSpriteInstance;
+import org.toadallyarmed.util.rendering.AnimatedStateSprite;
 import org.toadallyarmed.util.rendering.Renderer;
-import org.toadallyarmed.util.rendering.Sprite;
 
 public class FrogRenderableComponent implements RenderableComponent {
-    final TransformComponent transform;
-    final Sprite sprite;
+    final TransformComponent transformComponent;
+    final FrogStateComponent fullStateComponent;
 
-    public FrogRenderableComponent(TransformComponent transform, Sprite sprite) {
-        this.transform = transform;
-        this.sprite = sprite;
+    AnimatedStateMachineSpriteInstance<FrogState> spriteInstance;
+
+    public FrogRenderableComponent(
+        TransformComponent transformComponent,
+        FrogStateComponent fullStateComponent,
+        AnimatedStateSprite<FrogState> animatedStateSprite) {
+        this.transformComponent = transformComponent;
+        this.fullStateComponent = fullStateComponent;
+        spriteInstance = new AnimatedStateMachineSpriteInstance<>(
+            animatedStateSprite,
+            fullStateComponent.getGeneralStateMachine()
+        );
     }
 
     @Override
     public void render(Renderer renderer, float deltaTime) {
-        sprite.render(renderer, transform.getPosition());
+        spriteInstance.render(renderer, transformComponent.getPosition(), deltaTime);
     }
 }
