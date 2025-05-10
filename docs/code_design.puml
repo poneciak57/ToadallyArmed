@@ -61,9 +61,6 @@ together {
     }
 }
 
-class Renderer {
-    SpriteBatch batch;
-}
 class HealthComponent extends Component {
     health;
 }
@@ -88,13 +85,9 @@ class BoxComponent extends Component {
     height;
 }
 
-class Sprite {
-    TextureRegion textureRegion;
-}
 abstract class RenderComponent extends Component {
     virtual void render(Renderer)
 }
-RenderComponent::render --> Renderer
 note right of RenderComponent
     Rendering is handled in rendering
     thread with high frequency.
@@ -106,6 +99,65 @@ note right of UpdateComponent
     Updating is handled in logic
     thread with low frequency.
 end note
+
+newpage
+
+usecase header as "
+    **Rendering Utilities**
+"
+
+class Renderer {
+    SpriteBatch batch;
+}
+class StateMachine<State extends Enum<State>> {
+    State state;
+    HashMap<State, StateNode> states;
+
+    State getState()
+    void advanceState()
+    void setNextStateFrom(State from, State to)
+    void setNextTmpStateFrom(State from, State to)
+}
+StateMachine -> StateNode
+class StateNode <State> {
+    StateNode<State> next;
+    Optional<StateNode<State>> tmpNext;
+}
+class Sprite {
+    TextureRegion textureRegion;
+}
+class AnimatedSprite {
+    Animation<TextureRegion> animation;
+    Vector2 offsetPosition;
+    Vector2 baseDimensions;
+
+    constructor(animation, offsetPosition, baseDimensions)
+    static AnimatedSprite empty()
+    void render(Renderer renderer, Vector2 position, float animationTimer)
+    float getAnimationDuration()
+}
+class AnimatedStateSprite<State extends Enum<State>> {
+    Map<State, AnimatedSprite> animations;
+    void render(Renderer renderer, Vector2 position, State state, float animationTimer)
+}
+AnimatedStateSprite::animations -> AnimatedSprite
+class AnimatedStateMachineSpriteInstance<State extends Enum<State>> {
+    AnimatedStateSprite<State> animatedStateSprite;
+    StateMachine<State> stateMachine;
+    State prevState;
+    float stateElapsedTime;
+
+    constructor(AnimatedStateSprite<State>, StateMachine)
+    void render(Renderer renderer, Vector2 position, float deltaTime)
+}
+AnimatedStateMachineSpriteInstance::animatedStateSprite -> AnimatedStateSprite
+AnimatedStateMachineSpriteInstance::stateMachine -> StateMachine
+note right of AnimatedStateMachineSpriteInstance::render
+    Is responsible for **advancing state machine**,
+    so that animations dictate the
+    states' change the timing.
+end note
+
 
 newpage
 
@@ -129,21 +181,6 @@ class WizardFrogCollisionHandlerComponent extends CollisionHandlerComponent {
 class TankyFrogCollisionHandlerComponent extends CollisionHandlerComponent {
 }
 
-class StateMachine<State extends Enum<State>> {
-    State state;
-    HashMap<State, StateNode> states;
-
-    State getState()
-    void advanceState()
-    void setNextStateFrom(State from, State to)
-    void setNextTmpStateFrom(State from, State to)
-}
-StateMachine -> StateNode
-class StateNode <State> {
-    StateNode<State> next;
-    Optional<StateNode<State>> tmpNext;
-}
-
 class FrogStateComponent extends Component {
     final StateMachine<FrogState> generalStateMachine;
     boolean isAttacked;
@@ -153,7 +190,6 @@ class FrogStateComponent extends Component {
     FrogState getGeneralState()
     void setNextGeneralState(FrogState nextState)
 }
-FrogStateComponent::generalStateMachine -> StateMachine
 enum FrogState {
     IDLE,
     ACTION,
@@ -162,13 +198,9 @@ enum FrogState {
 }
 FrogStateComponent::generalState --> FrogState
 
-class Sprite {
-    TextureRegion textureRegion;
-}
 abstract class RenderComponent extends Component {
     virtual void render(Renderer)
 }
-RenderComponent::render --> Renderer
 class FrogRenderComponent extends RenderComponent {
     constructor(HashMap<FrogState, Animation>)
     --
@@ -178,7 +210,6 @@ class FrogRenderComponent extends RenderComponent {
     animation to render.
 }
 FrogRenderComponent --> FrogStateComponent
-FrogRenderComponent::sprite -> Sprite
 
 abstract class UpdateComponent extends Component {
     virtual void update()
@@ -231,9 +262,6 @@ enum HedgehogState {
 }
 HedgehogStateComponent::generalState --> HedgehogState
 
-class Sprite {
-    TextureRegion textureRegion;
-}
 abstract class RenderComponent extends Component {
     virtual void render(Renderer)
 }
@@ -247,7 +275,6 @@ class HedgehogRenderComponent extends RenderComponent {
     animation to render.
 }
 HedgehogRenderComponent --> HedgehogStateComponent
-HedgehogRenderComponent::sprite -> Sprite
 
 abstract class UpdateComponent extends Component {
     virtual void update()

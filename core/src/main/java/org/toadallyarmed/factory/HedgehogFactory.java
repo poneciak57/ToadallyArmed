@@ -10,7 +10,7 @@ import org.toadallyarmed.component.interfaces.RenderableComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
 import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.entity.EntityType;
-import org.toadallyarmed.util.Sprite;
+import org.toadallyarmed.util.rendering.Sprite;
 import org.toadallyarmed.util.logger.Logger;
 
 public class HedgehogFactory implements Disposable {

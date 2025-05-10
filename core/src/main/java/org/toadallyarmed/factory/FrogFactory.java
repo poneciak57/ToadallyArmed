@@ -15,8 +15,8 @@ import org.toadallyarmed.component.interfaces.StateComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
 import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.entity.EntityType;
-import org.toadallyarmed.util.AnimatedSprite;
-import org.toadallyarmed.util.Sprite;
+import org.toadallyarmed.util.rendering.AnimatedSprite;
+import org.toadallyarmed.util.rendering.Sprite;
 import org.toadallyarmed.util.logger.Logger;
 
 import java.util.Arrays;

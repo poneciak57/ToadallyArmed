@@ -12,7 +12,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import org.toadallyarmed.Main;
-import org.toadallyarmed.util.AnimatedSprite;
+import org.toadallyarmed.util.rendering.AnimatedSprite;
 
 import java.util.Arrays;
 

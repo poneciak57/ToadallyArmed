@@ -2,8 +2,8 @@ package org.toadallyarmed.component.frog;
 
 import org.toadallyarmed.component.interfaces.RenderableComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
-import org.toadallyarmed.util.AnimatedSprite;
-import org.toadallyarmed.util.Renderer;
+import org.toadallyarmed.util.rendering.AnimatedSprite;
+import org.toadallyarmed.util.rendering.Renderer;
 import org.toadallyarmed.util.logger.Logger;
 
 import java.util.Map;
