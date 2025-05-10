@@ -33,7 +33,7 @@ public class GameplayScreen implements Screen {
     Entity basicFrog;
 
     BitmapFont pixelFont, font;
-    Integer money=1000000;
+    Integer money=100;
 
     public GameplayScreen(Main main) {
         Logger.info("creating a new gameplay screen");
@@ -46,11 +46,11 @@ public class GameplayScreen implements Screen {
 
         frogFactory = FrogFactory.get();
         basicFrog = frogFactory.createBasicFrog();
-        basicFrog.get(TransformComponent.class).get().setPosition(new Vector2(3, 2));
+        basicFrog.get(TransformComponent.class).get().setPosition(new Vector2(0, 0));
         entities.add(basicFrog);
         hedgehogFactory = HedgehogFactory.get();
         Entity basicHedgehog = hedgehogFactory.createFastHedgehog();
-        basicHedgehog.get(TransformComponent.class).get().setPosition(new Vector2(1, 1));
+        basicHedgehog.get(TransformComponent.class).get().setPosition(new Vector2(10, 1));
         entities.add(basicHedgehog);
 
         setFonts();
