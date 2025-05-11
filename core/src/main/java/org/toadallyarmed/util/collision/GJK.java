@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import java.util.ArrayList;
 import java.util.List;
 
+/// Gilbert-Johnson-Keerthi algorithm
 public class GJK {
     private static final int MAX_ITER = 20;
 
@@ -41,15 +42,15 @@ public class GJK {
             // Triangle case - we have 3 points
             Vector2 b = simplex.get(1);
             Vector2 c = simplex.get(0);
-            
+
             // Edges from A
             Vector2 ab = b.cpy().sub(a);
             Vector2 ac = c.cpy().sub(a);
-            
+
             // Compute normals to edges pointing toward the origin
             Vector2 abNormal = tripleProduct(ac, ab, ab);
             Vector2 acNormal = tripleProduct(ab, ac, ac);
-            
+
             // Check which region contains the origin
             if (abNormal.dot(ao) > 0) {
                 // Origin is in region outside AB edge
@@ -69,10 +70,10 @@ public class GJK {
             // Line segment case - we have 2 points
             Vector2 b = simplex.get(0);
             Vector2 ab = b.cpy().sub(a);
-            
+
             // Compute direction perpendicular to AB toward origin
             Vector2 abPerp = tripleProduct(ab, ao, ab);
-            
+
             // If abPerp is zero, AB and AO are parallel and we need another fallback
             if (abPerp.len2() < 0.000001f) {
                 abPerp.set(ab.y, -ab.x); // Simple perpendicular
@@ -80,12 +81,12 @@ public class GJK {
                     abPerp.scl(-1);
                 }
             }
-            
+
             d.set(abPerp);
             return false;
         }
     }
-    
+
     // Helper function: computes (A × B) × C
     private static Vector2 tripleProduct(Vector2 a, Vector2 b, Vector2 c) {
         // (A × B) × C = B(A·C) - A(B·C)
@@ -96,6 +97,4 @@ public class GJK {
             b.y * acDot - a.y * bcDot
         );
     }
-
-    // Removed old implementations that are no longer used
 }
