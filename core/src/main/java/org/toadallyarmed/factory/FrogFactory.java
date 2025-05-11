@@ -94,7 +94,7 @@ public class FrogFactory implements Disposable {
     @SuppressWarnings("ReassignedVariable")
     private AnimatedStateSprite<FrogState> createAnimatedStateSprite(Texture texture) {
         final float FRAME_DURATION          = 0.08f;
-        final Vector2 OFFSET                = new Vector2(-0.4f, -0.4f);
+        final Vector2 OFFSET                = new Vector2(-0.4f, -0.53f);
         final Vector2 BASE_DIMENSIONS       = new Vector2(2F, 2F);
 
         Map<FrogState, AnimatedSprite> animatedSprites = new HashMap<>();

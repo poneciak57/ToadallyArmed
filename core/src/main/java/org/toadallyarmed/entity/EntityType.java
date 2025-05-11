@@ -4,5 +4,6 @@ public enum EntityType {
     FROG,
     BULLET,
     HEDGEHOG,
+    COIN,
     OTHER
 }

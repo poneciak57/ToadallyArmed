@@ -89,7 +89,7 @@ public class HedgehogFactory implements Disposable {
     private AnimatedStateSprite<HedgehogState> createAnimatedStateSprite(Texture texture) {
         final float FRAME_DURATION          = 0.12f;
         final Vector2 OFFSET                = new Vector2(0, 0.1F);
-        final Vector2 BASE_DIMENSIONS       = new Vector2(0.9F, 0.9F);
+        final Vector2 BASE_DIMENSIONS       = new Vector2(1.5F, 1.5F);
 
         Map<HedgehogState, AnimatedSprite> animatedSprites = new HashMap<>();
         TextureRegion[][] framesGrid;

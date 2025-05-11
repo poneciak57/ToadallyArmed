@@ -16,6 +16,7 @@ import org.toadallyarmed.component.hedgehog.HedgehogStateComponent;
 import org.toadallyarmed.component.interfaces.StateComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
 import org.toadallyarmed.entity.Entity;
+import org.toadallyarmed.factory.CoinFactory;
 import org.toadallyarmed.factory.FrogFactory;
 import org.toadallyarmed.factory.HedgehogFactory;
 import org.toadallyarmed.util.logger.Logger;
@@ -31,6 +32,7 @@ public class GameplayScreen implements Screen {
 
     FrogFactory frogFactory;
     HedgehogFactory hedgehogFactory;
+    CoinFactory coinFactory;
     ConcurrentLinkedQueue<Entity> entities = new ConcurrentLinkedQueue<>();
 
     BitmapFont pixelFont, font;
@@ -67,7 +69,7 @@ public class GameplayScreen implements Screen {
         Entity fastHedgehog = hedgehogFactory.createFastHedgehog();
         Entity strongHedgehog = hedgehogFactory.createStrongHedgehog();
         Entity healthyHedgehog = hedgehogFactory.createHealthyHedgehog();
-        basicHedgehog.get(TransformComponent.class).get().setPosition(new Vector2(9, 1), 0);
+        basicHedgehog.get(TransformComponent.class).get().setPosition(new Vector2(1, 1), 0);
         fastHedgehog.get(TransformComponent.class).get().setPosition(new Vector2(9, 2), 0);
         strongHedgehog.get(TransformComponent.class).get().setPosition(new Vector2(9, 3), 0);
         healthyHedgehog.get(TransformComponent.class).get().setPosition(new Vector2(9, 4), 0);
@@ -75,6 +77,14 @@ public class GameplayScreen implements Screen {
         entities.add(fastHedgehog);
         entities.add(strongHedgehog);
         entities.add(healthyHedgehog);
+
+        coinFactory = CoinFactory.get();
+        Entity coin = coinFactory.createCoin();
+        Entity Scoin = coinFactory.createSpecialCoin();
+        coin.get(TransformComponent.class).get().setPosition(new Vector2(0, 2), 0);
+        Scoin.get(TransformComponent.class).get().setPosition(new Vector2(0, 5), 0);
+        entities.add(Scoin);
+        entities.add(coin);
 
         setFonts();
 
