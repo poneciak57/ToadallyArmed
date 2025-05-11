@@ -21,4 +21,6 @@ public record GameConfig(
 
     // how much player will earn periodically
     int GlobalIncomeDelta
-){}
+) {
+    public static final float VELOCITY_SCALE = 0.005f;
+}

@@ -4,7 +4,7 @@ import org.toadallyarmed.component.interfaces.StateComponent;
 import org.toadallyarmed.util.StateMachine;
 
 public class HedgehogStateComponent implements StateComponent {
-    final StateMachine<HedgehogState> generalStateMachine = new StateMachine<>(HedgehogState.IDLE);
+    final StateMachine<HedgehogState> generalStateMachine = new StateMachine<>(HedgehogState.WALKING);
     volatile boolean isAttacked;
 
     public HedgehogStateComponent() {

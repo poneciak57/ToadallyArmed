@@ -42,8 +42,8 @@ public class CoinFactory implements Disposable {
         return factoryInstance;
     }
 
-    public Entity createCoin() { return createCoin(coinAnimatedStateSprite); }
-    public Entity createSpecialCoin() {return createCoin(specialCoinAnimatedStateSprite);}
+    public Entity createCoin(Vector2 pos) { return createCoin(coinAnimatedStateSprite, pos); }
+    public Entity createSpecialCoin(Vector2 pos) {return createCoin(specialCoinAnimatedStateSprite, pos);}
 
     @Override
     public void dispose() {
@@ -52,9 +52,9 @@ public class CoinFactory implements Disposable {
     }
 
 
-    private Entity createCoin(AnimatedStateSprite<CoinState> animatedStateSprite) {
+    private Entity createCoin(AnimatedStateSprite<CoinState> animatedStateSprite, Vector2 pos) {
         Logger.trace("Creating Coin Entity in factory");
-        WorldTransformComponent transform = new WorldTransformComponent();
+        WorldTransformComponent transform = new WorldTransformComponent(pos, new Vector2());
         CoinStateComponent CoinState = new CoinStateComponent();
         CoinRenderableComponent renderable =
             new CoinRenderableComponent(
