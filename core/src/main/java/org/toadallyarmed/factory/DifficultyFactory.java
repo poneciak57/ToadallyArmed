@@ -4,7 +4,7 @@ import org.toadallyarmed.config.CharacterConfig;
 import org.toadallyarmed.config.GameConfig;
 
 public class DifficultyFactory {
-    public GameConfig defaultGameConfig() {
+    public static GameConfig defaultGameConfig() {
         return new GameConfig(
             60,
             25,

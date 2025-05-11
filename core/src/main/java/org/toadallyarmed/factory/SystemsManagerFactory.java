@@ -5,7 +5,7 @@ import org.toadallyarmed.system.*;
 
 public class SystemsManagerFactory {
 
-    public SystemsManager getSystemsManagerForGameplay(GlobalGameState gameState) {
+    public static SystemsManager getSystemsManagerForGameplay(GlobalGameState gameState) {
         return new SystemsManager.Builder()
             .tickRate(gameState.getGameConfig().SystemManagerTickRate())
             .addThrottledSystem(

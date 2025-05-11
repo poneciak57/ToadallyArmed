@@ -9,15 +9,20 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import org.toadallyarmed.Main;
+import org.toadallyarmed.component.WalletComponent;
 import org.toadallyarmed.component.frog.FrogState;
 import org.toadallyarmed.component.frog.FrogStateComponent;
 import org.toadallyarmed.component.hedgehog.HedgehogState;
 import org.toadallyarmed.component.hedgehog.HedgehogStateComponent;
 import org.toadallyarmed.component.interfaces.StateComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
+import org.toadallyarmed.config.GameConfig;
 import org.toadallyarmed.entity.Entity;
+import org.toadallyarmed.factory.DifficultyFactory;
 import org.toadallyarmed.factory.FrogFactory;
 import org.toadallyarmed.factory.HedgehogFactory;
+import org.toadallyarmed.factory.SystemsManagerFactory;
+import org.toadallyarmed.system.SystemsManager;
 import org.toadallyarmed.util.logger.Logger;
 
 import java.time.Instant;
@@ -28,10 +33,8 @@ public class GameplayScreen implements Screen {
     FitViewport viewport;
 
     Texture backgroundTexture;
-
-    FrogFactory frogFactory;
-    HedgehogFactory hedgehogFactory;
-    ConcurrentLinkedQueue<Entity> entities = new ConcurrentLinkedQueue<>();
+    private final GlobalGameState gameState;
+    private final SystemsManager systemsManager;
 
     BitmapFont pixelFont, font;
     Integer money=100;
@@ -45,7 +48,15 @@ public class GameplayScreen implements Screen {
 
         backgroundTexture = new Texture("GameScreen/background.jpg");
 
-        frogFactory = FrogFactory.get();
+        FrogFactory frogFactory = FrogFactory.get();
+        HedgehogFactory hedgehogFactory = HedgehogFactory.get();
+        gameState = new GlobalGameState(
+            new WalletComponent(0),
+            DifficultyFactory.defaultGameConfig()
+        );
+        systemsManager = SystemsManagerFactory.getSystemsManagerForGameplay(gameState);
+        ConcurrentLinkedQueue<Entity> entities = gameState.getEntities();
+
         Entity basicFrog  = frogFactory.createBasicFrog();
         Entity knightFrog = frogFactory.createKnightFrog();
         Entity moneyFrog  = frogFactory.createMoneyFrog();
@@ -62,7 +73,6 @@ public class GameplayScreen implements Screen {
         entities.add(tankFrog);
         entities.add(wizardFrog);
 
-        hedgehogFactory = HedgehogFactory.get();
         Entity basicHedgehog = hedgehogFactory.createBasicHedgehog();
         Entity fastHedgehog = hedgehogFactory.createFastHedgehog();
         Entity strongHedgehog = hedgehogFactory.createStrongHedgehog();
@@ -94,6 +104,7 @@ public class GameplayScreen implements Screen {
 
     @Override
     public void show() {
+        systemsManager.start();
         // Prepare your screen here.
     }
 
@@ -124,23 +135,23 @@ public class GameplayScreen implements Screen {
         // Draw your screen here. "delta" is the time since last render in seconds.
         final float currentTimestamp = Instant.now().toEpochMilli();
 
-        stateSwitchComponentTimer += delta;
-        if (stateSwitchComponentTimer >= 2f) {
-            stateSwitchComponentTimer = 0f;
-            frogStateID = (frogStateID + 1) % 3;
-            hedgehogStateID = (hedgehogStateID + 1) % 4;
-            for (Entity entity : entities) {
-                var stateComponentOptional = entity.get(StateComponent.class);
-                if (stateComponentOptional.isEmpty())
-                    continue;
-                var stateComponent = stateComponentOptional.get();
-                if (stateComponent instanceof FrogStateComponent frogStateComponent) {
-                    testFrogStateComponentChange(frogStateComponent);
-                } else if (stateComponent instanceof HedgehogStateComponent hedgehogStateComponent) {
-                    testHedgehogStateComponentChange(hedgehogStateComponent);
-                }
-            }
-        }
+//        stateSwitchComponentTimer += delta;
+//        if (stateSwitchComponentTimer >= 2f) {
+//            stateSwitchComponentTimer = 0f;
+//            frogStateID = (frogStateID + 1) % 3;
+//            hedgehogStateID = (hedgehogStateID + 1) % 4;
+//            for (Entity entity : entities) {
+//                var stateComponentOptional = entity.get(StateComponent.class);
+//                if (stateComponentOptional.isEmpty())
+//                    continue;
+//                var stateComponent = stateComponentOptional.get();
+//                if (stateComponent instanceof FrogStateComponent frogStateComponent) {
+//                    testFrogStateComponentChange(frogStateComponent);
+//                } else if (stateComponent instanceof HedgehogStateComponent hedgehogStateComponent) {
+//                    testHedgehogStateComponentChange(hedgehogStateComponent);
+//                }
+//            }
+//        }
 
         ScreenUtils.clear(Color.BLACK);
         viewport.apply();
@@ -151,7 +162,7 @@ public class GameplayScreen implements Screen {
         float worldHeight = viewport.getWorldHeight();
         main.renderer.getSpriteBatch().draw(backgroundTexture, 0, 0, worldWidth, worldHeight);
 
-        main.renderingSystem.tick(delta, entities);
+        main.renderingSystem.tick(delta, gameState.getEntities());
 
         pixelFont.draw(main.renderer.getSpriteBatch(), Integer.toString(money), 1, 6);
 
@@ -168,16 +179,19 @@ public class GameplayScreen implements Screen {
     @Override
     public void pause() {
         // Invoked when your application is paused.
+        systemsManager.pause();
     }
 
     @Override
     public void resume() {
         // Invoked when your application is resumed after pause.
+        systemsManager.resume();
     }
 
     @Override
     public void hide() {
         // This method is called when another screen replaces this one.
+        systemsManager.stop();
     }
 
     @Override
@@ -185,6 +199,6 @@ public class GameplayScreen implements Screen {
         Logger.info("disposing a gameplay screen");
         // Destroy screen's assets here.
         backgroundTexture.dispose();
-        frogFactory.dispose();
+        systemsManager.stop();
     }
 }
