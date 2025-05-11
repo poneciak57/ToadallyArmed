@@ -7,7 +7,7 @@ import java.util.List;
 public class BaseComponentsRegistry {
     public static List<Class<? extends Component>> BASE_COMPONENTS = List.of(
         StateComponent.class,
-        BehaviourComponent.class,
+        BehaviorComponent.class,
         RenderableComponent.class,
         TransformComponent.class,
         HealthComponent.class,

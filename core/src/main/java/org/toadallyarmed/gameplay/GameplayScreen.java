@@ -47,8 +47,8 @@ public class GameplayScreen implements Screen {
 
         backgroundTexture = new Texture("GameScreen/background.jpg");
 
-        FrogFactory frogFactory = FrogFactory.get();
-        HedgehogFactory hedgehogFactory = HedgehogFactory.get();
+        frogFactory = FrogFactory.get();
+        hedgehogFactory = HedgehogFactory.get();
         gameState = new GlobalGameState(
             new WalletComponent(0),
             DifficultyFactory.defaultGameConfig()
@@ -67,7 +67,7 @@ public class GameplayScreen implements Screen {
         Entity strongHedgehog = hedgehogFactory.createStrongHedgehog(new Vector2(9, 3), config.strongHedgehog());
         Entity healthyHedgehog = hedgehogFactory.createHealthyHedgehog(new Vector2(9, 4), config.healthyHedgehog());
 
-        CoinFactory coinFactory = CoinFactory.get();
+        coinFactory = CoinFactory.get();
         Entity coin = coinFactory.createCoin(new Vector2(0, 2));
         Entity Scoin = coinFactory.createSpecialCoin(new Vector2(0, 5));
 
@@ -148,5 +148,8 @@ public class GameplayScreen implements Screen {
         // Destroy screen's assets here.
         backgroundTexture.dispose();
         systemsManager.stop();
+        frogFactory.dispose();
+        hedgehogFactory.dispose();
+        coinFactory.dispose();
     }
 }
