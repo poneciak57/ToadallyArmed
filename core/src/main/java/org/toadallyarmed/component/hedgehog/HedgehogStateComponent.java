@@ -1,5 +1,6 @@
 package org.toadallyarmed.component.hedgehog;
 
+import org.toadallyarmed.component.frog.FrogState;
 import org.toadallyarmed.component.interfaces.StateComponent;
 import org.toadallyarmed.util.StateMachine;
 
@@ -7,12 +8,13 @@ public class HedgehogStateComponent implements StateComponent {
     final StateMachine<HedgehogState> generalStateMachine = new StateMachine<>(HedgehogState.IDLE);
     volatile boolean isAttacked;
 
-    public HedgehogStateComponent() {
+    public HedgehogStateComponent(Runnable entityRemovalRunnable) {
         generalStateMachine.setNextStateFrom(HedgehogState.IDLE, HedgehogState.IDLE);
         generalStateMachine.setNextStateFrom(HedgehogState.WALKING, HedgehogState.WALKING);
         generalStateMachine.setNextStateFrom(HedgehogState.ACTION, HedgehogState.IDLE);
         generalStateMachine.setNextStateFrom(HedgehogState.DYING, HedgehogState.NONEXISTENT);
         generalStateMachine.setNextStateFrom(HedgehogState.NONEXISTENT, HedgehogState.NONEXISTENT);
+        generalStateMachine.setAfterStateAction(HedgehogState.DYING, entityRemovalRunnable);
     }
 
     public boolean getIsAttacked() {
