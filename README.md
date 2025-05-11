@@ -11,5 +11,6 @@ And so, the frogs leapt into battle to defend their tadpoles, etching their saga
 * *Kacper Poneta*
 * *Kacper Orszulak*
 
-### Code architecture and problems solutions
+### Code architecture
 For reference to the code design, patterns applied and plans refer to [the GitHub project Wiki](https://github.com/poneciak57/ToadallyArmed/wiki).
+For reference to the assets used in this project refer to [assets info](https://github.com/poneciak57/ToadallyArmed/blob/main/assets_and_their_licences.md)
