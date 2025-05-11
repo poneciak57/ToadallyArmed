@@ -12,6 +12,7 @@ import org.toadallyarmed.component.frog.FrogStateComponent;
 import org.toadallyarmed.component.interfaces.RenderableComponent;
 import org.toadallyarmed.component.interfaces.StateComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
+import org.toadallyarmed.config.CharacterConfig;
 import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.entity.EntityType;
 import org.toadallyarmed.util.rendering.AnimatedSprite;
@@ -58,11 +59,11 @@ public class FrogFactory implements Disposable {
         return factoryInstance;
     }
 
-    public Entity createBasicFrog() { return createFrog(basicFrogAnimatedStateSprite); }
-    public Entity createKnightFrog() { return createFrog(knightFrogAnimatedStateSprite); }
-    public Entity createMoneyFrog() { return createFrog(moneyFrogAnimatedStateSprite); }
-    public Entity createTankFrog() { return createFrog(tankFrogAnimatedStateSprite); }
-    public Entity createWizardFrog() { return createFrog(wizardFrogAnimatedStateSprite); }
+    public Entity createBasicFrog(Vector2 pos, CharacterConfig config) { return createFrog(basicFrogAnimatedStateSprite, pos, config); }
+    public Entity createKnightFrog(Vector2 pos, CharacterConfig config) { return createFrog(knightFrogAnimatedStateSprite, pos, config); }
+    public Entity createMoneyFrog(Vector2 pos, CharacterConfig config) { return createFrog(moneyFrogAnimatedStateSprite, pos, config); }
+    public Entity createTankFrog(Vector2 pos, CharacterConfig config) { return createFrog(tankFrogAnimatedStateSprite, pos, config); }
+    public Entity createWizardFrog(Vector2 pos, CharacterConfig config) { return createFrog(wizardFrogAnimatedStateSprite, pos, config); }
 
     @Override
     public void dispose() {
@@ -75,9 +76,9 @@ public class FrogFactory implements Disposable {
     }
 
 
-    private Entity createFrog(AnimatedStateSprite<FrogState> animatedStateSprite) {
+    private Entity createFrog(AnimatedStateSprite<FrogState> animatedStateSprite, Vector2 pos, CharacterConfig config) {
         Logger.trace("Creating Frog Entity in factory");
-        WorldTransformComponent transform = new WorldTransformComponent();
+        WorldTransformComponent transform = new WorldTransformComponent(pos, new Vector2(config.speed(), 0));
         FrogStateComponent frogState = new FrogStateComponent();
         FrogRenderableComponent renderable =
             new FrogRenderableComponent(

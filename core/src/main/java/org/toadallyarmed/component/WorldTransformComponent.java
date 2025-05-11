@@ -5,6 +5,8 @@ import org.toadallyarmed.component.interfaces.TransformComponent;
 
 import java.util.concurrent.atomic.AtomicReference;
 
+import static org.toadallyarmed.config.GameConfig.VELOCITY_SCALE;
+
 public class WorldTransformComponent implements TransformComponent {
     public record WorldTransformPayload(
         Vector2 position,
@@ -16,6 +18,14 @@ public class WorldTransformComponent implements TransformComponent {
         new Vector2(),
         0.f
     ));
+
+    public WorldTransformComponent(Vector2 position, Vector2 velocity) {
+        this.payload.set(new WorldTransformPayload(position, velocity, 0.0f));
+    }
+
+    public WorldTransformComponent(WorldTransformPayload payload) {
+        this.payload.set(payload);
+    }
 
     @Deprecated
     @Override
@@ -43,6 +53,6 @@ public class WorldTransformComponent implements TransformComponent {
         var oldPayload = payload.get();
         if (oldPayload.lastUpdateTime == 0) return oldPayload.position.cpy();
         float deltaTime = (currentNanoTime - oldPayload.lastUpdateTime) / 1_000_000_000f;
-        return oldPayload.position().add(oldPayload.velocity().cpy().scl(deltaTime));
+        return oldPayload.position().add(oldPayload.velocity().cpy().scl(deltaTime * VELOCITY_SCALE));
     }
 }

@@ -10,11 +10,6 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import org.toadallyarmed.Main;
 import org.toadallyarmed.component.WalletComponent;
-import org.toadallyarmed.component.frog.FrogState;
-import org.toadallyarmed.component.frog.FrogStateComponent;
-import org.toadallyarmed.component.hedgehog.HedgehogState;
-import org.toadallyarmed.component.hedgehog.HedgehogStateComponent;
-import org.toadallyarmed.component.interfaces.TransformComponent;
 import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.factory.DifficultyFactory;
 import org.toadallyarmed.factory.FrogFactory;
@@ -53,31 +48,22 @@ public class GameplayScreen implements Screen {
         );
         systemsManager = SystemsManagerFactory.getSystemsManagerForGameplay(gameState);
         ConcurrentLinkedQueue<Entity> entities = gameState.getEntities();
-
-        Entity basicFrog  = frogFactory.createBasicFrog();
-        Entity knightFrog = frogFactory.createKnightFrog();
-        Entity moneyFrog  = frogFactory.createMoneyFrog();
-        Entity tankFrog   = frogFactory.createTankFrog();
-        Entity wizardFrog = frogFactory.createWizardFrog();
-        basicFrog   .get(TransformComponent.class).get().setPosition(new Vector2(0, 0), 0);
-        knightFrog  .get(TransformComponent.class).get().setPosition(new Vector2(0, 1), 0);
-        moneyFrog   .get(TransformComponent.class).get().setPosition(new Vector2(0, 2), 0);
-        tankFrog    .get(TransformComponent.class).get().setPosition(new Vector2(0, 3), 0);
-        wizardFrog  .get(TransformComponent.class).get().setPosition(new Vector2(0, 4), 0);
+        var config = gameState.getGameConfig();
+        Entity basicFrog  = frogFactory.createBasicFrog(new Vector2(0, 0), config.knightFrog());
+        Entity knightFrog = frogFactory.createKnightFrog(new Vector2(0, 1), config.knightFrog());
+        Entity moneyFrog  = frogFactory.createMoneyFrog(new Vector2(0, 2), config.moneyFrog());
+        Entity tankFrog   = frogFactory.createTankFrog(new Vector2(0, 3), config.tankFrog());
+        Entity wizardFrog = frogFactory.createWizardFrog(new Vector2(0, 4), config.wizardFrog());
         entities.add(basicFrog);
         entities.add(knightFrog);
         entities.add(moneyFrog);
         entities.add(tankFrog);
         entities.add(wizardFrog);
 
-        Entity basicHedgehog = hedgehogFactory.createBasicHedgehog();
-        Entity fastHedgehog = hedgehogFactory.createFastHedgehog();
-        Entity strongHedgehog = hedgehogFactory.createStrongHedgehog();
-        Entity healthyHedgehog = hedgehogFactory.createHealthyHedgehog();
-        basicHedgehog.get(TransformComponent.class).get().setPosition(new Vector2(9, 1), 0);
-        fastHedgehog.get(TransformComponent.class).get().setPosition(new Vector2(9, 2), 0);
-        strongHedgehog.get(TransformComponent.class).get().setPosition(new Vector2(9, 3), 0);
-        healthyHedgehog.get(TransformComponent.class).get().setPosition(new Vector2(9, 4), 0);
+        Entity basicHedgehog = hedgehogFactory.createBasicHedgehog(new Vector2(9, 1), config.basicHedgehog());
+        Entity fastHedgehog = hedgehogFactory.createFastHedgehog(new Vector2(9, 2), config.fastHedgehog());
+        Entity strongHedgehog = hedgehogFactory.createStrongHedgehog(new Vector2(9, 3), config.strongHedgehog());
+        Entity healthyHedgehog = hedgehogFactory.createHealthyHedgehog(new Vector2(9, 4), config.healthyHedgehog());
         entities.add(basicHedgehog);
         entities.add(fastHedgehog);
         entities.add(strongHedgehog);
@@ -105,28 +91,6 @@ public class GameplayScreen implements Screen {
         // Prepare your screen here.
     }
 
-    int frogStateID = 0;
-    void testFrogStateComponentChange(FrogStateComponent frogStateComponent) {
-        switch(frogStateID) {
-            case 0: frogStateComponent.setNextGeneralState(FrogState.IDLE); break;
-            case 1: frogStateComponent.setNextGeneralState(FrogState.ACTION); break;
-            case 2: frogStateComponent.setNextGeneralState(FrogState.DYING); break;
-            default: break;
-        }
-    }
-
-    int hedgehogStateID = 0;
-    void testHedgehogStateComponentChange(HedgehogStateComponent hedgehogStateComponent) {
-        switch(hedgehogStateID) {
-            case 0: hedgehogStateComponent.setNextGeneralState(HedgehogState.IDLE); break;
-            case 1: hedgehogStateComponent.setNextGeneralState(HedgehogState.WALKING); break;
-            case 2: hedgehogStateComponent.setNextGeneralState(HedgehogState.ACTION); break;
-            case 3: hedgehogStateComponent.setNextGeneralState(HedgehogState.DYING); break;
-            default: break;
-        }
-    }
-
-    float stateSwitchComponentTimer = 0f;
     @Override
     public void render(float delta) {
         ScreenUtils.clear(Color.BLACK);

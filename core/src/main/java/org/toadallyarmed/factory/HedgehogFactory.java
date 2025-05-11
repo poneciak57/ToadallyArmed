@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
+import org.toadallyarmed.component.HealthComponent;
 import org.toadallyarmed.component.WorldTransformComponent;
 import org.toadallyarmed.component.hedgehog.HedgehogRenderableComponent;
 import org.toadallyarmed.component.hedgehog.HedgehogState;
@@ -12,6 +13,7 @@ import org.toadallyarmed.component.hedgehog.HedgehogStateComponent;
 import org.toadallyarmed.component.interfaces.RenderableComponent;
 import org.toadallyarmed.component.interfaces.StateComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
+import org.toadallyarmed.config.CharacterConfig;
 import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.entity.EntityType;
 import org.toadallyarmed.util.rendering.AnimatedSprite;
@@ -54,10 +56,10 @@ public class HedgehogFactory implements Disposable {
         return factoryInstance;
     }
 
-    public Entity createBasicHedgehog() { return createHedgehog(basicHedgehogAnimatedStateSprite); }
-    public Entity createFastHedgehog() { return createHedgehog(fastHedgehogAnimatedStateSprite); }
-    public Entity createStrongHedgehog() { return createHedgehog(strongHedgehogAnimatedStateSprite); }
-    public Entity createHealthyHedgehog() { return createHedgehog(healthyHedgehogAnimatedStateSprite); }
+    public Entity createBasicHedgehog(Vector2 pos, CharacterConfig config) { return createHedgehog(basicHedgehogAnimatedStateSprite, pos, config); }
+    public Entity createFastHedgehog(Vector2 pos, CharacterConfig config) { return createHedgehog(fastHedgehogAnimatedStateSprite, pos, config); }
+    public Entity createStrongHedgehog(Vector2 pos, CharacterConfig config) { return createHedgehog(strongHedgehogAnimatedStateSprite, pos, config); }
+    public Entity createHealthyHedgehog(Vector2 pos, CharacterConfig config) { return createHedgehog(healthyHedgehogAnimatedStateSprite, pos, config); }
 
     @Override
     public void dispose() {
@@ -69,9 +71,10 @@ public class HedgehogFactory implements Disposable {
     }
 
 
-    private Entity createHedgehog(AnimatedStateSprite<HedgehogState> animatedStateSprite) {
+    private Entity createHedgehog(AnimatedStateSprite<HedgehogState> animatedStateSprite, Vector2 pos, CharacterConfig config) {
         Logger.trace("Creating Hedgehog Entity in factory");
-        WorldTransformComponent transform = new WorldTransformComponent();
+        WorldTransformComponent transform = new WorldTransformComponent(pos, new Vector2(config.speed(), 0.f));
+        HealthComponent health = new HealthComponent(config.hp());
         HedgehogStateComponent hedgehogState = new HedgehogStateComponent();
         HedgehogRenderableComponent renderable =
             new HedgehogRenderableComponent(
@@ -82,6 +85,7 @@ public class HedgehogFactory implements Disposable {
             .add(TransformComponent.class, transform)
             .add(StateComponent.class, hedgehogState)
             .add(RenderableComponent.class, renderable)
+            .add(HealthComponent.class, health)
             .build();
     }
 
