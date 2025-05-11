@@ -14,9 +14,7 @@ import org.toadallyarmed.component.frog.FrogState;
 import org.toadallyarmed.component.frog.FrogStateComponent;
 import org.toadallyarmed.component.hedgehog.HedgehogState;
 import org.toadallyarmed.component.hedgehog.HedgehogStateComponent;
-import org.toadallyarmed.component.interfaces.StateComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
-import org.toadallyarmed.config.GameConfig;
 import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.factory.DifficultyFactory;
 import org.toadallyarmed.factory.FrogFactory;
@@ -25,7 +23,6 @@ import org.toadallyarmed.factory.SystemsManagerFactory;
 import org.toadallyarmed.system.SystemsManager;
 import org.toadallyarmed.util.logger.Logger;
 
-import java.time.Instant;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class GameplayScreen implements Screen {
@@ -132,27 +129,6 @@ public class GameplayScreen implements Screen {
     float stateSwitchComponentTimer = 0f;
     @Override
     public void render(float delta) {
-        // Draw your screen here. "delta" is the time since last render in seconds.
-        final float currentTimestamp = Instant.now().toEpochMilli();
-
-//        stateSwitchComponentTimer += delta;
-//        if (stateSwitchComponentTimer >= 2f) {
-//            stateSwitchComponentTimer = 0f;
-//            frogStateID = (frogStateID + 1) % 3;
-//            hedgehogStateID = (hedgehogStateID + 1) % 4;
-//            for (Entity entity : entities) {
-//                var stateComponentOptional = entity.get(StateComponent.class);
-//                if (stateComponentOptional.isEmpty())
-//                    continue;
-//                var stateComponent = stateComponentOptional.get();
-//                if (stateComponent instanceof FrogStateComponent frogStateComponent) {
-//                    testFrogStateComponentChange(frogStateComponent);
-//                } else if (stateComponent instanceof HedgehogStateComponent hedgehogStateComponent) {
-//                    testHedgehogStateComponentChange(hedgehogStateComponent);
-//                }
-//            }
-//        }
-
         ScreenUtils.clear(Color.BLACK);
         viewport.apply();
         main.renderer.getSpriteBatch().setProjectionMatrix(viewport.getCamera().combined);

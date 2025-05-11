@@ -3,7 +3,6 @@ package org.toadallyarmed.component;
 import com.badlogic.gdx.math.Vector2;
 import org.toadallyarmed.component.interfaces.TransformComponent;
 
-import java.time.Instant;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class WorldTransformComponent implements TransformComponent {
@@ -24,14 +23,14 @@ public class WorldTransformComponent implements TransformComponent {
         return payload.get().position.cpy();
     }
 
-    /// @param currentTimestamp if 0 means that value has not been yet updated and getAdvancedPosition should work like getPosition
+    /// @param currentNanoTime if 0 means that value has not been yet updated and getAdvancedPosition should work like getPosition
     @Override
-    public void setPosition(Vector2 position, float currentTimestamp) {
+    public void setPosition(Vector2 position, float currentNanoTime) {
         var oldPayload = payload.get();
         payload.set(new WorldTransformPayload(
             position.cpy(),
             oldPayload.velocity.cpy(),
-            currentTimestamp
+            currentNanoTime
         ));
     }
 
@@ -40,10 +39,10 @@ public class WorldTransformComponent implements TransformComponent {
     }
 
     @Override
-    public Vector2 getAdvancedPosition(float currentTimestamp) {
+    public Vector2 getAdvancedPosition(float currentNanoTime) {
         var oldPayload = payload.get();
         if (oldPayload.lastUpdateTime == 0) return oldPayload.position.cpy();
-        float deltaTime = currentTimestamp - oldPayload.lastUpdateTime;
-        return oldPayload.position().add(oldPayload.velocity().scl(deltaTime));
+        float deltaTime = (currentNanoTime - oldPayload.lastUpdateTime) / 1_000_000_000f;
+        return oldPayload.position().add(oldPayload.velocity().cpy().scl(deltaTime));
     }
 }

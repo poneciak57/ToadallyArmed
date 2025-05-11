@@ -2,6 +2,7 @@ package org.toadallyarmed.system;
 
 import org.toadallyarmed.component.HealthComponent;
 import org.toadallyarmed.entity.Entity;
+import org.toadallyarmed.util.logger.Logger;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -9,6 +10,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class HealthSystem implements System {
     @Override
     public void tick(float __, ConcurrentLinkedQueue<Entity> entities) {
+        Logger.trace("HealthSystem: tick");
         entities.removeIf((e) -> {
             var h = e.get(HealthComponent.class);
             if (h.isEmpty()) return false;
