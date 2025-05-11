@@ -102,13 +102,17 @@ end note
 
 newpage
 
-usecase header as "
-    **Rendering Utilities**
-"
+<style>
+title {
+  FontSize 24
+}
+</style>
+title Rendering Utilities
 
 class Renderer {
     SpriteBatch batch;
 }
+Renderer -[hidden]- StateMachine
 class StateMachine<State extends Enum<State>> {
     State state;
     HashMap<State, StateNode> states;
@@ -118,46 +122,48 @@ class StateMachine<State extends Enum<State>> {
     void setNextStateFrom(State from, State to)
     void setNextTmpStateFrom(State from, State to)
 }
-StateMachine -> StateNode
+StateMachine::states --> StateNode
 class StateNode <State> {
     StateNode<State> next;
     Optional<StateNode<State>> tmpNext;
 }
-class Sprite {
-    TextureRegion textureRegion;
-}
-class AnimatedSprite {
-    Animation<TextureRegion> animation;
-    Vector2 offsetPosition;
-    Vector2 baseDimensions;
 
-    constructor(animation, offsetPosition, baseDimensions)
-    static AnimatedSprite empty()
-    void render(Renderer renderer, Vector2 position, float animationTimer)
-    float getAnimationDuration()
-}
-class AnimatedStateSprite<State extends Enum<State>> {
-    Map<State, AnimatedSprite> animations;
-    void render(Renderer renderer, Vector2 position, State state, float animationTimer)
-}
-AnimatedStateSprite::animations -> AnimatedSprite
-class AnimatedStateMachineSpriteInstance<State extends Enum<State>> {
-    AnimatedStateSprite<State> animatedStateSprite;
-    StateMachine<State> stateMachine;
-    State prevState;
-    float stateElapsedTime;
+package Sprites {
+    class Sprite {
+        TextureRegion textureRegion;
+    }
+    class AnimatedSprite {
+        Animation<TextureRegion> animation;
+        Vector2 offsetPosition;
+        Vector2 baseDimensions;
 
-    constructor(AnimatedStateSprite<State>, StateMachine)
-    void render(Renderer renderer, Vector2 position, float deltaTime)
-}
-AnimatedStateMachineSpriteInstance::animatedStateSprite -> AnimatedStateSprite
-AnimatedStateMachineSpriteInstance::stateMachine -> StateMachine
-note right of AnimatedStateMachineSpriteInstance::render
-    Is responsible for **advancing state machine**,
-    so that animations dictate the
-    states' change the timing.
-end note
+        constructor(animation, offsetPosition, baseDimensions)
+        static AnimatedSprite empty()
+        void render(Renderer renderer, Vector2 position, float animationTimer)
+        float getAnimationDuration()
+    }
+    AnimatedSprite <-- AnimatedStateSprite::animations
+    class AnimatedStateSprite<State extends Enum<State>> {
+        Map<State, AnimatedSprite> animations;
+        void render(Renderer renderer, Vector2 position, State state, float animationTimer)
+    }
+    AnimatedStateSprite <-- AnimatedStateMachineSpriteInstance::animatedStateSprite
+    class AnimatedStateMachineSpriteInstance<State extends Enum<State>> {
+        AnimatedStateSprite<State> animatedStateSprite;
+        StateMachine<State> stateMachine;
+        State prevState;
+        float stateElapsedTime;
 
+        constructor(AnimatedStateSprite<State>, StateMachine)
+        void render(Renderer renderer, Vector2 position, float deltaTime)
+    }
+    StateMachine <-- AnimatedStateMachineSpriteInstance::stateMachine
+    note right of AnimatedStateMachineSpriteInstance::render
+        Is responsible for **advancing state machine**,
+        so that animations dictate the
+        states' change the timing.
+    end note
+}
 
 newpage
 
