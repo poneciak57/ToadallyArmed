@@ -14,6 +14,8 @@ public class StateMachine<State extends Enum<State>> {
 
         State next;
         State tmpNext = null;
+
+        Runnable afterStateAction = null;
     }
 
     State curState;
@@ -32,6 +34,8 @@ public class StateMachine<State extends Enum<State>> {
         Logger.trace("advanceState()");
         synchronized (this) {
             final StateNode<State> curStateNode = getStateNode(curState);
+            if (curStateNode.afterStateAction != null)
+                curStateNode.afterStateAction.run();
             if (curStateNode.tmpNext != null) {
                 curState = curStateNode.tmpNext;
                 curStateNode.tmpNext = null;
@@ -53,6 +57,13 @@ public class StateMachine<State extends Enum<State>> {
         synchronized (this) {
             StateNode<State> fromStateNode = getStateNode(from);
             fromStateNode.tmpNext = to;
+        }
+    }
+
+    public void setAfterStateAction(State state, Runnable action) {
+        synchronized (this) {
+            StateNode<State> stateNode = getStateNode(state);
+            stateNode.afterStateAction = action;
         }
     }
 
