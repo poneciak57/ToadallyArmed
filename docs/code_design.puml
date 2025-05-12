@@ -192,7 +192,7 @@ interface ColliderComponent extends Component {
 interface CollisionActionComponent extends Component {
     void collide(deltaTime, Entity other)
 }
-interface BehaviourComponent extends Component {
+interface BehaviorComponent extends Component {
     virtual void tick(deltaTime, Entity)
 }
 
@@ -281,6 +281,7 @@ title Systems Management
 interface System {
     void tick(deltaTime, ConcurrentLinkedQueue<Entity> entities;
 }
+class RenderingSystem implements System
 class CollisionSystem implements System
 class PhysicsSystem implements System
 class GlobalIncomeSystem implements System
