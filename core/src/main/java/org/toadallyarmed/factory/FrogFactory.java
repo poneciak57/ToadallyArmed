@@ -25,6 +25,7 @@ import java.util.Map;
 
 public class FrogFactory implements Disposable {
     private static final FrogFactory factoryInstance = new FrogFactory();
+    private final FrogAnimationFactory animationFactory = new FrogAnimationFactory();
 
     private final Texture basicFrogTexture;
     private final Texture knightFrogTexture;
@@ -94,33 +95,12 @@ public class FrogFactory implements Disposable {
 
     @SuppressWarnings("ReassignedVariable")
     private AnimatedStateSprite<FrogState> createAnimatedStateSprite(Texture texture) {
-        final float FRAME_DURATION          = 0.08f;
-        final Vector2 OFFSET                = new Vector2(-0.4f, -0.53f);
-        final Vector2 BASE_DIMENSIONS       = new Vector2(2F, 2F);
-
         Map<FrogState, AnimatedSprite> animatedSprites = new HashMap<>();
-        TextureRegion[][] framesGrid;
-        TextureRegion[] frames;
-        Animation<TextureRegion> animation;
 
-        framesGrid = TextureRegion.split(texture,
-            texture.getWidth() / 9,
-            texture.getHeight() / 5);
-
-        frames = Arrays.copyOfRange(framesGrid[0], 0, 7);
-        animation = new Animation<>(FRAME_DURATION, frames);
-        animatedSprites.put(FrogState.IDLE, new AnimatedSprite(animation, OFFSET, BASE_DIMENSIONS));
-
-        frames = Arrays.copyOfRange(framesGrid[2], 0, 5);
-        animation = new Animation<>(FRAME_DURATION, frames);
-        animatedSprites.put(FrogState.ACTION, new AnimatedSprite(animation, OFFSET, BASE_DIMENSIONS));
-
-        frames = Arrays.copyOfRange(framesGrid[4], 0, 8);
-        animation = new Animation<>(FRAME_DURATION, frames);
-        animatedSprites.put(FrogState.DYING, new AnimatedSprite(animation, OFFSET, BASE_DIMENSIONS));
-
+        animatedSprites.put(FrogState.IDLE, animationFactory.Animation(texture, 0, 0, 7));
+        animatedSprites.put(FrogState.ACTION, animationFactory.Animation(texture, 2, 0, 5));
+        animatedSprites.put(FrogState.DYING, animationFactory.Animation(texture, 4, 0, 8));
         animatedSprites.put(FrogState.NONEXISTENT, AnimatedSprite.empty());
-
         return new AnimatedStateSprite<>(animatedSprites);
     }
 }
