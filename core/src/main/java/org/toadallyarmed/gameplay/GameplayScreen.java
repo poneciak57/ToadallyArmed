@@ -54,7 +54,7 @@ public class GameplayScreen implements Screen {
         );
         wallet=gameState.getWallet();
         systemsManager = SystemsManagerFactory.getSystemsManagerForGameplay(gameState);
-        ConcurrentLinkedQueue<Entity> entities = gameState.getEntities();
+        entities = gameState.getEntities();
         var config = gameState.getGameConfig();
         Entity basicFrog  = frogFactory.createBasicFrog(new Vector2(0, 0), config.knightFrog());
         Entity knightFrog = frogFactory.createKnightFrog(new Vector2(0, 1), config.knightFrog());

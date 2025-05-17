@@ -5,6 +5,6 @@ public record CharacterConfig(
     int damage,
     float atk_speed,
     float speed,
-    float cost
+    int cost
 ) {
 }
