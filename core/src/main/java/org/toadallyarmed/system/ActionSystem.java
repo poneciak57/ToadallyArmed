@@ -19,7 +19,7 @@ public class ActionSystem implements System {
         for (Entity entity : entities) {
             BasicActionPayload basicActionPayload = new BasicActionPayload(gameState, entity);
             entity.get(ActionComponent.class)
-                .ifPresent(component -> component.run(basicActionPayload));
+                .ifPresent(component -> component.run(deltaTime, basicActionPayload));
         }
     }
 }

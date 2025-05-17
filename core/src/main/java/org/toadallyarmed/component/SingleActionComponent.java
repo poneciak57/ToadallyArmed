@@ -14,7 +14,7 @@ public class SingleActionComponent implements ActionComponent {
     }
 
     @Override
-    public void run(BasicActionPayload rawPayload) {
+    public void run(float deltaTime, BasicActionPayload rawPayload) {
         action.extract_run(rawPayload);
     }
 }
