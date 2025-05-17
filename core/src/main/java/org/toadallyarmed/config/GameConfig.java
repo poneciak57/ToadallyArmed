@@ -7,6 +7,7 @@ public record GameConfig(
     int CollisionSystemTickRate,
     int PhysicsSystemTickRate,
     int HealthSystemTickRate,
+    int BulletSystemTickRate,
 
     // -- Values -- //
     CharacterConfig knightFrog,
