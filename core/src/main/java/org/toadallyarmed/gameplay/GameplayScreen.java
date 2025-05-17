@@ -21,6 +21,7 @@ import org.toadallyarmed.util.logger.Logger;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class GameplayScreen implements Screen {
     final Main main;
@@ -36,7 +37,8 @@ public class GameplayScreen implements Screen {
     private final SystemsManager systemsManager;
 
     BitmapFont pixelFont, font;
-    Integer money=100;
+    WalletComponent wallet;
+    AtomicInteger money;
 
     public GameplayScreen(Main main) {
         Logger.info("creating a new gameplay screen");
@@ -53,6 +55,7 @@ public class GameplayScreen implements Screen {
             new WalletComponent(0),
             DifficultyFactory.defaultGameConfig()
         );
+        wallet=gameState.getWallet();
         systemsManager = SystemsManagerFactory.getSystemsManagerForGameplay(gameState);
         ConcurrentLinkedQueue<Entity> entities = gameState.getEntities();
         var config = gameState.getGameConfig();
@@ -112,7 +115,8 @@ public class GameplayScreen implements Screen {
 
         main.renderingSystem.tick(delta, gameState.getEntities());
 
-        pixelFont.draw(main.renderer.getSpriteBatch(), Integer.toString(money), 1, 6);
+        money=wallet.access();
+        pixelFont.draw(main.renderer.getSpriteBatch(), Integer.toString(money.get()), 1, 6);
 
         main.renderer.getSpriteBatch().end();
     }
