@@ -26,6 +26,7 @@ import java.util.Map;
 
 public class HedgehogFactory implements Disposable {
     private static final HedgehogFactory factoryInstance = new HedgehogFactory();
+    private final HedgehogAnimationFactory AnimationFactory=new HedgehogAnimationFactory();
 
     private final Texture basicHedgehogTexture;
     private final Texture fastHedgehogTexture;
@@ -91,53 +92,13 @@ public class HedgehogFactory implements Disposable {
 
     @SuppressWarnings("ReassignedVariable")
     private AnimatedStateSprite<HedgehogState> createAnimatedStateSprite(Texture texture) {
-        final float FRAME_DURATION          = 0.12f;
-        final Vector2 OFFSET                = new Vector2(0, 0.1F);
-        final Vector2 BASE_DIMENSIONS       = new Vector2(1.5F, 1.5F);
-
         Map<HedgehogState, AnimatedSprite> animatedSprites = new HashMap<>();
-        TextureRegion[][] framesGrid;
-        TextureRegion[] frames;
-        Animation<TextureRegion> animation;
-
-        framesGrid = TextureRegion.split(texture,
-            texture.getWidth() / 6,
-            texture.getHeight() / 4);
-
-        frames = Arrays.copyOfRange(framesGrid[0], 4, 5);
-        reverseInPlace(frames);
-        animation = new Animation<>(FRAME_DURATION, frames);
-        animatedSprites.put(HedgehogState.IDLE, new AnimatedSprite(animation, OFFSET, BASE_DIMENSIONS));
-
-        frames = Arrays.copyOfRange(framesGrid[1], 0, 5);
-        reverseInPlace(frames);
-        animation = new Animation<>(FRAME_DURATION, frames);
-        animatedSprites.put(HedgehogState.WALKING, new AnimatedSprite(animation, OFFSET, BASE_DIMENSIONS));
-
-        frames = Arrays.copyOfRange(framesGrid[3], 1, 5);
-        reverseInPlace(frames);
-        animation = new Animation<>(FRAME_DURATION, frames);
-        animatedSprites.put(HedgehogState.ACTION, new AnimatedSprite(animation, OFFSET, BASE_DIMENSIONS));
-
-        frames = Arrays.copyOfRange(framesGrid[2], 2, 5);
-        reverseInPlace(frames);
-        animation = new Animation<>(FRAME_DURATION, frames);
-        animatedSprites.put(HedgehogState.DYING, new AnimatedSprite(animation, OFFSET, BASE_DIMENSIONS));
-
+        animatedSprites.put(HedgehogState.IDLE, AnimationFactory.Animation(texture, 0, 4, 5));
+        animatedSprites.put(HedgehogState.WALKING, AnimationFactory.Animation(texture, 1, 0, 5));
+        animatedSprites.put(HedgehogState.DYING, AnimationFactory.Animation(texture, 2, 2, 5));
+        animatedSprites.put(HedgehogState.ACTION, AnimationFactory.Animation(texture, 3, 1, 5));
         animatedSprites.put(HedgehogState.NONEXISTENT, AnimatedSprite.empty());
 
         return new AnimatedStateSprite<>(animatedSprites);
-    }
-
-    private void reverseInPlace(TextureRegion[] array) {
-        int left = 0;
-        int right = array.length - 1;
-        while (left < right) {
-            TextureRegion temp = array[left];
-            array[left] = array[right];
-            array[right] = temp;
-            left++;
-            right--;
-        }
     }
 }
