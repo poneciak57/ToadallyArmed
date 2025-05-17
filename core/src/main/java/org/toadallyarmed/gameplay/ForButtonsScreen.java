@@ -20,6 +20,10 @@ import org.toadallyarmed.factory.*;
 import org.toadallyarmed.system.SystemsManager;
 import org.toadallyarmed.util.logger.Logger;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -40,13 +44,14 @@ public class ForButtonsScreen implements Screen {
     WalletComponent wallet;
     AtomicInteger money;
 
-
     //--BUTTONS--//
     Texture buttonTexture, secondButtonTexture;
     Rectangle buttonBounds11, buttonBounds12, buttonBounds21, buttonBounds22, bigButtonBounds;
     OrthographicCamera camera;
     FrogType bought=FrogType.NONE;
     ConcurrentLinkedQueue<Entity> entities = new ConcurrentLinkedQueue<>();
+    Set<Vector2> taken=new HashSet<>();
+
 
     public ForButtonsScreen(Main main) {
         Logger.info("Working on Nat's screen");
@@ -153,19 +158,21 @@ public class ForButtonsScreen implements Screen {
                 }
             } else if (bought!=FrogType.NONE){
                 Entity entity;
-                touchPos.x=floor(touchPos.x);
-                touchPos.y=floor(touchPos.y);
-                if (bought==FrogType.BARD)
-                    entity=frogFactory.createMoneyFrog(new Vector2(touchPos.x, touchPos.y), config.moneyFrog());
-                else if (bought==FrogType.TANK)
-                    entity=frogFactory.createTankFrog(new Vector2(touchPos.x, touchPos.y), config.tankFrog());
-                else if (bought==FrogType.KNIGHT)
-                    entity=frogFactory.createKnightFrog(new Vector2(touchPos.x, touchPos.y), config.knightFrog());
-                else
-                    entity=frogFactory.createWizardFrog(new Vector2(touchPos.x, touchPos.y), config.wizardFrog());
-                entities.add(entity);
-                bought=FrogType.NONE;
-            } //TODO: check whether that place is taken
+                Vector2 pos=new Vector2(floor(touchPos.x), floor(touchPos.y));
+                if (!taken.contains(pos)) {
+                    if (bought == FrogType.BARD)
+                        entity = frogFactory.createMoneyFrog(pos, config.moneyFrog());
+                    else if (bought == FrogType.TANK)
+                        entity = frogFactory.createTankFrog(pos, config.tankFrog());
+                    else if (bought == FrogType.KNIGHT)
+                        entity = frogFactory.createKnightFrog(pos, config.knightFrog());
+                    else
+                        entity = frogFactory.createWizardFrog(pos, config.wizardFrog());
+                    entities.add(entity);
+                    bought = FrogType.NONE;
+                    taken.add(pos);
+                }
+            } 
         }
         main.renderer.getSpriteBatch().draw(buttonTexture, buttonBounds11.x, buttonBounds11.y, buttonBounds11.width, buttonBounds11.height);
         main.renderer.getSpriteBatch().draw(buttonTexture, buttonBounds12.x, buttonBounds12.y, buttonBounds12.width, buttonBounds12.height);
