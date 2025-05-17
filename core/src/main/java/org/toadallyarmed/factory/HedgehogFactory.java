@@ -95,8 +95,8 @@ public class HedgehogFactory implements Disposable {
         Map<HedgehogState, AnimatedSprite> animatedSprites = new HashMap<>();
         animatedSprites.put(HedgehogState.IDLE, AnimationFactory.Animation(texture, 0, 4, 5));
         animatedSprites.put(HedgehogState.WALKING, AnimationFactory.Animation(texture, 1, 0, 5));
-        animatedSprites.put(HedgehogState.DYING, AnimationFactory.Animation(texture, 2, 2, 5));
-        animatedSprites.put(HedgehogState.ACTION, AnimationFactory.Animation(texture, 3, 1, 5));
+        animatedSprites.put(HedgehogState.ACTION, AnimationFactory.Animation(texture, 0, 4, 5));
+        animatedSprites.put(HedgehogState.DYING, AnimationFactory.Animation(texture, 3, 1, 5));
         animatedSprites.put(HedgehogState.NONEXISTENT, AnimatedSprite.empty());
 
         return new AnimatedStateSprite<>(animatedSprites);
