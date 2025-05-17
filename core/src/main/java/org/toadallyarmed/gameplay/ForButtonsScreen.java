@@ -107,17 +107,33 @@ public class ForButtonsScreen implements Screen {
             Vector3 touchPos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(touchPos);
             if (buttonBounds11.contains(touchPos.x, touchPos.y)){
-                pixelFont.draw(main.renderer.getSpriteBatch(), "Wizard", 1, 4);
-                Logger.info("4 clicked");
+                int cost=gameState.getGameConfig().wizardFrog().cost();
+                if (cost<=wallet.access().get()) {
+                    pixelFont.draw(main.renderer.getSpriteBatch(), "Wizard", 1, 4);
+                    wallet.pay(cost);
+                    Logger.info("Wizard bought");
+                }
             } else if (buttonBounds12.contains(touchPos.x, touchPos.y)) {
-                pixelFont.draw(main.renderer.getSpriteBatch(), "Bard", 1, 4);
-                Logger.info("2 clicked");
+                int cost=gameState.getGameConfig().moneyFrog().cost();
+                if (cost<=wallet.access().get()) {
+                    pixelFont.draw(main.renderer.getSpriteBatch(), "Bard", 1, 4);
+                    wallet.pay(cost);
+                    Logger.info("Bard bought");
+                }
             } else if (buttonBounds21.contains(touchPos.x, touchPos.y)){
-                pixelFont.draw(main.renderer.getSpriteBatch(), "Knight", 1, 4);
-                Logger.info("3 clicked");
+                int cost=gameState.getGameConfig().knightFrog().cost();
+                if (cost<=wallet.access().get()) {
+                    pixelFont.draw(main.renderer.getSpriteBatch(), "Knight", 1, 4);
+                    wallet.pay(cost);
+                    Logger.info("Knight bought");
+                }
             } else if (buttonBounds22.contains(touchPos.x, touchPos.y)){
-                pixelFont.draw(main.renderer.getSpriteBatch(), "Tank", 1, 4);
-                Logger.info("1 clicked");
+                int cost=gameState.getGameConfig().tankFrog().cost();
+                if (cost<=wallet.access().get()) {
+                    pixelFont.draw(main.renderer.getSpriteBatch(), "Tank", 1, 4);
+                    wallet.pay(cost);
+                    Logger.info("Tank bought");
+                }
             }
         }
         main.renderer.getSpriteBatch().draw(buttonTexture, buttonBounds11.x, buttonBounds11.y, buttonBounds11.width, buttonBounds11.height);

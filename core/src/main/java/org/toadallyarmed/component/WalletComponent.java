@@ -14,4 +14,5 @@ public class WalletComponent implements Component {
     public AtomicInteger access() {
         return counter;
     }
+    public void pay(int amount) {counter.addAndGet(-amount);}
 }
