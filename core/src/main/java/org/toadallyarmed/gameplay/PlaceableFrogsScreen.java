@@ -20,22 +20,21 @@ import org.toadallyarmed.factory.*;
 import org.toadallyarmed.system.SystemsManager;
 import org.toadallyarmed.util.logger.Logger;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.badlogic.gdx.math.MathUtils.floor;
 
-public class ForButtonsScreen implements Screen {
+public class PlaceableFrogsScreen implements Screen {
     final Main main;
     FitViewport viewport;
 
     Texture backgroundTexture;
 
     FrogFactory frogFactory;
+    CoinFactory coinFactory;
     private final GlobalGameState gameState;
     GameConfig config;
     private final SystemsManager systemsManager;
@@ -53,7 +52,7 @@ public class ForButtonsScreen implements Screen {
     Set<Vector2> taken=new HashSet<>();
 
 
-    public ForButtonsScreen(Main main) {
+    public PlaceableFrogsScreen(Main main) {
         Logger.info("Working on Nat's screen");
         this.main = main;
 
@@ -63,6 +62,7 @@ public class ForButtonsScreen implements Screen {
         backgroundTexture = new Texture("GameScreen/background.jpg");
 
         frogFactory = FrogFactory.get();
+        coinFactory = CoinFactory.get();
         gameState = new GlobalGameState(
             new WalletComponent(0),
             DifficultyFactory.defaultGameConfig()
@@ -71,6 +71,9 @@ public class ForButtonsScreen implements Screen {
         systemsManager = SystemsManagerFactory.getSystemsManagerForGameplay(gameState);
         entities = gameState.getEntities();
         config = gameState.getGameConfig();
+
+        coinFactory = CoinFactory.get();
+        entities.add(coinFactory.createSpecialCoin(new Vector2(0, 5)));
 
         setFonts();
 
@@ -172,7 +175,7 @@ public class ForButtonsScreen implements Screen {
                     bought = FrogType.NONE;
                     taken.add(pos);
                 }
-            } 
+            }
         }
         main.renderer.getSpriteBatch().draw(buttonTexture, buttonBounds11.x, buttonBounds11.y, buttonBounds11.width, buttonBounds11.height);
         main.renderer.getSpriteBatch().draw(buttonTexture, buttonBounds12.x, buttonBounds12.y, buttonBounds12.width, buttonBounds12.height);

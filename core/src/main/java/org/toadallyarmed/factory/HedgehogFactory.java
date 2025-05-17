@@ -1,8 +1,6 @@
 package org.toadallyarmed.factory;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import org.toadallyarmed.component.HealthComponent;
@@ -13,6 +11,7 @@ import org.toadallyarmed.component.hedgehog.HedgehogStateComponent;
 import org.toadallyarmed.component.interfaces.RenderableComponent;
 import org.toadallyarmed.component.interfaces.StateComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
+import org.toadallyarmed.config.AnimationConfig;
 import org.toadallyarmed.config.CharacterConfig;
 import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.entity.EntityType;
@@ -20,13 +19,14 @@ import org.toadallyarmed.util.rendering.AnimatedSprite;
 import org.toadallyarmed.util.rendering.AnimatedStateSprite;
 import org.toadallyarmed.util.logger.Logger;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class HedgehogFactory implements Disposable {
     private static final HedgehogFactory factoryInstance = new HedgehogFactory();
-    private final HedgehogAnimationFactory AnimationFactory=new HedgehogAnimationFactory();
+    private final AnimationFactory AnimationFactory=new AnimationFactory(new AnimationConfig(
+        0.12f, new Vector2(0, 0.1f), new Vector2(1.5f, 1.5f), 6, 4, true
+    ));
 
     private final Texture basicHedgehogTexture;
     private final Texture fastHedgehogTexture;
@@ -90,7 +90,6 @@ public class HedgehogFactory implements Disposable {
             .build();
     }
 
-    @SuppressWarnings("ReassignedVariable")
     private AnimatedStateSprite<HedgehogState> createAnimatedStateSprite(Texture texture) {
         Map<HedgehogState, AnimatedSprite> animatedSprites = new HashMap<>();
         animatedSprites.put(HedgehogState.IDLE, AnimationFactory.Animation(texture, 0, 4, 5));

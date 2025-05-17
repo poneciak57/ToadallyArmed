@@ -4,8 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import org.toadallyarmed.gameplay.ForButtonsScreen;
-import org.toadallyarmed.gameplay.GameplayScreen;
+import org.toadallyarmed.gameplay.PlaceableFrogsScreen;
 import org.toadallyarmed.system.RenderingSystem;
 import org.toadallyarmed.util.rendering.Renderer;
 import org.toadallyarmed.util.logger.LogLevel;
@@ -34,7 +33,7 @@ public class Main extends Game {
         Logger.init(List.of(new TerminalLoggerBackend(LogLevel.TRACE)), LogLevel.TRACE);
         //setScreen(new GameplayScreen(this));
         // setScreen(new DraftScreen(this));
-        setScreen(new ForButtonsScreen(this));
+        setScreen(new PlaceableFrogsScreen(this));
     }
 
     @Override

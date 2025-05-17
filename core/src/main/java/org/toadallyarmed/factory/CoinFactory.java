@@ -12,6 +12,7 @@ import org.toadallyarmed.component.coin.CoinStateComponent;
 import org.toadallyarmed.component.interfaces.RenderableComponent;
 import org.toadallyarmed.component.interfaces.StateComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
+import org.toadallyarmed.config.AnimationConfig;
 import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.entity.EntityType;
 import org.toadallyarmed.util.logger.Logger;
@@ -26,6 +27,11 @@ public class CoinFactory implements Disposable {
     private static final CoinFactory factoryInstance = new CoinFactory();
 
     private final Texture coinTexture;
+    AnimationFactory coinAnimationFactory=new AnimationFactory(new AnimationConfig(
+        0.12f, new Vector2(0.3f, 0.8f), new Vector2(0.3f, 0.3f), 6, 1, false
+    )), specialCoinAnimationFactory=new AnimationFactory(new AnimationConfig(
+        0.25f, new Vector2(0.15f, 0.15f), new Vector2(0.7f, 0.7f), 6, 1, false
+    ));
     private final AnimatedStateSprite<CoinState> coinAnimatedStateSprite, specialCoinAnimatedStateSprite;
 
     private CoinFactory() {
@@ -70,49 +76,17 @@ public class CoinFactory implements Disposable {
 
     @SuppressWarnings("ReassignedVariable")
     private AnimatedStateSprite<CoinState> createAnimatedStateSprite(Texture texture) {
-        final float FRAME_DURATION          = 0.12f;
-        final Vector2 OFFSET                = new Vector2(0.35f, 0.8F);
-        final Vector2 BASE_DIMENSIONS       = new Vector2(0.3F, 0.3F);
-
-        Map<CoinState, AnimatedSprite> animatedSprites = new HashMap<>();
-        TextureRegion[][] framesGrid;
-        TextureRegion[] frames;
-        Animation<TextureRegion> animation;
-
-        framesGrid = TextureRegion.split(texture,
-            texture.getWidth()/6,
-            texture.getHeight());
-
-        frames = Arrays.copyOfRange(framesGrid[0], 0, 5);
-        animation = new Animation<>(FRAME_DURATION, frames);
-        animatedSprites.put(CoinState.IDLE, new AnimatedSprite(animation, OFFSET, BASE_DIMENSIONS));
-
+        Map<CoinState, AnimatedSprite> animatedSprites=new HashMap<>();
+        animatedSprites.put(CoinState.IDLE, coinAnimationFactory.Animation(texture, 0, 0, 5));
         animatedSprites.put(CoinState.NONEXISTENT, AnimatedSprite.empty());
-
         return new AnimatedStateSprite<>(animatedSprites);
     }
 
     @SuppressWarnings("ReassignedVariable")
     private AnimatedStateSprite<CoinState> createSpecialAnimatedStateSprite(Texture texture) {
-        final float FRAME_DURATION          = 0.25f;
-        final Vector2 OFFSET                = new Vector2(0.15F, 0.15F);
-        final Vector2 BASE_DIMENSIONS       = new Vector2(0.7F, 0.7F);
-
         Map<CoinState, AnimatedSprite> animatedSprites = new HashMap<>();
-        TextureRegion[][] framesGrid;
-        TextureRegion[] frames;
-        Animation<TextureRegion> animation;
-
-        framesGrid = TextureRegion.split(texture,
-            texture.getWidth()/6,
-            texture.getHeight());
-
-        frames = Arrays.copyOfRange(framesGrid[0], 0, 5);
-        animation = new Animation<>(FRAME_DURATION, frames);
-        animatedSprites.put(CoinState.IDLE, new AnimatedSprite(animation, OFFSET, BASE_DIMENSIONS));
-
+        animatedSprites.put(CoinState.IDLE, specialCoinAnimationFactory.Animation(texture, 0, 0, 5));
         animatedSprites.put(CoinState.NONEXISTENT, AnimatedSprite.empty());
-
         return new AnimatedStateSprite<>(animatedSprites);
     }
 }
