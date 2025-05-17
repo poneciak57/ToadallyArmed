@@ -6,12 +6,15 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.math.Rectangle;
 import org.toadallyarmed.Main;
 import org.toadallyarmed.component.WalletComponent;
+import org.toadallyarmed.component.frog.FrogType;
+import org.toadallyarmed.config.GameConfig;
 import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.factory.*;
 import org.toadallyarmed.system.SystemsManager;
@@ -20,13 +23,17 @@ import org.toadallyarmed.util.logger.Logger;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static com.badlogic.gdx.math.MathUtils.floor;
+
 public class ForButtonsScreen implements Screen {
     final Main main;
     FitViewport viewport;
 
     Texture backgroundTexture;
 
+    FrogFactory frogFactory;
     private final GlobalGameState gameState;
+    GameConfig config;
     private final SystemsManager systemsManager;
 
     BitmapFont pixelFont, font;
@@ -36,9 +43,10 @@ public class ForButtonsScreen implements Screen {
 
     //--BUTTONS--//
     Texture buttonTexture, secondButtonTexture;
-    Rectangle buttonBounds11, buttonBounds12, buttonBounds21, buttonBounds22;
+    Rectangle buttonBounds11, buttonBounds12, buttonBounds21, buttonBounds22, bigButtonBounds;
     OrthographicCamera camera;
-
+    FrogType bought=FrogType.NONE;
+    ConcurrentLinkedQueue<Entity> entities = new ConcurrentLinkedQueue<>();
 
     public ForButtonsScreen(Main main) {
         Logger.info("Working on Nat's screen");
@@ -49,13 +57,15 @@ public class ForButtonsScreen implements Screen {
 
         backgroundTexture = new Texture("GameScreen/background.jpg");
 
+        frogFactory = FrogFactory.get();
         gameState = new GlobalGameState(
             new WalletComponent(0),
             DifficultyFactory.defaultGameConfig()
         );
         wallet=gameState.getWallet();
         systemsManager = SystemsManagerFactory.getSystemsManagerForGameplay(gameState);
-        ConcurrentLinkedQueue<Entity> entities = gameState.getEntities();
+        entities = gameState.getEntities();
+        config = gameState.getGameConfig();
 
         setFonts();
 
@@ -84,6 +94,7 @@ public class ForButtonsScreen implements Screen {
         buttonBounds12=new Rectangle(10.66F-4.5F, 5, 1.5F, 1);
         buttonBounds21=new Rectangle(10.66F-3F, 5, 1.5F, 1);
         buttonBounds22=new Rectangle(10.66F-6F, 5, 1.5F, 1);
+        bigButtonBounds=new Rectangle(10.66F-6F, 5, 6F, 1);
         camera=new OrthographicCamera();
         camera.setToOrtho(false, 10.66F, 6);
         camera.update();
@@ -106,35 +117,55 @@ public class ForButtonsScreen implements Screen {
         if (Gdx.input.justTouched()){
             Vector3 touchPos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(touchPos);
-            if (buttonBounds11.contains(touchPos.x, touchPos.y)){
-                int cost=gameState.getGameConfig().wizardFrog().cost();
-                if (cost<=wallet.access().get()) {
-                    pixelFont.draw(main.renderer.getSpriteBatch(), "Wizard", 1, 4);
-                    wallet.pay(cost);
-                    Logger.info("Wizard bought");
+            if (bigButtonBounds.contains(touchPos.x, touchPos.y)) {
+                if (bought!=FrogType.NONE) {
+                    pixelFont.draw(main.renderer.getSpriteBatch(), "Place your hero first", 1, 5);
+                } else {
+                    if (buttonBounds11.contains(touchPos.x, touchPos.y)) {
+                        int cost = config.wizardFrog().cost();
+                        if (cost <= wallet.access().get()) {
+                            wallet.pay(cost);
+                            Logger.info("Wizard bought");
+                            bought = FrogType.WIZARD;
+                        }
+                    } else if (buttonBounds12.contains(touchPos.x, touchPos.y)) {
+                        int cost = config.moneyFrog().cost();
+                        if (cost <= wallet.access().get()) {
+                            wallet.pay(cost);
+                            Logger.info("Bard bought");
+                            bought = FrogType.BARD;
+                        }
+                    } else if (buttonBounds21.contains(touchPos.x, touchPos.y)) {
+                        int cost = config.knightFrog().cost();
+                        if (cost <= wallet.access().get()) {
+                            wallet.pay(cost);
+                            Logger.info("Knight bought");
+                            bought = FrogType.KNIGHT;
+                        }
+                    } else if (buttonBounds22.contains(touchPos.x, touchPos.y)) {
+                        int cost = config.tankFrog().cost();
+                        if (cost <= wallet.access().get()) {
+                            wallet.pay(cost);
+                            Logger.info("Tank bought");
+                            bought = FrogType.TANK;
+                        }
+                    }
                 }
-            } else if (buttonBounds12.contains(touchPos.x, touchPos.y)) {
-                int cost=gameState.getGameConfig().moneyFrog().cost();
-                if (cost<=wallet.access().get()) {
-                    pixelFont.draw(main.renderer.getSpriteBatch(), "Bard", 1, 4);
-                    wallet.pay(cost);
-                    Logger.info("Bard bought");
-                }
-            } else if (buttonBounds21.contains(touchPos.x, touchPos.y)){
-                int cost=gameState.getGameConfig().knightFrog().cost();
-                if (cost<=wallet.access().get()) {
-                    pixelFont.draw(main.renderer.getSpriteBatch(), "Knight", 1, 4);
-                    wallet.pay(cost);
-                    Logger.info("Knight bought");
-                }
-            } else if (buttonBounds22.contains(touchPos.x, touchPos.y)){
-                int cost=gameState.getGameConfig().tankFrog().cost();
-                if (cost<=wallet.access().get()) {
-                    pixelFont.draw(main.renderer.getSpriteBatch(), "Tank", 1, 4);
-                    wallet.pay(cost);
-                    Logger.info("Tank bought");
-                }
-            }
+            } else if (bought!=FrogType.NONE){
+                Entity entity;
+                touchPos.x=floor(touchPos.x);
+                touchPos.y=floor(touchPos.y);
+                if (bought==FrogType.BARD)
+                    entity=frogFactory.createMoneyFrog(new Vector2(touchPos.x, touchPos.y), config.moneyFrog());
+                else if (bought==FrogType.TANK)
+                    entity=frogFactory.createTankFrog(new Vector2(touchPos.x, touchPos.y), config.tankFrog());
+                else if (bought==FrogType.KNIGHT)
+                    entity=frogFactory.createKnightFrog(new Vector2(touchPos.x, touchPos.y), config.knightFrog());
+                else
+                    entity=frogFactory.createWizardFrog(new Vector2(touchPos.x, touchPos.y), config.wizardFrog());
+                entities.add(entity);
+                bought=FrogType.NONE;
+            } //TODO: check whether that place is taken
         }
         main.renderer.getSpriteBatch().draw(buttonTexture, buttonBounds11.x, buttonBounds11.y, buttonBounds11.width, buttonBounds11.height);
         main.renderer.getSpriteBatch().draw(buttonTexture, buttonBounds12.x, buttonBounds12.y, buttonBounds12.width, buttonBounds12.height);
