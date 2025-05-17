@@ -3,11 +3,13 @@ package org.toadallyarmed.gameplay;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.math.Rectangle;
 import org.toadallyarmed.Main;
 import org.toadallyarmed.component.WalletComponent;
 import org.toadallyarmed.entity.Entity;
@@ -15,21 +17,15 @@ import org.toadallyarmed.factory.*;
 import org.toadallyarmed.system.SystemsManager;
 import org.toadallyarmed.util.logger.Logger;
 
-import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class GameplayScreen implements Screen {
+public class ForButtonsScreen implements Screen {
     final Main main;
     FitViewport viewport;
 
     Texture backgroundTexture;
 
-    FrogFactory frogFactory;
-    HedgehogFactory hedgehogFactory;
-    CoinFactory coinFactory;
-    BulletFactory bulletFactory;
-    ConcurrentLinkedQueue<Entity> entities = new ConcurrentLinkedQueue<>();
     private final GlobalGameState gameState;
     private final SystemsManager systemsManager;
 
@@ -37,8 +33,15 @@ public class GameplayScreen implements Screen {
     WalletComponent wallet;
     AtomicInteger money;
 
-    public GameplayScreen(Main main) {
-        Logger.info("creating a new gameplay screen");
+
+    //--BUTTONS--//
+    Texture buttonTexture, secondButtonTexture;
+    Rectangle buttonBounds11, buttonBounds12, buttonBounds21, buttonBounds22;
+    OrthographicCamera camera;
+
+
+    public ForButtonsScreen(Main main) {
+        Logger.info("Working on Nat's screen");
         this.main = main;
 
         viewport = new FitViewport(10.66F, 6);
@@ -46,8 +49,6 @@ public class GameplayScreen implements Screen {
 
         backgroundTexture = new Texture("GameScreen/background.jpg");
 
-        frogFactory = FrogFactory.get();
-        hedgehogFactory = HedgehogFactory.get();
         gameState = new GlobalGameState(
             new WalletComponent(0),
             DifficultyFactory.defaultGameConfig()
@@ -55,30 +56,6 @@ public class GameplayScreen implements Screen {
         wallet=gameState.getWallet();
         systemsManager = SystemsManagerFactory.getSystemsManagerForGameplay(gameState);
         ConcurrentLinkedQueue<Entity> entities = gameState.getEntities();
-        var config = gameState.getGameConfig();
-        Entity basicFrog  = frogFactory.createBasicFrog(new Vector2(0, 0), config.knightFrog());
-        Entity knightFrog = frogFactory.createKnightFrog(new Vector2(0, 1), config.knightFrog());
-        Entity moneyFrog  = frogFactory.createMoneyFrog(new Vector2(0, 2), config.moneyFrog());
-        Entity tankFrog   = frogFactory.createTankFrog(new Vector2(0, 3), config.tankFrog());
-        Entity wizardFrog = frogFactory.createWizardFrog(new Vector2(0, 4), config.wizardFrog());
-
-        Entity basicHedgehog = hedgehogFactory.createBasicHedgehog(new Vector2(9, 1), config.basicHedgehog());
-        Entity fastHedgehog = hedgehogFactory.createFastHedgehog(new Vector2(9, 2), config.fastHedgehog());
-        Entity strongHedgehog = hedgehogFactory.createStrongHedgehog(new Vector2(9, 3), config.strongHedgehog());
-        Entity healthyHedgehog = hedgehogFactory.createHealthyHedgehog(new Vector2(9, 4), config.healthyHedgehog());
-
-        coinFactory = CoinFactory.get();
-        Entity coin = coinFactory.createCoin(new Vector2(0, 2));
-        Entity Scoin = coinFactory.createSpecialCoin(new Vector2(0, 5));
-        bulletFactory = BulletFactory.get();
-        Entity real = bulletFactory.createFireball(new Vector2(3, 3), config);
-        Entity fake = bulletFactory.createBullet(new Vector2(4, 4), config);
-
-        entities.addAll(List.of(
-            basicFrog, knightFrog, moneyFrog, tankFrog, wizardFrog,
-            basicHedgehog, fastHedgehog, strongHedgehog, healthyHedgehog,
-            coin, Scoin, real, fake
-        ));
 
         setFonts();
 
@@ -100,6 +77,16 @@ public class GameplayScreen implements Screen {
     public void show() {
         systemsManager.start();
         // Prepare your screen here.
+
+        //--BUTTONS--//
+        buttonTexture=new Texture("GameScreen/emptyTexture.png");
+        buttonBounds11=new Rectangle(10.66F-1.5F, 5, 1.5F, 1);
+        buttonBounds12=new Rectangle(10.66F-4.5F, 5, 1.5F, 1);
+        buttonBounds21=new Rectangle(10.66F-3F, 5, 1.5F, 1);
+        buttonBounds22=new Rectangle(10.66F-6F, 5, 1.5F, 1);
+        camera=new OrthographicCamera();
+        camera.setToOrtho(false, 10.66F, 6);
+        camera.update();
     }
 
     @Override
@@ -115,6 +102,31 @@ public class GameplayScreen implements Screen {
 
         main.renderingSystem.tick(delta, gameState.getEntities());
 
+        //-- BUTTONS --//
+        if (Gdx.input.justTouched()){
+            Vector3 touchPos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+            camera.unproject(touchPos);
+            if (buttonBounds11.contains(touchPos.x, touchPos.y)){
+                pixelFont.draw(main.renderer.getSpriteBatch(), "Wizard", 1, 4);
+                Logger.info("4 clicked");
+            } else if (buttonBounds12.contains(touchPos.x, touchPos.y)) {
+                pixelFont.draw(main.renderer.getSpriteBatch(), "Bard", 1, 4);
+                Logger.info("2 clicked");
+            } else if (buttonBounds21.contains(touchPos.x, touchPos.y)){
+                pixelFont.draw(main.renderer.getSpriteBatch(), "Knight", 1, 4);
+                Logger.info("3 clicked");
+            } else if (buttonBounds22.contains(touchPos.x, touchPos.y)){
+                pixelFont.draw(main.renderer.getSpriteBatch(), "Tank", 1, 4);
+                Logger.info("1 clicked");
+            }
+        }
+        main.renderer.getSpriteBatch().draw(buttonTexture, buttonBounds11.x, buttonBounds11.y, buttonBounds11.width, buttonBounds11.height);
+        main.renderer.getSpriteBatch().draw(buttonTexture, buttonBounds12.x, buttonBounds12.y, buttonBounds12.width, buttonBounds12.height);
+        main.renderer.getSpriteBatch().draw(buttonTexture, buttonBounds21.x, buttonBounds21.y, buttonBounds21.width, buttonBounds21.height);
+        main.renderer.getSpriteBatch().draw(buttonTexture, buttonBounds22.x, buttonBounds22.y, buttonBounds22.width, buttonBounds22.height);
+
+
+        //-- END --//
         money=wallet.access();
         pixelFont.draw(main.renderer.getSpriteBatch(), Integer.toString(money.get()), 1, 6);
 
@@ -152,8 +164,5 @@ public class GameplayScreen implements Screen {
         // Destroy screen's assets here.
         backgroundTexture.dispose();
         systemsManager.stop();
-        frogFactory.dispose();
-        hedgehogFactory.dispose();
-        coinFactory.dispose();
     }
 }
