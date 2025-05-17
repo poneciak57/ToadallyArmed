@@ -36,7 +36,15 @@ This project uses the following third-party assets. All assets have been verifie
 
 ---
 
-## 5. Custom graphic made especially for this project
+## 5. Fireball Effect – Magic Projectile Animation for 2D Games
+- **Author**: NYKNCK
+- **Source**: [itch.io page](https://nyknck.itch.io/pixelarteffectfx017)
+- **License**: Free to use anywhere; attribution not required but appreciated. Redistribution or resale of the asset files themselves is not allowed.
+- **Notes**: Used under the terms provided on the asset page.
+
+---
+
+## 6. Custom graphic made especially for this project
 - **Author**: Natalia Ignatowicz
 - **Source**: private
 - **Licence**: Free to use
