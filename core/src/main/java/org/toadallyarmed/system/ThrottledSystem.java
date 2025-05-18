@@ -10,7 +10,7 @@ public class ThrottledSystem implements System {
     private final float interval;
     private float accumulatedTime = 0;
 
-    public ThrottledSystem(int tickRate, System system) {
+    public ThrottledSystem(float tickRate, System system) {
         this.interval = 1f / tickRate;
         this.system = system;
     }

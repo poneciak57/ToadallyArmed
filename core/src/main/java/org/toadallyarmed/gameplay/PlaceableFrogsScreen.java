@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -44,11 +46,11 @@ public class PlaceableFrogsScreen implements Screen {
     AtomicInteger money;
 
     //--BUTTONS--//
-    Texture buttonTexture, secondButtonTexture;
-    Rectangle buttonBounds11, buttonBounds12, buttonBounds21, buttonBounds22, bigButtonBounds;
+    Texture buttonTexture;
+    Rectangle buttonBounds11, buttonBounds12, buttonBounds21, buttonBounds22;
     OrthographicCamera camera;
     FrogType bought=FrogType.NONE;
-    ConcurrentLinkedQueue<Entity> entities = new ConcurrentLinkedQueue<>();
+    ConcurrentLinkedQueue<Entity> entities;
     Set<Vector2> taken=new HashSet<>();
 
 
@@ -97,12 +99,11 @@ public class PlaceableFrogsScreen implements Screen {
         // Prepare your screen here.
 
         //--BUTTONS--//
-        buttonTexture=new Texture("GameScreen/emptyTexture.png");
+        buttonTexture=new Texture("GameScreen/button.png");
         buttonBounds11=new Rectangle(10.66F-1.5F, 5, 1.5F, 1);
-        buttonBounds12=new Rectangle(10.66F-4.5F, 5, 1.5F, 1);
         buttonBounds21=new Rectangle(10.66F-3F, 5, 1.5F, 1);
+        buttonBounds12=new Rectangle(10.66F-4.5F, 5, 1.5F, 1);
         buttonBounds22=new Rectangle(10.66F-6F, 5, 1.5F, 1);
-        bigButtonBounds=new Rectangle(10.66F-6F, 5, 6F, 1);
         camera=new OrthographicCamera();
         camera.setToOrtho(false, 10.66F, 6);
         camera.update();
@@ -115,80 +116,103 @@ public class PlaceableFrogsScreen implements Screen {
         main.renderer.getSpriteBatch().setProjectionMatrix(viewport.getCamera().combined);
         main.renderer.getSpriteBatch().begin();
 
+        // RYSOWANIE TŁA I GRY
         float worldWidth = viewport.getWorldWidth();
         float worldHeight = viewport.getWorldHeight();
         main.renderer.getSpriteBatch().draw(backgroundTexture, 0, 0, worldWidth, worldHeight);
-
         main.renderingSystem.tick(delta, gameState.getEntities());
 
-        //-- BUTTONS --//
-        if (Gdx.input.justTouched()){
+        if (Gdx.input.justTouched()) {
+            // 1) pobranie i konwersja współrzędnych
             Vector3 touchPos = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
             camera.unproject(touchPos);
-            if (bigButtonBounds.contains(touchPos.x, touchPos.y)) {
-                if (bought!=FrogType.NONE) {
-                    pixelFont.draw(main.renderer.getSpriteBatch(), "Place your hero first", 1, 5);
-                } else {
-                    if (buttonBounds11.contains(touchPos.x, touchPos.y)) {
-                        int cost = config.wizardFrog().cost();
-                        if (cost <= wallet.access().get()) {
-                            wallet.pay(cost);
-                            Logger.info("Wizard bought");
-                            bought = FrogType.WIZARD;
-                        }
-                    } else if (buttonBounds12.contains(touchPos.x, touchPos.y)) {
-                        int cost = config.moneyFrog().cost();
-                        if (cost <= wallet.access().get()) {
-                            wallet.pay(cost);
-                            Logger.info("Bard bought");
-                            bought = FrogType.BARD;
-                        }
-                    } else if (buttonBounds21.contains(touchPos.x, touchPos.y)) {
-                        int cost = config.knightFrog().cost();
-                        if (cost <= wallet.access().get()) {
-                            wallet.pay(cost);
-                            Logger.info("Knight bought");
-                            bought = FrogType.KNIGHT;
-                        }
-                    } else if (buttonBounds22.contains(touchPos.x, touchPos.y)) {
-                        int cost = config.tankFrog().cost();
-                        if (cost <= wallet.access().get()) {
-                            wallet.pay(cost);
-                            Logger.info("Tank bought");
-                            bought = FrogType.TANK;
-                        }
+
+            // 2) detekcja kliknięcia w przycisk
+            boolean hit11 = buttonBounds11.contains(touchPos.x, touchPos.y);
+            boolean hit12 = buttonBounds12.contains(touchPos.x, touchPos.y);
+            boolean hit21 = buttonBounds21.contains(touchPos.x, touchPos.y);
+            boolean hit22 = buttonBounds22.contains(touchPos.x, touchPos.y);
+            boolean onButton = hit11 || hit12 || hit21 || hit22;
+
+            // --- 3A) JEŚLI nic nie kupione i klik w przycisk → kupno ---
+            if (bought == FrogType.NONE && onButton) {
+                if (hit11) {
+                    int cost = config.wizardFrog().cost();
+                    if (cost <= wallet.access().get()) {
+                        wallet.pay(cost);
+                        Logger.info("Wizard bought");
+                        bought = FrogType.WIZARD;
+                    }
+                } else if (hit12) {
+                    int cost = config.moneyFrog().cost();
+                    if (cost <= wallet.access().get()) {
+                        wallet.pay(cost);
+                        Logger.info("Bard bought");
+                        bought = FrogType.BARD;
+                    }
+                } else if (hit21) {
+                    int cost = config.knightFrog().cost();
+                    if (cost <= wallet.access().get()) {
+                        wallet.pay(cost);
+                        Logger.info("Knight bought");
+                        bought = FrogType.KNIGHT;
+                    }
+                } else { // hit22
+                    int cost = config.tankFrog().cost();
+                    if (cost <= wallet.access().get()) {
+                        wallet.pay(cost);
+                        Logger.info("Tank bought");
+                        bought = FrogType.TANK;
                     }
                 }
-            } else if (bought!=FrogType.NONE){
-                Entity entity;
-                Vector2 pos=new Vector2(floor(touchPos.x), floor(touchPos.y));
-                if (!taken.contains(pos)) {
-                    if (bought == FrogType.BARD)
-                        entity = frogFactory.createMoneyFrog(pos, config.moneyFrog());
-                    else if (bought == FrogType.TANK)
-                        entity = frogFactory.createTankFrog(pos, config.tankFrog());
-                    else if (bought == FrogType.KNIGHT)
-                        entity = frogFactory.createKnightFrog(pos, config.knightFrog());
-                    else
-                        entity = frogFactory.createWizardFrog(pos, config.wizardFrog());
-                    entities.add(entity);
-                    bought = FrogType.NONE;
-                    taken.add(pos);
+            }
+            // --- 3B) JEŚLI coś kupione i klik poza przyciskami → stawianie ---
+            else if (bought != FrogType.NONE && !onButton) {
+                // 1) upewnij się, że klik jest wewnątrz regionu 10 krat (0 ≤ x < 10.66, y < 5)
+                if (touchPos.y >= 0 && touchPos.y < 5f && touchPos.x >= 0 && touchPos.x < viewport.getWorldWidth()) {
+                    // 2) oblicz szerokość jednej kratki na podstawie całkowitej szerokości viewportu i liczby kolumn (10)
+                    float cellWidth  = viewport.getWorldWidth()  / 10f;  // ≈1.066
+                    float cellHeight = 5f / 5f;                        // jeśli masz 5 wierszy, inaczej dostosuj
+
+                    // 3) indeksy komórek przez dzielenie, a nie floor całego współrzędnego
+                    int cellX = MathUtils.clamp((int)(touchPos.x / cellWidth), 0, 9);
+                    int cellY = MathUtils.clamp((int)(touchPos.y / cellHeight), 0, 4);
+
+                    Vector2 gridPos = new Vector2(cellX, cellY);
+
+                    if (!taken.contains(gridPos)) {
+                        Entity entity;
+                        switch (bought) {
+                            case BARD:
+                                entity = frogFactory.createMoneyFrog(gridPos, config.moneyFrog());
+                                break;
+                            case TANK:
+                                entity = frogFactory.createTankFrog(gridPos, config.tankFrog());
+                                break;
+                            case KNIGHT:
+                                entity = frogFactory.createKnightFrog(gridPos, config.knightFrog());
+                                break;
+                            default: // WIZARD
+                                entity = frogFactory.createWizardFrog(gridPos, config.wizardFrog());
+                        }
+                        entities.add(entity);
+                        taken.add(gridPos);
+                        bought = FrogType.NONE;
+                    }
                 }
             }
+            // w każdym innym przypadku (klik w UI po zakupie, albo poza UI bez zakupu) – ignorujemy
         }
-        main.renderer.getSpriteBatch().draw(buttonTexture, buttonBounds11.x, buttonBounds11.y, buttonBounds11.width, buttonBounds11.height);
-        main.renderer.getSpriteBatch().draw(buttonTexture, buttonBounds12.x, buttonBounds12.y, buttonBounds12.width, buttonBounds12.height);
-        main.renderer.getSpriteBatch().draw(buttonTexture, buttonBounds21.x, buttonBounds21.y, buttonBounds21.width, buttonBounds21.height);
-        main.renderer.getSpriteBatch().draw(buttonTexture, buttonBounds22.x, buttonBounds22.y, buttonBounds22.width, buttonBounds22.height);
 
-
-        //-- END --//
-        money=wallet.access();
-        pixelFont.draw(main.renderer.getSpriteBatch(), Integer.toString(money.get()), 1, 6);
+        // RYSOWANIE PRZYCISKÓW
+        SpriteBatch sb = main.renderer.getSpriteBatch();
+        money = wallet.access();
+        pixelFont.draw(sb, Integer.toString(money.get()), 1, 6);
+        sb.draw(buttonTexture, 10.66F-1.5F, 5, 1.5F, 1);
 
         main.renderer.getSpriteBatch().end();
     }
+
 
     @Override
     public void resize(int width, int height) {
