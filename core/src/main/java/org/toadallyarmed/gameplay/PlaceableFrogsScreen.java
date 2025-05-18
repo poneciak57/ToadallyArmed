@@ -48,7 +48,6 @@ public class PlaceableFrogsScreen implements Screen {
     //--BUTTONS--//
     Texture buttonTexture;
     Rectangle buttonBoundswizard, buttonBoundsbard, buttonBoundsknight, buttonBoundstank;
-    OrthographicCamera camera;
     FrogType bought=FrogType.NONE;
     ConcurrentLinkedQueue<Entity> entities;
     Set<Vector2> taken=new HashSet<>();
@@ -60,9 +59,6 @@ public class PlaceableFrogsScreen implements Screen {
 
         viewport = new FitViewport(10.66F, 6);
         this.main.updateFontScale(viewport);
-        camera=new OrthographicCamera();
-        camera.setToOrtho(false, 10.66F, 6);
-        camera.update();
 
         backgroundTexture = new Texture("GameScreen/background.jpg");
 
@@ -104,7 +100,7 @@ public class PlaceableFrogsScreen implements Screen {
         buttonBoundstank=new Rectangle(10.66F-6F, 5, 1.5F, 1);
     }
     private void analyzeTouch(Vector3 touchPos){//touch position is obtained  (in terms of x, y)
-        camera.unproject(touchPos);  //but there is an unknown issue with processing it (only on x-asis)
+        viewport.unproject(touchPos);  //but there is an unknown issue with processing it (only on x-asis)
 
         boolean hitwizard = buttonBoundswizard.contains(touchPos.x, touchPos.y);
         boolean hitbard = buttonBoundsbard.contains(touchPos.x, touchPos.y);
