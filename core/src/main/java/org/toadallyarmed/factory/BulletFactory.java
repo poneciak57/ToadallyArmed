@@ -33,7 +33,7 @@ public class BulletFactory implements Disposable {
     private BulletFactory(){
         Logger.trace("Initializing BulletFactory");
 
-        fireballTexture  = new Texture("GameScreen/fireball/fireball.png");
+        fireballTexture  = new Texture("GameScreen/Fireball/fireball.png");
         bulletAnimatedStateSprite = createAnimatedStateSprite(false);
         fireballAnimatedStateSprite=createAnimatedStateSprite(true);
         Logger.debug("Initialized BulletFactory successfully");
