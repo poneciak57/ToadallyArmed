@@ -31,6 +31,7 @@ public class CollisionSystem implements System {
             if (entries.isEmpty())
                 continue;
             for (Entity otherEntity : entities) {
+                if (entity.equals(otherEntity)) continue;
                 Optional<List<ColliderActionEntry>> otherEntries = getEntries(otherEntity);
                 if (otherEntries.isEmpty())
                     continue;
@@ -41,6 +42,7 @@ public class CollisionSystem implements System {
                 );
                 for (ColliderActionEntry entry : entries.get()) {
                     for (ColliderActionEntry otherEntry : otherEntries.get()) {
+                        if (!entry.filter(otherEntity.type(), otherEntry.getColliderType())) continue;
                         if (GJK.intersects(entry.getShape(), otherEntry.getShape()))
                             entry.run(deltaTime, payload);
                     }
