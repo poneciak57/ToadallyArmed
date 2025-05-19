@@ -1,34 +1,60 @@
 package org.toadallyarmed.system;
 
-import org.toadallyarmed.component.interfaces.ColliderComponent;
-import org.toadallyarmed.component.interfaces.CollisionActionComponent;
+import org.toadallyarmed.component.ColliderComponent;
+import org.toadallyarmed.component.action.payload.BasicCollisionActionPayload;
+import org.toadallyarmed.component.interfaces.ColliderActionEntry;
 import org.toadallyarmed.component.interfaces.TransformComponent;
 import org.toadallyarmed.entity.Entity;
-import org.toadallyarmed.util.collision.ConvexShape;
+import org.toadallyarmed.gameplay.GlobalGameState;
 import org.toadallyarmed.util.collision.GJK;
 import org.toadallyarmed.util.logger.Logger;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class CollisionSystem implements System{
+public class CollisionSystem implements System {
+
+    private final GlobalGameState gameState;
+
+    public CollisionSystem(GlobalGameState gameState) {
+        this.gameState = gameState;
+    }
+
     @Override
     public void tick(float deltaTime, ConcurrentLinkedQueue<Entity> entities) {
         Logger.trace("CollisionSystem: tick");
-        float currentNanoTime = java.lang.System.nanoTime();
+//        float currentNanoTime = java.lang.System.nanoTime();
         for (Entity entity : entities) {
-            CollisionActionComponent actionComponent = entity.get(CollisionActionComponent.class).orElse(null);
-            ColliderComponent colliderComponent = entity.get(ColliderComponent.class).orElse(null);
-            TransformComponent transformComponent = entity.get(TransformComponent.class).orElse(null);
-            if (colliderComponent == null || transformComponent == null || actionComponent == null) continue;
-            ConvexShape convex = colliderComponent.getConvexShape(transformComponent.getAdvancedPosition(currentNanoTime));
+
+            Optional<List<ColliderActionEntry>> entries = getEntries(entity);
+            if (entries.isEmpty())
+                continue;
             for (Entity otherEntity : entities) {
-                ColliderComponent otherColliderComponent = otherEntity.get(ColliderComponent.class).orElse(null);
-                TransformComponent otherTransformComponent = otherEntity.get(TransformComponent.class).orElse(null);
-                if (otherColliderComponent == null || otherTransformComponent == null) continue;
-                ConvexShape otherConvex = otherColliderComponent.getConvexShape(otherTransformComponent.getAdvancedPosition(currentNanoTime));
-                if (GJK.intersects(convex, otherConvex))
-                    actionComponent.collide(deltaTime, otherEntity);
+                Optional<List<ColliderActionEntry>> otherEntries = getEntries(otherEntity);
+                if (otherEntries.isEmpty())
+                    continue;
+                BasicCollisionActionPayload payload = new BasicCollisionActionPayload(
+                   this.gameState,
+                   entity,
+                   otherEntity
+                );
+                for (ColliderActionEntry entry : entries.get()) {
+                    for (ColliderActionEntry otherEntry : otherEntries.get()) {
+                        if (GJK.intersects(entry.getShape(), otherEntry.getShape()))
+                            entry.run(deltaTime, payload);
+                    }
+                }
             }
         }
+    }
+
+    private static Optional<List<ColliderActionEntry>> getEntries(Entity entity) {
+        Optional<ColliderComponent> colliderComponent = entity.get(ColliderComponent.class);
+        Optional<TransformComponent> transformComponent = entity.get(TransformComponent.class);
+        if (colliderComponent.isEmpty() || transformComponent.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(colliderComponent.get().getEntries());
     }
 }

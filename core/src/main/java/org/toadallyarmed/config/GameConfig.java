@@ -8,6 +8,7 @@ public record GameConfig(
     float PhysicsSystemTickRate,
     float HealthSystemTickRate,
     float BulletSystemTickRate,
+    float ActionSystemTickRate,
 
     // -- Values -- //
     CharacterConfig knightFrog,

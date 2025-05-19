@@ -20,11 +20,15 @@ public class SystemsManagerFactory {
             )
             .addThrottledSystem(
                 gameState.getGameConfig().CollisionSystemTickRate(),
-                new CollisionSystem()
+                new CollisionSystem(gameState)
             )
             .addThrottledSystem(
                 gameState.getGameConfig().PhysicsSystemTickRate(),
                 new PhysicsSystem()
+            )
+            .addThrottledSystem(
+                gameState.getGameConfig().ActionSystemTickRate(),
+                new ActionSystem(gameState)
             )
             .build(gameState.getEntities());
     }

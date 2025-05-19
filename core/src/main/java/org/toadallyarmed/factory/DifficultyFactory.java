@@ -12,6 +12,7 @@ public class DifficultyFactory {
             5,
             5,
             10,
+            5,
             new CharacterConfig( //knight
                 300, 20, 1, 0, 75
             ), new CharacterConfig( //money
