@@ -87,11 +87,10 @@ public class FrogFactory implements Disposable {
                 transform,
                 frogState,
                 animatedStateSprite);
-        return new Entity.EntityBuilder(EntityType.FROG)
-            .add(TransformComponent.class, transform)
-            .add(StateComponent.class, frogState)
-            .add(RenderableComponent.class, renderable)
-            .build();
+        return new Entity(EntityType.FROG)
+            .put(TransformComponent.class, transform)
+            .put(StateComponent.class, frogState)
+            .put(RenderableComponent.class, renderable);
     }
 
     private AnimatedStateSprite<FrogState> createAnimatedStateSprite(Texture texture) {

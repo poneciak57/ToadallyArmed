@@ -67,11 +67,10 @@ public class CoinFactory implements Disposable {
                 transform,
                 CoinState,
                 animatedStateSprite);
-        return new Entity.EntityBuilder(EntityType.COIN)
-            .add(TransformComponent.class, transform)
-            .add(StateComponent.class, CoinState)
-            .add(RenderableComponent.class, renderable)
-            .build();
+        return new Entity(EntityType.COIN)
+            .put(TransformComponent.class, transform)
+            .put(StateComponent.class, CoinState)
+            .put(RenderableComponent.class, renderable);
     }
 
     @SuppressWarnings("ReassignedVariable")

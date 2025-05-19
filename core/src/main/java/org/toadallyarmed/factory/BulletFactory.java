@@ -60,11 +60,10 @@ public class BulletFactory implements Disposable {
                 transform,
                 BulletState,
                 animatedStateSprite);
-        return new Entity.EntityBuilder(EntityType.BULLET)
-            .add(TransformComponent.class, transform)
-            .add(StateComponent.class, BulletState)
-            .add(RenderableComponent.class, renderable)
-            .build();
+        return new Entity(EntityType.BULLET)
+            .put(TransformComponent.class, transform)
+            .put(StateComponent.class, BulletState)
+            .put(RenderableComponent.class, renderable);
     }
     private AnimatedStateSprite<BulletState> createAnimatedStateSprite(boolean real) {
         Map<BulletState, AnimatedSprite> animatedSprites = new HashMap<>();

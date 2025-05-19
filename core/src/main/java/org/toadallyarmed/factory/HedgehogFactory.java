@@ -82,12 +82,11 @@ public class HedgehogFactory implements Disposable {
                 transform,
                 hedgehogState,
                 animatedStateSprite);
-        return new Entity.EntityBuilder(EntityType.HEDGEHOG)
-            .add(TransformComponent.class, transform)
-            .add(StateComponent.class, hedgehogState)
-            .add(RenderableComponent.class, renderable)
-            .add(HealthComponent.class, health)
-            .build();
+        return new Entity(EntityType.HEDGEHOG)
+            .put(TransformComponent.class, transform)
+            .put(StateComponent.class, hedgehogState)
+            .put(RenderableComponent.class, renderable)
+            .put(HealthComponent.class, health);
     }
 
     private AnimatedStateSprite<HedgehogState> createAnimatedStateSprite(Texture texture) {
