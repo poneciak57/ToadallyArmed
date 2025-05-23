@@ -100,7 +100,7 @@ public class PlaceableFrogsScreen implements Screen {
         buttonBoundstank=new Rectangle(10.66F-6F, 5, 1.5F, 1);
     }
     private void analyzeTouch(Vector3 touchPos){//touch position is obtained  (in terms of x, y)
-        viewport.unproject(touchPos);  //but there is an unknown issue with processing it (only on x-asis)
+        viewport.unproject(touchPos);
 
         boolean hitwizard = buttonBoundswizard.contains(touchPos.x, touchPos.y);
         boolean hitbard = buttonBoundsbard.contains(touchPos.x, touchPos.y);
@@ -144,12 +144,13 @@ public class PlaceableFrogsScreen implements Screen {
                 float cellWidth  = viewport.getWorldWidth()/10.66f;
                 float cellHeight = viewport.getWorldHeight()/6;
 
-                int cellX = MathUtils.clamp((int)(touchPos.x / cellWidth), 0, 9);
+                int cellX = MathUtils.clamp((int)(touchPos.x / cellWidth), 0, 10);
                 int cellY = MathUtils.clamp((int)(touchPos.y / cellHeight), 0, 4);
 
                 Vector2 gridPos = new Vector2(cellX, cellY);
 
-                if (!taken.contains(gridPos)) {
+
+                if (!taken.contains(gridPos) && cellX<=9) {
                     Entity entity = switch (bought) {
                         case BARD -> frogFactory.createMoneyFrog(gridPos, config.moneyFrog());
                         case TANK -> frogFactory.createTankFrog(gridPos, config.tankFrog());
