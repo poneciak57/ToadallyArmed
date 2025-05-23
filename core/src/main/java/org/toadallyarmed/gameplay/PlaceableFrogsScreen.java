@@ -37,6 +37,7 @@ public class PlaceableFrogsScreen implements Screen {
 
     FrogFactory frogFactory;
     CoinFactory coinFactory;
+    HedgehogFactory hedgehogFactory;
     private final GlobalGameState gameState;
     GameConfig config;
     private final SystemsManager systemsManager;
@@ -64,6 +65,7 @@ public class PlaceableFrogsScreen implements Screen {
 
         frogFactory = FrogFactory.get();
         coinFactory = CoinFactory.get();
+        hedgehogFactory = HedgehogFactory.get();
         gameState = new GlobalGameState(
             new WalletComponent(0),
             DifficultyFactory.defaultGameConfig()
@@ -73,7 +75,7 @@ public class PlaceableFrogsScreen implements Screen {
         entities = gameState.getEntities();
         config = gameState.getGameConfig();
 
-        coinFactory = CoinFactory.get();
+        entities.add(hedgehogFactory.createRandomHedgehog(new Vector2(10, 4), config));
         entities.add(coinFactory.createSpecialCoin(new Vector2(0, 5)));
 
         setFonts();
