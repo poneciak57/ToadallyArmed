@@ -147,6 +147,7 @@ enum EntityType {
 }
 
 newpage
+title Renderable Component
 
 interface RenderableComponent extends Component {
     virtual void render(Renderer, deltaTime, currentTimestamp)
@@ -162,6 +163,7 @@ note left of RenderableComponent::render
 end note
 
 newpage
+title Basic Components
 
 interface TransformComponent extends Component {
     position;
@@ -185,15 +187,84 @@ class HealthComponent extends Component {
 
 newpage
 
+<style>
+title {
+  FontSize 24
+}
+</style>
+title Collisions and Actions
+
+class GlobalActionPayload {
+    Contains data about the global
+    game state, action state.
+    --
+}
+
+interface PayloadExtractor<T> {
+    @FunctionalInterface
+    --
+    Optional<T> extract(GlobalActionPayload)
+    --
+    Verifies if an entity meets certain
+    conditions. For example, if it contains
+    specific components.
+    --
+    Extractor may optionally decide
+    to log an error if certain conditions
+    are required.
+}
+
+interface Action<T> {
+    void run(T)
+    PayloadExtractor<T> extractor()
+    default void run(GlobalActionPayload)
+}
+note left of Action::run(GlobalActionPayload)
+    Calls run(T) and extractor.
+    The only externally called method.
+end note
+
+struct ExamplePayload {
+    Make it extend an abstract class Payload
+    that implements a method extractor()?
+    --
+    Implemented with a **record**.
+    --
+    public static final PayloadExtractor<ExamplePayload> extract = ExamplePayload::from;
+    --
+    private constructor()
+    static ExamplePayload from(GlobalActionPayload)
+}
+ExamplePayload --> PayloadExtractor
+
+class ExampleAction implements Action<ExamplePayload> {
+    void run(ExamplePayload)
+    PayloadExtractor<ExamplePayload> extractor()
+}
+ExamplePayload --> GlobalActionPayload
+ExampleAction --> ExamplePayload
+
+class Collider {
+    Action onCollision
+    ConvexShape getConvexShape(Vector2 origin)
+    constructor(ActionComponent onCollision)
+}
+Collider -> CollisionActionComponent
+
 interface Component
 interface ColliderComponent extends Component {
-    ConvexShape getConvexShape(Vector2 origin)
+    List<Collider>
 }
-interface CollisionActionComponent extends Component {
+interface ActionComponent extends Component {
+    void run()
+}
+class MultipleActionComponent implements ActionComponent {
+    List<ActionComponent>
+    constructor(List<ActionComponent>)
+    void run()
+}
+interface CollisionActionComponent extends ActionComponent {
     void collide(deltaTime, Entity other)
-}
-interface BehaviorComponent extends Component {
-    virtual void tick(deltaTime, Entity)
 }
 
 newpage
