@@ -7,9 +7,11 @@ public class DifficultyFactory {
     public static GameConfig defaultGameConfig() {
         return new GameConfig(
             60,
-            25,
+            1f, //change to 0.1
             5,
             5,
+            5,
+            10,
             5,
             new CharacterConfig( //knight
                 300, 20, 1, 0, 75
@@ -27,7 +29,7 @@ public class DifficultyFactory {
                 100, 100, 1, -20, 0
             ), new CharacterConfig(//healthy
                 300, 20, 2, -10, 0
-            ), 10
+            ), 7, 15,25
         );
     }
 }

@@ -1,8 +1,6 @@
 package org.toadallyarmed.factory;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import org.toadallyarmed.component.HealthComponent;
@@ -13,6 +11,7 @@ import org.toadallyarmed.component.hedgehog.HedgehogStateComponent;
 import org.toadallyarmed.component.interfaces.RenderableComponent;
 import org.toadallyarmed.component.interfaces.StateComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
+import org.toadallyarmed.config.AnimationConfig;
 import org.toadallyarmed.config.CharacterConfig;
 import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.entity.EntityType;
@@ -20,13 +19,14 @@ import org.toadallyarmed.util.rendering.AnimatedSprite;
 import org.toadallyarmed.util.rendering.AnimatedStateSprite;
 import org.toadallyarmed.util.logger.Logger;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class HedgehogFactory implements Disposable {
     private static final HedgehogFactory factoryInstance = new HedgehogFactory();
-    private final HedgehogAnimationFactory AnimationFactory=new HedgehogAnimationFactory();
+    private final AnimationFactory AnimationFactory=new AnimationFactory(new AnimationConfig(
+        0.12f, new Vector2(0, 0.1f), new Vector2(1.5f, 1.5f), 6, 4, true
+    ));
 
     private final Texture basicHedgehogTexture;
     private final Texture fastHedgehogTexture;
@@ -82,21 +82,19 @@ public class HedgehogFactory implements Disposable {
                 transform,
                 hedgehogState,
                 animatedStateSprite);
-        return new Entity.EntityBuilder(EntityType.HEDGEHOG)
-            .add(TransformComponent.class, transform)
-            .add(StateComponent.class, hedgehogState)
-            .add(RenderableComponent.class, renderable)
-            .add(HealthComponent.class, health)
-            .build();
+        return new Entity(EntityType.HEDGEHOG)
+            .put(TransformComponent.class, transform)
+            .put(StateComponent.class, hedgehogState)
+            .put(RenderableComponent.class, renderable)
+            .put(HealthComponent.class, health);
     }
 
-    @SuppressWarnings("ReassignedVariable")
     private AnimatedStateSprite<HedgehogState> createAnimatedStateSprite(Texture texture) {
         Map<HedgehogState, AnimatedSprite> animatedSprites = new HashMap<>();
         animatedSprites.put(HedgehogState.IDLE, AnimationFactory.Animation(texture, 0, 4, 5));
         animatedSprites.put(HedgehogState.WALKING, AnimationFactory.Animation(texture, 1, 0, 5));
-        animatedSprites.put(HedgehogState.DYING, AnimationFactory.Animation(texture, 2, 2, 5));
-        animatedSprites.put(HedgehogState.ACTION, AnimationFactory.Animation(texture, 3, 1, 5));
+        animatedSprites.put(HedgehogState.ACTION, AnimationFactory.Animation(texture, 0, 4, 5));
+        animatedSprites.put(HedgehogState.DYING, AnimationFactory.Animation(texture, 3, 1, 5));
         animatedSprites.put(HedgehogState.NONEXISTENT, AnimatedSprite.empty());
 
         return new AnimatedStateSprite<>(animatedSprites);

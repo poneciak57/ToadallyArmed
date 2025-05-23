@@ -11,16 +11,13 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import org.toadallyarmed.Main;
 import org.toadallyarmed.component.WalletComponent;
 import org.toadallyarmed.entity.Entity;
-import org.toadallyarmed.factory.CoinFactory;
-import org.toadallyarmed.factory.DifficultyFactory;
-import org.toadallyarmed.factory.FrogFactory;
-import org.toadallyarmed.factory.HedgehogFactory;
-import org.toadallyarmed.factory.SystemsManagerFactory;
+import org.toadallyarmed.factory.*;
 import org.toadallyarmed.system.SystemsManager;
 import org.toadallyarmed.util.logger.Logger;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class GameplayScreen implements Screen {
     final Main main;
@@ -31,12 +28,14 @@ public class GameplayScreen implements Screen {
     FrogFactory frogFactory;
     HedgehogFactory hedgehogFactory;
     CoinFactory coinFactory;
+    BulletFactory bulletFactory;
     ConcurrentLinkedQueue<Entity> entities = new ConcurrentLinkedQueue<>();
     private final GlobalGameState gameState;
     private final SystemsManager systemsManager;
 
     BitmapFont pixelFont, font;
-    Integer money=100;
+    WalletComponent wallet;
+    AtomicInteger money;
 
     public GameplayScreen(Main main) {
         Logger.info("creating a new gameplay screen");
@@ -53,8 +52,9 @@ public class GameplayScreen implements Screen {
             new WalletComponent(0),
             DifficultyFactory.defaultGameConfig()
         );
+        wallet=gameState.getWallet();
         systemsManager = SystemsManagerFactory.getSystemsManagerForGameplay(gameState);
-        ConcurrentLinkedQueue<Entity> entities = gameState.getEntities();
+        entities = gameState.getEntities();
         var config = gameState.getGameConfig();
         Entity basicFrog  = frogFactory.createBasicFrog(new Vector2(0, 0), config.knightFrog());
         Entity knightFrog = frogFactory.createKnightFrog(new Vector2(0, 1), config.knightFrog());
@@ -70,16 +70,19 @@ public class GameplayScreen implements Screen {
         coinFactory = CoinFactory.get();
         Entity coin = coinFactory.createCoin(new Vector2(0, 2));
         Entity Scoin = coinFactory.createSpecialCoin(new Vector2(0, 5));
+        bulletFactory = BulletFactory.get();
+        Entity real = bulletFactory.createFireball(new Vector2(3, 3), config);
+        Entity fake = bulletFactory.createBullet(new Vector2(4, 4), config);
 
         entities.addAll(List.of(
             basicFrog, knightFrog, moneyFrog, tankFrog, wizardFrog,
             basicHedgehog, fastHedgehog, strongHedgehog, healthyHedgehog,
-            coin, Scoin
+            coin, Scoin, real, fake
         ));
 
         setFonts();
 
-        Logger.info("created a new gameplay screen successfully");
+        Logger.info("Created a new gameplay screen successfully");
     }
     private void setFonts(){
         font=new BitmapFont();
@@ -112,7 +115,8 @@ public class GameplayScreen implements Screen {
 
         main.renderingSystem.tick(delta, gameState.getEntities());
 
-        pixelFont.draw(main.renderer.getSpriteBatch(), Integer.toString(money), 1, 6);
+        money=wallet.access();
+        pixelFont.draw(main.renderer.getSpriteBatch(), Integer.toString(money.get()), 1, 6);
 
         main.renderer.getSpriteBatch().end();
     }

@@ -22,7 +22,7 @@ public class EntityComponentsTests {
     public void testNotBaseComponent() {
         List<Class<? extends Component>> components = BaseComponentsRegistry.BASE_COMPONENTS;
         BaseComponentsRegistry.BASE_COMPONENTS = List.of();
-        Entity e = new Entity.EntityBuilder(EntityType.OTHER).build();
+        Entity e = new Entity(EntityType.OTHER);
         TestComponent1 c = new TestComponent1();
         assertThrows(NotBaseComponentException.class ,() -> e.put(TestComponent1.class, c));
         BaseComponentsRegistry.BASE_COMPONENTS = components;
@@ -32,7 +32,7 @@ public class EntityComponentsTests {
     public void testSimpleCase() {
         List<Class<? extends Component>> components = BaseComponentsRegistry.BASE_COMPONENTS;
         BaseComponentsRegistry.BASE_COMPONENTS = List.of(Component.class);
-        Entity e = new Entity.EntityBuilder(EntityType.OTHER).build();
+        Entity e = new Entity(EntityType.OTHER);
         Component c = new Component() {};
         e.put(Component.class, c);
 
@@ -44,7 +44,7 @@ public class EntityComponentsTests {
     public void testMoreAdvancedCase() {
         List<Class<? extends Component>> components = BaseComponentsRegistry.BASE_COMPONENTS;
         BaseComponentsRegistry.BASE_COMPONENTS = List.of(TestComponent1.class, TestComponent2.class);
-        Entity e = new Entity.EntityBuilder(EntityType.OTHER).build();
+        Entity e = new Entity(EntityType.OTHER);
         TestComponent1 c1 = new TestComponent1();
         TestComponent2 c2 = new TestComponent2();
         e.put(TestComponent1.class, c1);
@@ -58,7 +58,7 @@ public class EntityComponentsTests {
     public void testAdvancedCase() {
         List<Class<? extends Component>> components = BaseComponentsRegistry.BASE_COMPONENTS;
         BaseComponentsRegistry.BASE_COMPONENTS = List.of(SuperComponent.class);
-        Entity e = new Entity.EntityBuilder(EntityType.OTHER).build();
+        Entity e = new Entity(EntityType.OTHER);
         TestSuperComponent1 c1 = new TestSuperComponent1();
         TestSuperComponent2 c2 = new TestSuperComponent2();
         assertFalse(e.get(TestSuperComponent1.class).isPresent());

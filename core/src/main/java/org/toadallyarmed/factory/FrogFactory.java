@@ -1,8 +1,6 @@
 package org.toadallyarmed.factory;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import org.toadallyarmed.component.WorldTransformComponent;
@@ -12,6 +10,7 @@ import org.toadallyarmed.component.frog.FrogStateComponent;
 import org.toadallyarmed.component.interfaces.RenderableComponent;
 import org.toadallyarmed.component.interfaces.StateComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
+import org.toadallyarmed.config.AnimationConfig;
 import org.toadallyarmed.config.CharacterConfig;
 import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.entity.EntityType;
@@ -19,13 +18,15 @@ import org.toadallyarmed.util.rendering.AnimatedSprite;
 import org.toadallyarmed.util.rendering.AnimatedStateSprite;
 import org.toadallyarmed.util.logger.Logger;
 
-import java.util.Arrays;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class FrogFactory implements Disposable {
     private static final FrogFactory factoryInstance = new FrogFactory();
-    private final FrogAnimationFactory animationFactory = new FrogAnimationFactory();
+    private final AnimationFactory animationFactory = new AnimationFactory(new AnimationConfig(
+        0.08f, new Vector2(-0.4f, -0.53f), new Vector2(2, 2), 9, 5, false
+    ));
 
     private final Texture basicFrogTexture;
     private final Texture knightFrogTexture;
@@ -86,14 +87,12 @@ public class FrogFactory implements Disposable {
                 transform,
                 frogState,
                 animatedStateSprite);
-        return new Entity.EntityBuilder(EntityType.FROG)
-            .add(TransformComponent.class, transform)
-            .add(StateComponent.class, frogState)
-            .add(RenderableComponent.class, renderable)
-            .build();
+        return new Entity(EntityType.FROG)
+            .put(TransformComponent.class, transform)
+            .put(StateComponent.class, frogState)
+            .put(RenderableComponent.class, renderable);
     }
 
-    @SuppressWarnings("ReassignedVariable")
     private AnimatedStateSprite<FrogState> createAnimatedStateSprite(Texture texture) {
         Map<FrogState, AnimatedSprite> animatedSprites = new HashMap<>();
 

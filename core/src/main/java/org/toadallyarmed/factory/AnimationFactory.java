@@ -4,17 +4,25 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import org.toadallyarmed.config.AnimationConfig;
 import org.toadallyarmed.util.rendering.AnimatedSprite;
 
 import java.util.Arrays;
 
-public class HedgehogAnimationFactory {
-    final float FRAME_DURATION          = 0.12f;
-    final Vector2 OFFSET                = new Vector2(0, 0.1F);
-    final Vector2 BASE_DIMENSIONS       = new Vector2(1.5F, 1.5F);
+public class AnimationFactory {
+    final float FRAME_DURATION;
+    final Vector2 OFFSET, BASE_DIMENSIONS;
+    int width, height;
+    boolean reverse;
 
-
-    HedgehogAnimationFactory() {}
+    AnimationFactory(AnimationConfig config) {
+        FRAME_DURATION=config.FRAME_DURATION();
+        OFFSET=config.OFFSET();
+        BASE_DIMENSIONS=config.BASE_DIMENSIONS();
+        width=config.width();
+        height=config.height();
+        reverse=config.reversed();
+    }
 
     AnimatedSprite Animation(Texture texture, int index, int from, int to){
         TextureRegion[][] framesGrid;
@@ -22,11 +30,11 @@ public class HedgehogAnimationFactory {
         Animation<TextureRegion> animation;
 
         framesGrid = TextureRegion.split(texture,
-            texture.getWidth() / 6,
-            texture.getHeight() / 4);
+            texture.getWidth() / width,
+            texture.getHeight() / height);
 
         frames = Arrays.copyOfRange(framesGrid[index], from, to);
-        reverseInPlace(frames);
+        if (reverse) reverseInPlace(frames);
         animation = new Animation<>(FRAME_DURATION, frames);
         return new AnimatedSprite(animation, OFFSET, BASE_DIMENSIONS);
     }

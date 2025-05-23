@@ -10,7 +10,7 @@ import java.util.concurrent.locks.LockSupport;
 
 public class SystemsManager {
     private final List<System> systems;
-    private final int tickRate;
+    private final float tickRate;
     private final ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     private final ConcurrentLinkedQueue<Entity> entities;
 
@@ -19,7 +19,7 @@ public class SystemsManager {
 
     private Thread tickThread;
 
-    SystemsManager(int tickRate, List<System> systems, ConcurrentLinkedQueue<Entity> entities) {
+    SystemsManager(float tickRate, List<System> systems, ConcurrentLinkedQueue<Entity> entities) {
         this.entities = entities;
         this.systems = systems;
         this.tickRate = tickRate;
@@ -72,7 +72,7 @@ public class SystemsManager {
     }
 
     private void tickLoop() {
-        final long tickIntervalNanos = 1_000_000_000L / tickRate;
+        final long tickIntervalNanos = (long) (1_000_000_000L / tickRate);
         long lastTime = java.lang.System.nanoTime();
 
         while (running) {
@@ -103,7 +103,7 @@ public class SystemsManager {
     }
 
     public static class Builder {
-        int tickRate = 60;
+        float tickRate = 60;
         List<System> systems = new ArrayList<>();
         public Builder() {}
 
@@ -111,10 +111,10 @@ public class SystemsManager {
             systems.add(system);
             return this;
         }
-        public Builder addThrottledSystem(int tickRate, System system) {
+        public Builder addThrottledSystem(float tickRate, System system) {
             return addSystem(new ThrottledSystem(tickRate, system));
         }
-        public Builder tickRate(int tickRate) {
+        public Builder tickRate(float tickRate) {
             this.tickRate = tickRate;
             return this;
         }
