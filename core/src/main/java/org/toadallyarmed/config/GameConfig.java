@@ -22,6 +22,7 @@ public record GameConfig(
     CharacterConfig healthyHedgehog,
     int spawnLowerbound,
     int spawnUpperbound,
+    int spawnQuantity,
 
     // how much player will earn periodically
     int GlobalIncomeDelta

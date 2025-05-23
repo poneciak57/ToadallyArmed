@@ -29,7 +29,7 @@ public class DifficultyFactory {
                 100, 100, 1, -20, 0
             ), new CharacterConfig(//healthy
                 300, 20, 2, -10, 0
-            ), 7, 15,25
+            ), 7, 15,10, 25
         );
     }
 }
