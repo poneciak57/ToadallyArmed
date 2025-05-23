@@ -9,6 +9,8 @@ public record GameConfig(
     float HealthSystemTickRate,
     float BulletSystemTickRate,
     float ActionSystemTickRate,
+    float EnemyRenderSystemTickRate,
+    int EnemyRenderSystemQuantity,
 
     // -- Values -- //
     CharacterConfig knightFrog,
@@ -20,9 +22,6 @@ public record GameConfig(
     CharacterConfig fastHedgehog,
     CharacterConfig strongHedgehog,
     CharacterConfig healthyHedgehog,
-    int spawnLowerbound,
-    int spawnUpperbound,
-    int spawnQuantity,
 
     // how much player will earn periodically
     int GlobalIncomeDelta

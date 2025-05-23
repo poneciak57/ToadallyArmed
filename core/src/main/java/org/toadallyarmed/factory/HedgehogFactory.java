@@ -39,7 +39,7 @@ public class HedgehogFactory implements Disposable {
     private final AnimatedStateSprite<HedgehogState> strongHedgehogAnimatedStateSprite;
     private final AnimatedStateSprite<HedgehogState> healthyHedgehogAnimatedStateSprite;
 
-    private HedgehogFactory() {
+    public HedgehogFactory() {
         Logger.trace("Initializing HedgehogFactory");
 
         basicHedgehogTexture    = new Texture("GameScreen/Hedgehogs/basicHedgehog.png");
