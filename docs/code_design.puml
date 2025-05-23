@@ -1,27 +1,35 @@
 @startuml
 
+<style>
+title {
+  FontSize 24
+}
+</style>
+title Basic Screens layout
+
 abstract class Game {
     LibGDX class.
 }
 
 class Main extends Game {
-    SpriteBatch spritebatch
-    ViewPort viewport
     -- Overrides --
     void create()
     void render()
     void dispose()
     -- Screens --
-    mainMenuScreen
-    gameScreen
+    MainMenuScreen
+    GameplayScreen
+    -- Fields --
+    Renderer renderer;
+    RenderingSystem renderingSystem;
 }
 
 class MainMenuScreen implements Screen
 Main::mainMenuScreen --> MainMenuScreen: First screen
-MainMenuScreen -> GameScreen: Switches screen
-MainMenuScreen <- GameScreen: Switches screen back
+MainMenuScreen -> GameplayScreen: Switches screen
+MainMenuScreen <- GameplayScreen: Switches screen back
 
-class GameScreen implements Screen {
+class GameplayScreen implements Screen {
     -- Overrides --
     void show()
     void hide()
@@ -37,78 +45,24 @@ class GameScreen implements Screen {
     void draw()
     -- Fields --
     final Main main
-    gameState
-    ConcurrentList<Entity> entities;
+    GlobalGameState
+    ConcurrentLinkedQueue<Entity> entities;
+    SystemsManager
 }
 
 newpage
 
-together {
-    usecase header as "
-    **General Entity Component System**
-    "
-
-    abstract class Entity {
-        E.g. Frog, Hedgehog, Bullets, Fireballs etc.
-        -- Components --
-        HashMap<Class, Component> components;
-        -- Fields --
-        boolean doesExist;
-    }
-    abstract class Component {
-        Entity entity;
-        getEntity()
-    }
+<style>
+title {
+  FontSize 24
 }
-
-class HealthComponent extends Component {
-    health;
-}
-class TransformComponent extends Component {
-    position;
-    speed;
-    getSpeed()
-    getPosition()
-    getAdvancedPosition(timeOffset)
-    setPosition()
-}
-note right of TransformComponent::speed
-    Frogs have speed of 0.
-end note
-note right of TransformComponent::getAdvancedPosition
-    Uses speed and timeOffset to calculate
-    new position. It is useful to predict new
-    position in render thread for smooth movement.
-end note
-class BoxComponent extends Component {
-    width;
-    height;
-}
-
-abstract class RenderComponent extends Component {
-    virtual void render(Renderer)
-}
-note right of RenderComponent
-    Rendering is handled in rendering
-    thread with high frequency.
-end note
-abstract class UpdateComponent extends Component {
-    virtual void update(deltaTime)
-}
-note right of UpdateComponent
-    Updating is handled in logic
-    thread with low frequency.
-end note
-
-newpage
-
-usecase header as "
-    **Rendering Utilities**
-"
+</style>
+title Rendering Utilities
 
 class Renderer {
     SpriteBatch batch;
 }
+Renderer -[hidden]- StateMachine
 class StateMachine<State extends Enum<State>> {
     State state;
     HashMap<State, StateNode> states;
@@ -118,78 +72,241 @@ class StateMachine<State extends Enum<State>> {
     void setNextStateFrom(State from, State to)
     void setNextTmpStateFrom(State from, State to)
 }
-StateMachine -> StateNode
+StateMachine::states --> StateNode
 class StateNode <State> {
     StateNode<State> next;
-    Optional<StateNode<State>> tmpNext;
+    StateNode<State> tmpNext;
 }
-class Sprite {
-    TextureRegion textureRegion;
-}
-class AnimatedSprite {
-    Animation<TextureRegion> animation;
-    Vector2 offsetPosition;
-    Vector2 baseDimensions;
 
-    constructor(animation, offsetPosition, baseDimensions)
-    static AnimatedSprite empty()
-    void render(Renderer renderer, Vector2 position, float animationTimer)
-    float getAnimationDuration()
-}
-class AnimatedStateSprite<State extends Enum<State>> {
-    Map<State, AnimatedSprite> animations;
-    void render(Renderer renderer, Vector2 position, State state, float animationTimer)
-}
-AnimatedStateSprite::animations -> AnimatedSprite
-class AnimatedStateMachineSpriteInstance<State extends Enum<State>> {
-    AnimatedStateSprite<State> animatedStateSprite;
-    StateMachine<State> stateMachine;
-    State prevState;
-    float stateElapsedTime;
+package Sprites {
+    class Sprite {
+        TextureRegion textureRegion;
+    }
+    class AnimatedSprite {
+        Animation<TextureRegion> animation;
+        Vector2 offsetPosition;
+        Vector2 baseDimensions;
 
-    constructor(AnimatedStateSprite<State>, StateMachine)
-    void render(Renderer renderer, Vector2 position, float deltaTime)
-}
-AnimatedStateMachineSpriteInstance::animatedStateSprite -> AnimatedStateSprite
-AnimatedStateMachineSpriteInstance::stateMachine -> StateMachine
-note right of AnimatedStateMachineSpriteInstance::render
-    Is responsible for **advancing state machine**,
-    so that animations dictate the
-    states' change the timing.
-end note
+        constructor(animation, offsetPosition, baseDimensions)
+        static AnimatedSprite empty()
+        void render(Renderer renderer, Vector2 position, float animationTimer)
+        float getAnimationDuration()
+    }
+    AnimatedSprite <-- AnimatedStateSprite::animations
+    class AnimatedStateSprite<State extends Enum<State>> {
+        Map<State, AnimatedSprite> animations;
+        void render(Renderer renderer, Vector2 position, State state, float animationTimer)
+    }
+    AnimatedStateSprite <-- AnimatedStateMachineSpriteInstance::animatedStateSprite
+    class AnimatedStateMachineSpriteInstance<State extends Enum<State>> {
+        AnimatedStateSprite<State> animatedStateSprite;
+        StateMachine<State> stateMachine;
+        State prevState;
+        float stateElapsedTime;
 
+        constructor(AnimatedStateSprite<State>, StateMachine)
+        void render(Renderer renderer, Vector2 position, float deltaTime)
+    }
+    StateMachine <-- AnimatedStateMachineSpriteInstance::stateMachine
+    note right of AnimatedStateMachineSpriteInstance::render
+        Is responsible for **advancing state machine**,
+        so that animations dictate the
+        states' change the timing.
+    end note
+}
 
 newpage
 
-usecase header as "
-**Frog Entities**
-"
+<style>
+title {
+  FontSize 24
+}
+</style>
+title General Entity Component System
 
-abstract class Component {
-    Entity entity;
-    getEntity()
+together {
+    class Entity::Builder {
+        constructor(EntityType type)
+        Builder add(componentType, component)
+        Entity build()
+    }
+    class Entity {
+        E.g. Frog, Hedgehog, Bullets, Fireballs etc.
+        -- Components --
+        ConcurrentHashMap<Class, Component> components;
+        -- Fields --
+        final EntityType type;
+    }
 }
-abstract class CollisionHandlerComponent extends Component {
-    virtual void onCollision()
-}
-class KnightFrogCollisionHandlerComponent extends CollisionHandlerComponent {
-}
-class BardFrogCollisionHandlerComponent extends CollisionHandlerComponent {
-}
-class WizardFrogCollisionHandlerComponent extends CollisionHandlerComponent {
-}
-class TankyFrogCollisionHandlerComponent extends CollisionHandlerComponent {
+Entity -> EntityType
+enum EntityType {
+    FROG,
+    BULLET,
+    HEDGEHOG,
+    OTHER
 }
 
-class FrogStateComponent extends Component {
+newpage
+title Renderable Component
+
+interface RenderableComponent extends Component {
+    virtual void render(Renderer, deltaTime, currentTimestamp)
+}
+note right of RenderableComponent
+    Rendering is handled in rendering
+    system with high frequency.
+end note
+note left of RenderableComponent::render
+    Animations depend on deltaTime
+    calculate the right frame.
+    Positions depend on currentTimestamp.
+end note
+
+newpage
+title Basic Components
+
+interface TransformComponent extends Component {
+    position;
+    speed;
+    getSpeed()
+    getAdvancedPosition(currentTimestamp)
+    setPosition(position, currentTimestamp)
+}
+note left of TransformComponent::speed
+    Frogs have speed of 0.
+end note
+note left of TransformComponent::getAdvancedPosition
+    Uses speed and currentTimestamp to calculate
+    new position. It is useful to predict new
+    position in the rendering system for smooth movement.
+end note
+interface StateComponent extends Component
+class HealthComponent extends Component {
+    health;
+}
+
+newpage
+
+<style>
+title {
+  FontSize 24
+}
+</style>
+title Collisions and Actions
+
+class GlobalActionPayload {
+    Contains data about the global
+    game state, action state.
+    --
+}
+
+interface PayloadExtractor<T> {
+    @FunctionalInterface
+    --
+    Optional<T> extract(GlobalActionPayload)
+    --
+    Verifies if an entity meets certain
+    conditions. For example, if it contains
+    specific components.
+    --
+    Extractor may optionally decide
+    to log an error if certain conditions
+    are required.
+}
+
+interface Action<T> {
+    void run(T)
+    PayloadExtractor<T> extractor()
+    default void run(GlobalActionPayload)
+}
+note left of Action::run(GlobalActionPayload)
+    Calls run(T) and extractor.
+    The only externally called method.
+end note
+
+struct ExamplePayload {
+    Make it extend an abstract class Payload
+    that implements a method extractor()?
+    --
+    Implemented with a **record**.
+    --
+    public static final PayloadExtractor<ExamplePayload> extract = ExamplePayload::from;
+    --
+    private constructor()
+    static ExamplePayload from(GlobalActionPayload)
+}
+ExamplePayload --> PayloadExtractor
+
+class ExampleAction implements Action<ExamplePayload> {
+    void run(ExamplePayload)
+    PayloadExtractor<ExamplePayload> extractor()
+}
+ExamplePayload --> GlobalActionPayload
+ExampleAction --> ExamplePayload
+
+class Collider {
+    Action onCollision
+    ConvexShape getConvexShape(Vector2 origin)
+    constructor(ActionComponent onCollision)
+}
+Collider -> CollisionActionComponent
+
+interface Component
+interface ColliderComponent extends Component {
+    List<Collider>
+}
+interface ActionComponent extends Component {
+    void run()
+}
+class MultipleActionComponent implements ActionComponent {
+    List<ActionComponent>
+    constructor(List<ActionComponent>)
+    void run()
+}
+interface CollisionActionComponent extends ActionComponent {
+    void collide(deltaTime, Entity other)
+}
+
+newpage
+
+<style>
+title {
+  FontSize 24
+}
+</style>
+title Frog Entities (other entity types are similar)
+
+interface Component {
+}
+interface CollisionActionComponent extends Component {
+}
+
+class KnightFrogCollisionActionComponent implements CollisionActionComponent {
+}
+class BardFrogCollisionActionComponent implements CollisionActionComponent {
+}
+KnightFrogCollisionActionComponent -[hidden]- WizardFrogCollisionActionComponent
+class WizardFrogCollisionActionComponent implements CollisionActionComponent {
+}
+class TankyFrogCollisionActionComponent implements CollisionActionComponent {
+}
+BardFrogCollisionActionComponent -[hidden]- TankyFrogCollisionActionComponent
+
+interface StateComponent extends Component
+class FrogStateComponent implements StateComponent {
     final StateMachine<FrogState> generalStateMachine;
-    boolean isAttacked;
+    volatile boolean isAttacked;
 
     boolean getIsAttacked()
     boolean setIsAttacked(boolean newIsAttacked)
+    StateMachine<FrogState> getGeneralStateMachine()
     FrogState getGeneralState()
     void setNextGeneralState(FrogState nextState)
+    void advanceState()
 }
+note left of FrogStateComponent::setNextGeneralState
+    Adds a temporary edge to the StateMachine.
+end note
 enum FrogState {
     IDLE,
     ACTION,
@@ -198,33 +315,24 @@ enum FrogState {
 }
 FrogStateComponent::generalState --> FrogState
 
-abstract class RenderComponent extends Component {
-    virtual void render(Renderer)
+interface RenderableComponent extends Component {
 }
-class FrogRenderComponent extends RenderComponent {
-    constructor(HashMap<FrogState, Animation>)
-    --
-    HashMap<FrogState, Animation> animations;
-    --
-    Queries state to decide which
+class FrogRenderableComponent implements RenderableComponent {
+    Queries state machine
+    to decide which
     animation to render.
+    --
+    final TransformComponent transformComponent;
+    final FrogStateComponent fullStateComponent;
+    final AnimatedStateMachineSpriteInstance<FrogState> spriteInstance;
+    --
+    constructor(TransformComponent, FrogStateComponent, AnimatedStateSprite<FrogState>)
 }
-FrogRenderComponent --> FrogStateComponent
-
-abstract class UpdateComponent extends Component {
-    virtual void update()
-}
-class KnightFrogUpdateComponent extends UpdateComponent {
-}
-class BardFrogUpdateComponent extends UpdateComponent {
-}
-class WizardFrogUpdateComponent extends UpdateComponent {
-}
-class TankyFrogUpdateComponent extends UpdateComponent {
-}
+FrogRenderableComponent --> FrogStateComponent
 
 class FrogFactory << Singleton >> {
-    Creates Frog Entity and necessary Components.
+    Creates Frog Entity, necessary Components
+    and manages their resources (e.g. textures).
     --
     Entity createKnightFrog()
     Entity createBardFrog()
@@ -234,63 +342,53 @@ class FrogFactory << Singleton >> {
 
 newpage
 
-usecase header as "
-**Hedgehog Entities**
-"
+<style>
+title {
+  FontSize 24
+}
+</style>
+title Systems Management
 
-abstract class Component {
-    Entity entity;
-    getEntity()
+interface System {
+    void tick(deltaTime, ConcurrentLinkedQueue<Entity> entities;
 }
-abstract class CollisionHandlerComponent extends Component {
-    virtual void onCollision()
-}
-class HedgehogCollisionHandlerComponent extends CollisionHandlerComponent {
+class RenderingSystem implements System
+class CollisionSystem implements System
+class PhysicsSystem implements System
+class GlobalIncomeSystem implements System
+class HealthSystem implements System
+class ThrottledSystem implements System {
+    constructor(tickRate, System)
 }
 
-class HedgehogStateComponent extends Component {
-    volatile HedgehogState generalState;
-    volatile boolean isAttacked;
-    final Color color;
-    damage;
-}
-enum HedgehogState {
-    IDLE = 0,
-    WALKING = 1,
-    ACTION = 2,
-    DYING = 4
-}
-HedgehogStateComponent::generalState --> HedgehogState
-
-abstract class RenderComponent extends Component {
-    virtual void render(Renderer)
-}
-RenderComponent::render --> Renderer
-class HedgehogRenderComponent extends RenderComponent {
-    constructor(Sprite)
+class SystemsManager {
+    Schedules systems unrelated to rendering.
+    Rendering has to run in the main thread,
+    which is OpenGL limitation.
     --
-    Sprite sprite;
+    final List<System> systems;
+    final tickRate;
+    final ExecutorService executor;
+    final ConcurrentLinkedQueue<Entity> entities;
     --
-    Queries state to decide which
-    animation to render.
+    volatile boolean running;
+    volatile boolean paused;
+    --
+    constructor(tickRate, systems, entities)
+    --
+    void start()
+    void stop()
+    void pause()
+    void resume()
+    void tick(deltaTime)
 }
-HedgehogRenderComponent --> HedgehogStateComponent
 
-abstract class UpdateComponent extends Component {
-    virtual void update()
-}
-class HedgehogUpdateComponent extends UpdateComponent {
-}
-
-class HedgehogFactory << Singleton >> {
-    Creates Hedgehog Entity and necessary Components.
-    --
-    Picks the following (possibly randomizes):
-        * Color for newly created Hedgehog.
-        * Picks damage.
-        * Picks speed.
-    --
-    Entity createHedgehog()
+class SystemsManager::Builder {
+    constructor()
+    Builder addSystem(System)
+    Builder addThrottledSystem(tickRate, System)
+    Builder tickRate(tickRate)
+    SystemsManager build(entities)
 }
 
 @enduml

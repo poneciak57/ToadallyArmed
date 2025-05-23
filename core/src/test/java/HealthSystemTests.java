@@ -13,7 +13,7 @@ public class HealthSystemTests {
     @Test
     public void testBasicHealthSystem() {
         ConcurrentLinkedQueue<Entity> entities = new ConcurrentLinkedQueue<>();
-        Entity e = new Entity.EntityBuilder(EntityType.OTHER).build();
+        Entity e = new Entity(EntityType.OTHER);
         HealthComponent healthComponent = new HealthComponent(100);
         HealthSystem healthSystem = new HealthSystem();
         e.put(HealthComponent.class, healthComponent);

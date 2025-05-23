@@ -5,7 +5,7 @@ import org.toadallyarmed.system.*;
 
 public class SystemsManagerFactory {
 
-    public SystemsManager getSystemsManagerForGameplay(GlobalGameState gameState) {
+    public static SystemsManager getSystemsManagerForGameplay(GlobalGameState gameState) {
         return new SystemsManager.Builder()
             .tickRate(gameState.getGameConfig().SystemManagerTickRate())
             .addThrottledSystem(
@@ -20,11 +20,15 @@ public class SystemsManagerFactory {
             )
             .addThrottledSystem(
                 gameState.getGameConfig().CollisionSystemTickRate(),
-                new CollisionSystem()
+                new CollisionSystem(gameState)
             )
             .addThrottledSystem(
                 gameState.getGameConfig().PhysicsSystemTickRate(),
                 new PhysicsSystem()
+            )
+            .addThrottledSystem(
+                gameState.getGameConfig().ActionSystemTickRate(),
+                new ActionSystem(gameState)
             )
             .build(gameState.getEntities());
     }

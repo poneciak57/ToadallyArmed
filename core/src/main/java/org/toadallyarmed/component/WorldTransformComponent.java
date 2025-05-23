@@ -3,7 +3,9 @@ package org.toadallyarmed.component;
 import com.badlogic.gdx.math.Vector2;
 import org.toadallyarmed.component.interfaces.TransformComponent;
 
-import java.time.Instant;
+import java.util.concurrent.atomic.AtomicReference;
+
+import static org.toadallyarmed.config.GameConfig.VELOCITY_SCALE;
 
 public class WorldTransformComponent implements TransformComponent {
     public record WorldTransformPayload(
@@ -11,38 +13,46 @@ public class WorldTransformComponent implements TransformComponent {
         Vector2 velocity,
         float lastUpdateTime
     ){}
-    WorldTransformPayload payload = new WorldTransformPayload(
+    AtomicReference<WorldTransformPayload> payload = new AtomicReference<>(new WorldTransformPayload(
         new Vector2(),
         new Vector2(),
         0.f
-    );
+    ));
+
+    public WorldTransformComponent(Vector2 position, Vector2 velocity) {
+        this.payload.set(new WorldTransformPayload(position, velocity, 0.0f));
+    }
+
+    public WorldTransformComponent(WorldTransformPayload payload) {
+        this.payload.set(payload);
+    }
 
     @Deprecated
     @Override
     public Vector2 getPosition() {
-        return payload.position.cpy();
+        return payload.get().position.cpy();
     }
 
-    /// @param currentTimestamp if 0 means that value has not been yet updated and getAdvancedPosition should work like getPosition
+    /// @param currentNanoTime if 0 means that value has not been yet updated and getAdvancedPosition should work like getPosition
     @Override
-    public void setPosition(Vector2 position, float currentTimestamp) {
-        var oldPayload = payload;
-        payload = new WorldTransformPayload(
+    public void setPosition(Vector2 position, float currentNanoTime) {
+        var oldPayload = payload.get();
+        payload.set(new WorldTransformPayload(
             position.cpy(),
             oldPayload.velocity.cpy(),
-            currentTimestamp
-        );
+            currentNanoTime
+        ));
     }
 
     public Vector2 getVelocity() {
-        return this.payload.velocity.cpy();
+        return this.payload.get().velocity.cpy();
     }
 
     @Override
-    public Vector2 getAdvancedPosition(float currentTimestamp) {
-        var oldPayload = payload;
+    public Vector2 getAdvancedPosition(float currentNanoTime) {
+        var oldPayload = payload.get();
         if (oldPayload.lastUpdateTime == 0) return oldPayload.position.cpy();
-        float deltaTime = currentTimestamp - oldPayload.lastUpdateTime;
-        return oldPayload.position().add(oldPayload.velocity().scl(deltaTime));
+        float deltaTime = (currentNanoTime - oldPayload.lastUpdateTime) / 1_000_000_000f;
+        return oldPayload.position().add(oldPayload.velocity().cpy().scl(deltaTime * VELOCITY_SCALE));
     }
 }

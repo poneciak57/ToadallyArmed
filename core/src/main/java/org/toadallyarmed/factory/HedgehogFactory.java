@@ -1,10 +1,9 @@
 package org.toadallyarmed.factory;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
+import org.toadallyarmed.component.HealthComponent;
 import org.toadallyarmed.component.WorldTransformComponent;
 import org.toadallyarmed.component.hedgehog.HedgehogRenderableComponent;
 import org.toadallyarmed.component.hedgehog.HedgehogState;
@@ -12,18 +11,22 @@ import org.toadallyarmed.component.hedgehog.HedgehogStateComponent;
 import org.toadallyarmed.component.interfaces.RenderableComponent;
 import org.toadallyarmed.component.interfaces.StateComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
+import org.toadallyarmed.config.AnimationConfig;
+import org.toadallyarmed.config.CharacterConfig;
 import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.entity.EntityType;
 import org.toadallyarmed.util.rendering.AnimatedSprite;
 import org.toadallyarmed.util.rendering.AnimatedStateSprite;
 import org.toadallyarmed.util.logger.Logger;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class HedgehogFactory implements Disposable {
     private static final HedgehogFactory factoryInstance = new HedgehogFactory();
+    private final AnimationFactory AnimationFactory=new AnimationFactory(new AnimationConfig(
+        0.12f, new Vector2(0, 0.1f), new Vector2(1.5f, 1.5f), 6, 4, true
+    ));
 
     private final Texture basicHedgehogTexture;
     private final Texture fastHedgehogTexture;
@@ -54,10 +57,10 @@ public class HedgehogFactory implements Disposable {
         return factoryInstance;
     }
 
-    public Entity createBasicHedgehog() { return createHedgehog(basicHedgehogAnimatedStateSprite); }
-    public Entity createFastHedgehog() { return createHedgehog(fastHedgehogAnimatedStateSprite); }
-    public Entity createStrongHedgehog() { return createHedgehog(strongHedgehogAnimatedStateSprite); }
-    public Entity createHealthyHedgehog() { return createHedgehog(healthyHedgehogAnimatedStateSprite); }
+    public Entity createBasicHedgehog(Vector2 pos, CharacterConfig config) { return createHedgehog(basicHedgehogAnimatedStateSprite, pos, config); }
+    public Entity createFastHedgehog(Vector2 pos, CharacterConfig config) { return createHedgehog(fastHedgehogAnimatedStateSprite, pos, config); }
+    public Entity createStrongHedgehog(Vector2 pos, CharacterConfig config) { return createHedgehog(strongHedgehogAnimatedStateSprite, pos, config); }
+    public Entity createHealthyHedgehog(Vector2 pos, CharacterConfig config) { return createHedgehog(healthyHedgehogAnimatedStateSprite, pos, config); }
 
     @Override
     public void dispose() {
@@ -69,71 +72,33 @@ public class HedgehogFactory implements Disposable {
     }
 
 
-    private Entity createHedgehog(AnimatedStateSprite<HedgehogState> animatedStateSprite) {
+    private Entity createHedgehog(AnimatedStateSprite<HedgehogState> animatedStateSprite, Vector2 pos, CharacterConfig config) {
         Logger.trace("Creating Hedgehog Entity in factory");
-        WorldTransformComponent transform = new WorldTransformComponent();
-        HedgehogStateComponent hedgehogState = new HedgehogStateComponent();
+        Entity entity = new Entity(EntityType.HEDGEHOG);
+        WorldTransformComponent transform = new WorldTransformComponent(pos, new Vector2(config.speed(), 0.f));
+        HealthComponent health = new HealthComponent(config.hp());
+        HedgehogStateComponent hedgehogState = new HedgehogStateComponent(entity.getMarkForRemovalRunnable());
         HedgehogRenderableComponent renderable =
             new HedgehogRenderableComponent(
                 transform,
                 hedgehogState,
                 animatedStateSprite);
-        return new Entity.EntityBuilder(EntityType.HEDGEHOG)
-            .add(TransformComponent.class, transform)
-            .add(StateComponent.class, hedgehogState)
-            .add(RenderableComponent.class, renderable)
-            .build();
+        entity
+            .put(TransformComponent.class, transform)
+            .put(StateComponent.class, hedgehogState)
+            .put(RenderableComponent.class, renderable)
+            .put(HealthComponent.class, health);
+        return entity;
     }
 
-    @SuppressWarnings("ReassignedVariable")
     private AnimatedStateSprite<HedgehogState> createAnimatedStateSprite(Texture texture) {
-        final float FRAME_DURATION          = 0.12f;
-        final Vector2 OFFSET                = new Vector2(0, 0.1F);
-        final Vector2 BASE_DIMENSIONS       = new Vector2(0.9F, 0.9F);
-
         Map<HedgehogState, AnimatedSprite> animatedSprites = new HashMap<>();
-        TextureRegion[][] framesGrid;
-        TextureRegion[] frames;
-        Animation<TextureRegion> animation;
-
-        framesGrid = TextureRegion.split(texture,
-            texture.getWidth() / 6,
-            texture.getHeight() / 4);
-
-        frames = Arrays.copyOfRange(framesGrid[0], 4, 5);
-        reverseInPlace(frames);
-        animation = new Animation<>(FRAME_DURATION, frames);
-        animatedSprites.put(HedgehogState.IDLE, new AnimatedSprite(animation, OFFSET, BASE_DIMENSIONS));
-
-        frames = Arrays.copyOfRange(framesGrid[1], 0, 5);
-        reverseInPlace(frames);
-        animation = new Animation<>(FRAME_DURATION, frames);
-        animatedSprites.put(HedgehogState.WALKING, new AnimatedSprite(animation, OFFSET, BASE_DIMENSIONS));
-
-        frames = Arrays.copyOfRange(framesGrid[3], 1, 5);
-        reverseInPlace(frames);
-        animation = new Animation<>(FRAME_DURATION, frames);
-        animatedSprites.put(HedgehogState.ACTION, new AnimatedSprite(animation, OFFSET, BASE_DIMENSIONS));
-
-        frames = Arrays.copyOfRange(framesGrid[2], 2, 5);
-        reverseInPlace(frames);
-        animation = new Animation<>(FRAME_DURATION, frames);
-        animatedSprites.put(HedgehogState.DYING, new AnimatedSprite(animation, OFFSET, BASE_DIMENSIONS));
-
+        animatedSprites.put(HedgehogState.IDLE, AnimationFactory.Animation(texture, 0, 4, 5));
+        animatedSprites.put(HedgehogState.WALKING, AnimationFactory.Animation(texture, 1, 0, 5));
+        animatedSprites.put(HedgehogState.ACTION, AnimationFactory.Animation(texture, 0, 4, 5));
+        animatedSprites.put(HedgehogState.DYING, AnimationFactory.Animation(texture, 3, 1, 5));
         animatedSprites.put(HedgehogState.NONEXISTENT, AnimatedSprite.empty());
 
         return new AnimatedStateSprite<>(animatedSprites);
-    }
-
-    private void reverseInPlace(TextureRegion[] array) {
-        int left = 0;
-        int right = array.length - 1;
-        while (left < right) {
-            TextureRegion temp = array[left];
-            array[left] = array[right];
-            array[right] = temp;
-            left++;
-            right--;
-        }
     }
 }

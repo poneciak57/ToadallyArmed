@@ -2,9 +2,9 @@ package org.toadallyarmed.system;
 
 import org.toadallyarmed.component.interfaces.RenderableComponent;
 import org.toadallyarmed.entity.Entity;
+import org.toadallyarmed.util.logger.Logger;
 import org.toadallyarmed.util.rendering.Renderer;
 
-import java.time.Instant;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class RenderingSystem implements System {
@@ -16,13 +16,14 @@ public class RenderingSystem implements System {
 
     @Override
     public void tick(float deltaTime, ConcurrentLinkedQueue<Entity> entities) {
-        float currentTimestamp = Instant.now().toEpochMilli();
+        Logger.trace("RenderingSystem: tick");
+        float currentNanoTime = java.lang.System.nanoTime();
         for (Entity entity : entities) {
             var renderableOptional = entity.get(RenderableComponent.class);
             if (renderableOptional.isEmpty())
                 continue;
             var renderable = renderableOptional.get();
-            renderable.render(renderer, deltaTime, currentTimestamp);
+            renderable.render(renderer, deltaTime, currentNanoTime);
         }
     }
 }

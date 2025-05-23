@@ -8,7 +8,7 @@ public interface TransformComponent extends Component {
     @Deprecated
     Vector2 getPosition();
 
-    void setPosition(Vector2 position, float currentTimestamp);
+    void setPosition(Vector2 position, float currentNanoTime);
 
-    Vector2 getAdvancedPosition(float currentTimestamp);
+    Vector2 getAdvancedPosition(float currentNanoTime);
 }

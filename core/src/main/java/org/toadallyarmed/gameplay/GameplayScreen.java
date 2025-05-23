@@ -9,19 +9,15 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import org.toadallyarmed.Main;
-import org.toadallyarmed.component.frog.FrogState;
-import org.toadallyarmed.component.frog.FrogStateComponent;
-import org.toadallyarmed.component.hedgehog.HedgehogState;
-import org.toadallyarmed.component.hedgehog.HedgehogStateComponent;
-import org.toadallyarmed.component.interfaces.StateComponent;
-import org.toadallyarmed.component.interfaces.TransformComponent;
+import org.toadallyarmed.component.WalletComponent;
 import org.toadallyarmed.entity.Entity;
-import org.toadallyarmed.factory.FrogFactory;
-import org.toadallyarmed.factory.HedgehogFactory;
+import org.toadallyarmed.factory.*;
+import org.toadallyarmed.system.SystemsManager;
 import org.toadallyarmed.util.logger.Logger;
 
-import java.time.Instant;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class GameplayScreen implements Screen {
     final Main main;
@@ -31,10 +27,15 @@ public class GameplayScreen implements Screen {
 
     FrogFactory frogFactory;
     HedgehogFactory hedgehogFactory;
+    CoinFactory coinFactory;
+    BulletFactory bulletFactory;
     ConcurrentLinkedQueue<Entity> entities = new ConcurrentLinkedQueue<>();
+    private final GlobalGameState gameState;
+    private final SystemsManager systemsManager;
 
     BitmapFont pixelFont, font;
-    Integer money=100;
+    WalletComponent wallet;
+    AtomicInteger money;
 
     public GameplayScreen(Main main) {
         Logger.info("creating a new gameplay screen");
@@ -46,39 +47,42 @@ public class GameplayScreen implements Screen {
         backgroundTexture = new Texture("GameScreen/background.jpg");
 
         frogFactory = FrogFactory.get();
-        Entity basicFrog  = frogFactory.createBasicFrog();
-        Entity knightFrog = frogFactory.createKnightFrog();
-        Entity moneyFrog  = frogFactory.createMoneyFrog();
-        Entity tankFrog   = frogFactory.createTankFrog();
-        Entity wizardFrog = frogFactory.createWizardFrog();
-        basicFrog   .get(TransformComponent.class).get().setPosition(new Vector2(0, 0), 0);
-        knightFrog  .get(TransformComponent.class).get().setPosition(new Vector2(0, 1), 0);
-        moneyFrog   .get(TransformComponent.class).get().setPosition(new Vector2(0, 2), 0);
-        tankFrog    .get(TransformComponent.class).get().setPosition(new Vector2(0, 3), 0);
-        wizardFrog  .get(TransformComponent.class).get().setPosition(new Vector2(0, 4), 0);
-        entities.add(basicFrog);
-        entities.add(knightFrog);
-        entities.add(moneyFrog);
-        entities.add(tankFrog);
-        entities.add(wizardFrog);
-
         hedgehogFactory = HedgehogFactory.get();
-        Entity basicHedgehog = hedgehogFactory.createBasicHedgehog();
-        Entity fastHedgehog = hedgehogFactory.createFastHedgehog();
-        Entity strongHedgehog = hedgehogFactory.createStrongHedgehog();
-        Entity healthyHedgehog = hedgehogFactory.createHealthyHedgehog();
-        basicHedgehog.get(TransformComponent.class).get().setPosition(new Vector2(9, 1), 0);
-        fastHedgehog.get(TransformComponent.class).get().setPosition(new Vector2(9, 2), 0);
-        strongHedgehog.get(TransformComponent.class).get().setPosition(new Vector2(9, 3), 0);
-        healthyHedgehog.get(TransformComponent.class).get().setPosition(new Vector2(9, 4), 0);
-        entities.add(basicHedgehog);
-        entities.add(fastHedgehog);
-        entities.add(strongHedgehog);
-        entities.add(healthyHedgehog);
+        gameState = new GlobalGameState(
+            new WalletComponent(0),
+            DifficultyFactory.defaultGameConfig()
+        );
+        wallet=gameState.getWallet();
+        systemsManager = SystemsManagerFactory.getSystemsManagerForGameplay(gameState);
+        entities = gameState.getEntities();
+        var config = gameState.getGameConfig();
+        Entity basicFrog  = frogFactory.createBasicFrog(new Vector2(0, 0), config.knightFrog());
+        Entity knightFrog = frogFactory.createKnightFrog(new Vector2(0, 1), config.knightFrog());
+        Entity moneyFrog  = frogFactory.createMoneyFrog(new Vector2(0, 2), config.moneyFrog());
+        Entity tankFrog   = frogFactory.createTankFrog(new Vector2(0, 3), config.tankFrog());
+        Entity wizardFrog = frogFactory.createWizardFrog(new Vector2(0, 4), config.wizardFrog());
+
+        Entity basicHedgehog = hedgehogFactory.createBasicHedgehog(new Vector2(9, 1), config.basicHedgehog());
+        Entity fastHedgehog = hedgehogFactory.createFastHedgehog(new Vector2(9, 2), config.fastHedgehog());
+        Entity strongHedgehog = hedgehogFactory.createStrongHedgehog(new Vector2(9, 3), config.strongHedgehog());
+        Entity healthyHedgehog = hedgehogFactory.createHealthyHedgehog(new Vector2(9, 4), config.healthyHedgehog());
+
+        coinFactory = CoinFactory.get();
+        Entity coin = coinFactory.createCoin(new Vector2(0, 2));
+        Entity Scoin = coinFactory.createSpecialCoin(new Vector2(0, 5));
+        bulletFactory = BulletFactory.get();
+        Entity real = bulletFactory.createFireball(new Vector2(3, 3), config);
+        Entity fake = bulletFactory.createBullet(new Vector2(4, 4), config);
+
+        entities.addAll(List.of(
+            basicFrog, knightFrog, moneyFrog, tankFrog, wizardFrog,
+            basicHedgehog, fastHedgehog, strongHedgehog, healthyHedgehog,
+            coin, Scoin, real, fake
+        ));
 
         setFonts();
 
-        Logger.info("created a new gameplay screen successfully");
+        Logger.info("Created a new gameplay screen successfully");
     }
     private void setFonts(){
         font=new BitmapFont();
@@ -94,54 +98,12 @@ public class GameplayScreen implements Screen {
 
     @Override
     public void show() {
+        systemsManager.start();
         // Prepare your screen here.
     }
 
-    int frogStateID = 0;
-    void testFrogStateComponentChange(FrogStateComponent frogStateComponent) {
-        switch(frogStateID) {
-            case 0: frogStateComponent.setNextGeneralState(FrogState.IDLE); break;
-            case 1: frogStateComponent.setNextGeneralState(FrogState.ACTION); break;
-            case 2: frogStateComponent.setNextGeneralState(FrogState.DYING); break;
-            default: break;
-        }
-    }
-
-    int hedgehogStateID = 0;
-    void testHedgehogStateComponentChange(HedgehogStateComponent hedgehogStateComponent) {
-        switch(hedgehogStateID) {
-            case 0: hedgehogStateComponent.setNextGeneralState(HedgehogState.IDLE); break;
-            case 1: hedgehogStateComponent.setNextGeneralState(HedgehogState.WALKING); break;
-            case 2: hedgehogStateComponent.setNextGeneralState(HedgehogState.ACTION); break;
-            case 3: hedgehogStateComponent.setNextGeneralState(HedgehogState.DYING); break;
-            default: break;
-        }
-    }
-
-    float stateSwitchComponentTimer = 0f;
     @Override
     public void render(float delta) {
-        // Draw your screen here. "delta" is the time since last render in seconds.
-        final float currentTimestamp = Instant.now().toEpochMilli();
-
-        stateSwitchComponentTimer += delta;
-        if (stateSwitchComponentTimer >= 2f) {
-            stateSwitchComponentTimer = 0f;
-            frogStateID = (frogStateID + 1) % 3;
-            hedgehogStateID = (hedgehogStateID + 1) % 4;
-            for (Entity entity : entities) {
-                var stateComponentOptional = entity.get(StateComponent.class);
-                if (stateComponentOptional.isEmpty())
-                    continue;
-                var stateComponent = stateComponentOptional.get();
-                if (stateComponent instanceof FrogStateComponent frogStateComponent) {
-                    testFrogStateComponentChange(frogStateComponent);
-                } else if (stateComponent instanceof HedgehogStateComponent hedgehogStateComponent) {
-                    testHedgehogStateComponentChange(hedgehogStateComponent);
-                }
-            }
-        }
-
         ScreenUtils.clear(Color.BLACK);
         viewport.apply();
         main.renderer.getSpriteBatch().setProjectionMatrix(viewport.getCamera().combined);
@@ -151,9 +113,10 @@ public class GameplayScreen implements Screen {
         float worldHeight = viewport.getWorldHeight();
         main.renderer.getSpriteBatch().draw(backgroundTexture, 0, 0, worldWidth, worldHeight);
 
-        main.renderingSystem.tick(delta, entities);
+        main.renderingSystem.tick(delta, gameState.getEntities());
 
-        pixelFont.draw(main.renderer.getSpriteBatch(), Integer.toString(money), 1, 6);
+        money=wallet.access();
+        pixelFont.draw(main.renderer.getSpriteBatch(), Integer.toString(money.get()), 1, 6);
 
         main.renderer.getSpriteBatch().end();
     }
@@ -168,16 +131,19 @@ public class GameplayScreen implements Screen {
     @Override
     public void pause() {
         // Invoked when your application is paused.
+        systemsManager.pause();
     }
 
     @Override
     public void resume() {
         // Invoked when your application is resumed after pause.
+        systemsManager.resume();
     }
 
     @Override
     public void hide() {
         // This method is called when another screen replaces this one.
+        systemsManager.stop();
     }
 
     @Override
@@ -185,6 +151,9 @@ public class GameplayScreen implements Screen {
         Logger.info("disposing a gameplay screen");
         // Destroy screen's assets here.
         backgroundTexture.dispose();
+        systemsManager.stop();
         frogFactory.dispose();
+        hedgehogFactory.dispose();
+        coinFactory.dispose();
     }
 }

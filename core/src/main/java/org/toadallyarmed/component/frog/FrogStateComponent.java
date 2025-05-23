@@ -8,12 +8,11 @@ public class FrogStateComponent implements StateComponent {
     volatile boolean isAttacked;
 
     public FrogStateComponent(Runnable entityRemovalRunnable) {
-        generalStateMachine.setNextStateFrom(FrogState.IDLE, FrogState.IDLE);
-        generalStateMachine.setNextStateFrom(FrogState.ACTION, FrogState.IDLE);
-        generalStateMachine.setNextStateFrom(FrogState.DYING, FrogState.NONEXISTENT);
-        generalStateMachine.setNextStateFrom(FrogState.NONEXISTENT, FrogState.NONEXISTENT);
-        generalStateMachine.setAfterStateAction(FrogState.DYING, entityRemovalRunnable);
-    }
+        generalStateMachine.addState(FrogState.IDLE, FrogState.IDLE);
+        generalStateMachine.addState(FrogState.ACTION, FrogState.IDLE);
+        generalStateMachine.addState(FrogState.DYING, FrogState.NONEXISTENT, entityRemovalRunnable);
+        generalStateMachine.addState(FrogState.NONEXISTENT, FrogState.NONEXISTENT);
+   }
 
     public boolean getIsAttacked() {
         return isAttacked;

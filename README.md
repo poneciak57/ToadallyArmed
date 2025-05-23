@@ -6,7 +6,13 @@ And so, the frogs leapt into battle to defend their tadpoles, etching their saga
 
 🎮 Toadally Armed is a cozy, pixel-art strategy game that lovingly recycles the iconic “Plants vs. Zombies” concept — but with frogs. Lots of frogs. Armed frogs.
 
-Authors:
-* Natalia Ignatowicz
-* Kacper Poneta
-* Kacper Orszulak
+*Authors:*
+* *Natalia Ignatowicz*
+* *Kacper Poneta*
+* *Kacper Orszulak*
+
+### Code architecture
+For reference to the code design, patterns applied and plans refer to [the GitHub project Wiki](https://github.com/poneciak57/ToadallyArmed/wiki).
+
+### Assets
+For reference to the assets used in this project refer to [assets info](https://github.com/poneciak57/ToadallyArmed/blob/main/assets_and_their_licences.md)

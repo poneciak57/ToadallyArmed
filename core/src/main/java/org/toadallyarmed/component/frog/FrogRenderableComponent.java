@@ -25,7 +25,7 @@ public class FrogRenderableComponent implements RenderableComponent {
     }
 
     @Override
-    public void render(Renderer renderer, float deltaTime, float currentTimestamp) {
-        spriteInstance.render(renderer, transformComponent.getAdvancedPosition(currentTimestamp), deltaTime);
+    public void render(Renderer renderer, float deltaTime, float currentNanoTime) {
+        spriteInstance.render(renderer, transformComponent.getAdvancedPosition(currentNanoTime), deltaTime);
     }
 }
