@@ -74,19 +74,21 @@ public class HedgehogFactory implements Disposable {
 
     private Entity createHedgehog(AnimatedStateSprite<HedgehogState> animatedStateSprite, Vector2 pos, CharacterConfig config) {
         Logger.trace("Creating Hedgehog Entity in factory");
+        Entity entity = new Entity(EntityType.HEDGEHOG);
         WorldTransformComponent transform = new WorldTransformComponent(pos, new Vector2(config.speed(), 0.f));
         HealthComponent health = new HealthComponent(config.hp());
-        HedgehogStateComponent hedgehogState = new HedgehogStateComponent();
+        HedgehogStateComponent hedgehogState = new HedgehogStateComponent(entity.getMarkForRemovalRunnable());
         HedgehogRenderableComponent renderable =
             new HedgehogRenderableComponent(
                 transform,
                 hedgehogState,
                 animatedStateSprite);
-        return new Entity(EntityType.HEDGEHOG)
+        entity
             .put(TransformComponent.class, transform)
             .put(StateComponent.class, hedgehogState)
             .put(RenderableComponent.class, renderable)
             .put(HealthComponent.class, health);
+        return entity;
     }
 
     private AnimatedStateSprite<HedgehogState> createAnimatedStateSprite(Texture texture) {

@@ -80,17 +80,19 @@ public class FrogFactory implements Disposable {
 
     private Entity createFrog(AnimatedStateSprite<FrogState> animatedStateSprite, Vector2 pos, CharacterConfig config) {
         Logger.trace("Creating Frog Entity in factory");
+        Entity entity = new Entity(EntityType.FROG);
         WorldTransformComponent transform = new WorldTransformComponent(pos, new Vector2(config.speed(), 0));
-        FrogStateComponent frogState = new FrogStateComponent();
+        FrogStateComponent frogState = new FrogStateComponent(entity.getMarkForRemovalRunnable());
         FrogRenderableComponent renderable =
             new FrogRenderableComponent(
                 transform,
                 frogState,
                 animatedStateSprite);
-        return new Entity(EntityType.FROG)
+        entity
             .put(TransformComponent.class, transform)
             .put(StateComponent.class, frogState)
             .put(RenderableComponent.class, renderable);
+        return entity;
     }
 
     private AnimatedStateSprite<FrogState> createAnimatedStateSprite(Texture texture) {

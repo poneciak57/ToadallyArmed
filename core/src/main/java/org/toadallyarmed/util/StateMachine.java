@@ -2,20 +2,21 @@ package org.toadallyarmed.util;
 
 import org.toadallyarmed.util.logger.Logger;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class StateMachine<State extends Enum<State>> {
     private static class StateNode<State extends Enum<State>> {
-        StateNode(State next) {
+        StateNode(State next, Runnable afterStateAction) {
             this.next = next;
+            this.afterStateAction = afterStateAction;
         }
 
         final State next;
         final AtomicReference<State> tmpNext = new AtomicReference<>(null);
+
+        final Runnable afterStateAction;
     }
 
     private volatile State curState;
@@ -33,16 +34,21 @@ public class StateMachine<State extends Enum<State>> {
     public void advanceState() {
         Logger.trace("advanceState()");
         final StateNode<State> curStateNode = getStateNode(curState);
+        if (curStateNode.afterStateAction != null) curStateNode.afterStateAction.run();
         var tmpNext = curStateNode.tmpNext.getAndSet(null);
         if (tmpNext != null) curState = tmpNext;
         else curState = curStateNode.next;
     }
 
-    public void setNextStateFrom(State from, State to) {
-        StateNode<State> newStateNode = new StateNode<>(to);
-        if (states.putIfAbsent(from, newStateNode) != null) {
-            Logger.error("State " + from + " already exists. Overwriting!!!");
-            states.put(from, newStateNode);
+    public void addState(State state, State next) {
+        addState(state, next, null);
+    }
+
+    public void addState(State state, State next, Runnable afterStateAction) {
+        StateNode<State> newStateNode = new StateNode<>(next, afterStateAction);
+        if (states.putIfAbsent(state, newStateNode) != null) {
+            Logger.error("State " + state + " already exists. Overwriting!!!");
+            states.put(state, newStateNode);
         };
     }
 
@@ -55,7 +61,9 @@ public class StateMachine<State extends Enum<State>> {
     }
 
     private StateNode<State> getStateNode(State state) {
-        states.putIfAbsent(state, new StateNode<>(state));
-        return states.get(state);
+        var stateNode = states.get(state);
+        if (stateNode == null)
+            Logger.error("State " + state + " does not exist in the state machine!");
+        return stateNode;
     }
 }

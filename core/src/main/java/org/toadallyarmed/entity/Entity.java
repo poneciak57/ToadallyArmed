@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class Entity {
     private final EntityType type;
+    private volatile boolean markedForRemoval = false;
     private final ConcurrentHashMap<Class<? extends Component>, Component> components =
         new ConcurrentHashMap<>();
 
@@ -16,9 +17,25 @@ public class Entity {
         this.type = type;
     }
 
-    /// Returns type of the entity
     public EntityType type() {
         return type;
+    }
+
+    /// Marks entity for removal, but does
+    /// not perform the removal operation itself.
+    /// It should be done externally.
+    public void markForRemoval() {
+        markedForRemoval = true;
+    }
+
+    public Runnable getMarkForRemovalRunnable() {
+        return this::markForRemoval;
+    }
+
+    /// Entity marked for removal should not be used
+    /// and should be removed when viable.
+    public boolean markedForRemoval() {
+        return markedForRemoval;
     }
 
     /// Returns component that extends one of BASE_COMPONENTS

@@ -7,8 +7,8 @@ public class BulletStateComponent implements StateComponent {
     final StateMachine<BulletState> generalStateMachine = new StateMachine<>(BulletState.IDLE);
 
     public BulletStateComponent() {
-        generalStateMachine.setNextStateFrom(BulletState.IDLE, BulletState.IDLE);
-        generalStateMachine.setNextStateFrom(BulletState.NONEXISTENT, BulletState.NONEXISTENT);
+        generalStateMachine.addState(BulletState.IDLE, BulletState.IDLE);
+        generalStateMachine.addState(BulletState.NONEXISTENT, BulletState.NONEXISTENT);
     }
 
     public StateMachine<BulletState> getGeneralStateMachine() {

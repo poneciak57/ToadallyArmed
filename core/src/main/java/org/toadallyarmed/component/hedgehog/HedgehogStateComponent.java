@@ -7,12 +7,12 @@ public class HedgehogStateComponent implements StateComponent {
     final StateMachine<HedgehogState> generalStateMachine = new StateMachine<>(HedgehogState.WALKING);
     volatile boolean isAttacked;
 
-    public HedgehogStateComponent() {
-        generalStateMachine.setNextStateFrom(HedgehogState.IDLE, HedgehogState.IDLE);
-        generalStateMachine.setNextStateFrom(HedgehogState.WALKING, HedgehogState.WALKING);
-        generalStateMachine.setNextStateFrom(HedgehogState.ACTION, HedgehogState.IDLE);
-        generalStateMachine.setNextStateFrom(HedgehogState.DYING, HedgehogState.NONEXISTENT);
-        generalStateMachine.setNextStateFrom(HedgehogState.NONEXISTENT, HedgehogState.NONEXISTENT);
+    public HedgehogStateComponent(Runnable entityRemovalRunnable) {
+        generalStateMachine.addState(HedgehogState.IDLE, HedgehogState.IDLE);
+        generalStateMachine.addState(HedgehogState.WALKING, HedgehogState.WALKING);
+        generalStateMachine.addState(HedgehogState.ACTION, HedgehogState.IDLE);
+        generalStateMachine.addState(HedgehogState.DYING, HedgehogState.NONEXISTENT, entityRemovalRunnable);
+        generalStateMachine.addState(HedgehogState.NONEXISTENT, HedgehogState.NONEXISTENT);
     }
 
     public boolean getIsAttacked() {
