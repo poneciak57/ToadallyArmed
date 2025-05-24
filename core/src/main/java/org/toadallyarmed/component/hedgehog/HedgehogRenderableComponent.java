@@ -2,6 +2,7 @@ package org.toadallyarmed.component.hedgehog;
 
 import org.toadallyarmed.component.interfaces.RenderableComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
+import org.toadallyarmed.state.HedgehogState;
 import org.toadallyarmed.util.rendering.AnimatedStateMachineSpriteInstance;
 import org.toadallyarmed.util.rendering.AnimatedStateSprite;
 import org.toadallyarmed.util.rendering.Renderer;

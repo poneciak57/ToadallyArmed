@@ -1,4 +1,4 @@
-package org.toadallyarmed.component.bullet;
+package org.toadallyarmed.state;
 
 public enum BulletState {
     IDLE,

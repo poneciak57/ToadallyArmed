@@ -2,6 +2,7 @@ package org.toadallyarmed.component.coin;
 
 import org.toadallyarmed.component.interfaces.RenderableComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
+import org.toadallyarmed.state.CoinState;
 import org.toadallyarmed.util.rendering.AnimatedStateMachineSpriteInstance;
 import org.toadallyarmed.util.rendering.AnimatedStateSprite;
 import org.toadallyarmed.util.rendering.Renderer;

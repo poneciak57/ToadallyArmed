@@ -2,6 +2,7 @@ package org.toadallyarmed.component.bullet;
 
 import org.toadallyarmed.component.interfaces.RenderableComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
+import org.toadallyarmed.state.BulletState;
 import org.toadallyarmed.util.rendering.AnimatedStateMachineSpriteInstance;
 import org.toadallyarmed.util.rendering.AnimatedStateSprite;
 import org.toadallyarmed.util.rendering.Renderer;

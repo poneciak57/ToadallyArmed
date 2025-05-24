@@ -1,6 +1,7 @@
 package org.toadallyarmed.component.coin;
 
 import org.toadallyarmed.component.interfaces.StateComponent;
+import org.toadallyarmed.state.CoinState;
 import org.toadallyarmed.util.StateMachine;
 
 public class CoinStateComponent implements StateComponent {
@@ -13,21 +14,5 @@ public class CoinStateComponent implements StateComponent {
 
     public StateMachine<CoinState> getGeneralStateMachine() {
         return generalStateMachine;
-    }
-
-    public CoinState getGeneralState() {
-        return generalStateMachine.getCurState();
-    }
-
-    /// Enqueues the state change as a temporary next. advanceState() should be called
-    /// to actually change the state.
-    public void setNextGeneralState(CoinState nextState) {
-        generalStateMachine.setNextTmpStateFrom(getGeneralState(), nextState);
-    }
-
-    /// Changes the state to the default next or the enqueued temporary next.
-    /// It should be usually called after the animation is fully executed.
-    public void advanceState() {
-        generalStateMachine.advanceState();
     }
 }

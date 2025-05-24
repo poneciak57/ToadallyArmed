@@ -1,4 +1,4 @@
-package org.toadallyarmed.component.coin;
+package org.toadallyarmed.state;
 
 public enum CoinState {
     IDLE,

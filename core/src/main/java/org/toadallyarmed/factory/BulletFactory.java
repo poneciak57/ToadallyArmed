@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import org.toadallyarmed.component.WorldTransformComponent;
 import org.toadallyarmed.component.bullet.BulletRenderableComponent;
-import org.toadallyarmed.component.bullet.BulletState;
+import org.toadallyarmed.state.BulletState;
 import org.toadallyarmed.component.bullet.BulletStateComponent;
 import org.toadallyarmed.component.interfaces.RenderableComponent;
 import org.toadallyarmed.component.interfaces.StateComponent;

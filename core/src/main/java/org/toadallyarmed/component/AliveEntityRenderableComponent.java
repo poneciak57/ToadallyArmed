@@ -1,4 +1,4 @@
-package org.toadallyarmed.component.frog;
+package org.toadallyarmed.component;
 
 import org.toadallyarmed.component.interfaces.RenderableComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
@@ -6,16 +6,16 @@ import org.toadallyarmed.util.rendering.AnimatedStateMachineSpriteInstance;
 import org.toadallyarmed.util.rendering.AnimatedStateSprite;
 import org.toadallyarmed.util.rendering.Renderer;
 
-public class FrogRenderableComponent implements RenderableComponent {
+public class AliveEntityRenderableComponent<State extends Enum<State>> implements RenderableComponent {
     final TransformComponent transformComponent;
-    final FrogStateComponent fullStateComponent;
+    final AliveEntityStateComponent<State> fullStateComponent;
 
-    AnimatedStateMachineSpriteInstance<FrogState> spriteInstance;
+    AnimatedStateMachineSpriteInstance<State> spriteInstance;
 
-    public FrogRenderableComponent(
+    public AliveEntityRenderableComponent(
         TransformComponent transformComponent,
-        FrogStateComponent fullStateComponent,
-        AnimatedStateSprite<FrogState> animatedStateSprite) {
+        AliveEntityStateComponent<State> fullStateComponent,
+        AnimatedStateSprite<State> animatedStateSprite) {
         this.transformComponent = transformComponent;
         this.fullStateComponent = fullStateComponent;
         spriteInstance = new AnimatedStateMachineSpriteInstance<>(

@@ -3,10 +3,10 @@ package org.toadallyarmed.factory;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
+import org.toadallyarmed.component.AliveEntityRenderableComponent;
+import org.toadallyarmed.component.AliveEntityStateComponent;
 import org.toadallyarmed.component.WorldTransformComponent;
-import org.toadallyarmed.component.frog.FrogRenderableComponent;
-import org.toadallyarmed.component.frog.FrogState;
-import org.toadallyarmed.component.frog.FrogStateComponent;
+import org.toadallyarmed.state.FrogState;
 import org.toadallyarmed.component.interfaces.RenderableComponent;
 import org.toadallyarmed.component.interfaces.StateComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
@@ -14,6 +14,7 @@ import org.toadallyarmed.config.AnimationConfig;
 import org.toadallyarmed.config.CharacterConfig;
 import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.entity.EntityType;
+import org.toadallyarmed.util.StateMachine;
 import org.toadallyarmed.util.rendering.AnimatedSprite;
 import org.toadallyarmed.util.rendering.AnimatedStateSprite;
 import org.toadallyarmed.util.logger.Logger;
@@ -82,15 +83,20 @@ public class FrogFactory implements Disposable {
         Logger.trace("Creating Frog Entity in factory");
         Entity entity = new Entity(EntityType.FROG);
         WorldTransformComponent transform = new WorldTransformComponent(pos, new Vector2(config.speed(), 0));
-        FrogStateComponent frogState = new FrogStateComponent(entity.getMarkForRemovalRunnable());
-        FrogRenderableComponent renderable =
-            new FrogRenderableComponent(
+        StateMachine<FrogState> generalStateMachine = new StateMachine<>(FrogState.IDLE);
+        generalStateMachine.addState(FrogState.IDLE, FrogState.IDLE);
+        generalStateMachine.addState(FrogState.ACTION, FrogState.IDLE);
+        generalStateMachine.addState(FrogState.DYING, FrogState.NONEXISTENT, entity.getMarkForRemovalRunnable());
+        generalStateMachine.addState(FrogState.NONEXISTENT, FrogState.NONEXISTENT);
+        AliveEntityStateComponent<FrogState> state = new AliveEntityStateComponent<>(generalStateMachine);
+        AliveEntityRenderableComponent<FrogState> renderable =
+            new AliveEntityRenderableComponent<>(
                 transform,
-                frogState,
+                state,
                 animatedStateSprite);
         entity
             .put(TransformComponent.class, transform)
-            .put(StateComponent.class, frogState)
+            .put(StateComponent.class, state)
             .put(RenderableComponent.class, renderable);
         return entity;
     }

@@ -1,13 +1,11 @@
 package org.toadallyarmed.factory;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import org.toadallyarmed.component.WorldTransformComponent;
 import org.toadallyarmed.component.coin.CoinRenderableComponent;
-import org.toadallyarmed.component.coin.CoinState;
+import org.toadallyarmed.state.CoinState;
 import org.toadallyarmed.component.coin.CoinStateComponent;
 import org.toadallyarmed.component.interfaces.RenderableComponent;
 import org.toadallyarmed.component.interfaces.StateComponent;
@@ -19,7 +17,6 @@ import org.toadallyarmed.util.logger.Logger;
 import org.toadallyarmed.util.rendering.AnimatedSprite;
 import org.toadallyarmed.util.rendering.AnimatedStateSprite;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 

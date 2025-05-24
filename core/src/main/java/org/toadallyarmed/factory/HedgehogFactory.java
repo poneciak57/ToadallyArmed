@@ -6,7 +6,7 @@ import com.badlogic.gdx.utils.Disposable;
 import org.toadallyarmed.component.HealthComponent;
 import org.toadallyarmed.component.WorldTransformComponent;
 import org.toadallyarmed.component.hedgehog.HedgehogRenderableComponent;
-import org.toadallyarmed.component.hedgehog.HedgehogState;
+import org.toadallyarmed.state.HedgehogState;
 import org.toadallyarmed.component.hedgehog.HedgehogStateComponent;
 import org.toadallyarmed.component.interfaces.RenderableComponent;
 import org.toadallyarmed.component.interfaces.StateComponent;

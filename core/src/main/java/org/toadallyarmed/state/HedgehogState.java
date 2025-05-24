@@ -1,4 +1,4 @@
-package org.toadallyarmed.component.hedgehog;
+package org.toadallyarmed.state;
 
 public enum HedgehogState {
     IDLE,
