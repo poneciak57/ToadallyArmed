@@ -49,7 +49,7 @@ public class StateMachine<State extends Enum<State>> {
         if (states.putIfAbsent(state, newStateNode) != null) {
             Logger.error("State " + state + " already exists. Overwriting!!!");
             states.put(state, newStateNode);
-        };
+        }
     }
 
     public void setNextTmpStateFrom(State from, State to) {
@@ -58,6 +58,10 @@ public class StateMachine<State extends Enum<State>> {
         var old = fromStateNode.tmpNext.getAndSet(to);
         if (old != null)
             Logger.warn("Temporary next state " + from + " overwritten before the consumption");
+    }
+
+    public void setNextTmpState(State newState) {
+        setNextTmpStateFrom(getCurState(), newState);
     }
 
     private StateNode<State> getStateNode(State state) {

@@ -1,12 +1,16 @@
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
+import org.toadallyarmed.component.BasicStateComponent;
 import org.toadallyarmed.component.HealthComponent;
+import org.toadallyarmed.component.interfaces.StateComponent;
 import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.entity.EntityType;
 import org.toadallyarmed.system.GarbageCollectorSystem;
+import org.toadallyarmed.util.StateMachine;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import static org.junit.Assert.*;
@@ -15,7 +19,7 @@ import static org.junit.Assert.*;
 public class GarbageCollectorSystemTest {
     public static class EntityRemovalTest {
         @Test
-        public void basicRemoval() throws InterruptedException {
+        public void basicRemoval() {
             ConcurrentLinkedQueue<Entity> entities = new ConcurrentLinkedQueue<>();
             GarbageCollectorSystem garbageCollectorSystem = new GarbageCollectorSystem();
 
@@ -25,17 +29,17 @@ public class GarbageCollectorSystemTest {
 
             assertEquals(3, entities.size());
 
-            assert entities.peek() != null;
+            assertNotNull(entities.peek());
             entities.peek().markForRemoval();
             garbageCollectorSystem.tick(0, entities);
             assertEquals(2, entities.size());
 
-            assert entities.peek() != null;
+            assertNotNull(entities.peek());
             entities.peek().markForRemoval();
             garbageCollectorSystem.tick(0, entities);
             assertEquals(1, entities.size());
 
-            assert entities.peek() != null;
+            assertNotNull(entities.peek());
             entities.peek().markForRemoval();
             garbageCollectorSystem.tick(0, entities);
             assertEquals(0, entities.size());
@@ -57,30 +61,53 @@ public class GarbageCollectorSystemTest {
 
             assertEquals(3, entities.size());
 
-            assert entities.peek() != null;
+            assertNotNull(entities.peek());
             entities.peek().get(HealthComponent.class).orElseThrow().removeHealth(15);
             garbageCollectorSystem.tick(0, entities);
             assertEquals(2, entities.size());
 
-            assert entities.peek() != null;
+            assertNotNull(entities.peek());
             entities.peek().get(HealthComponent.class).orElseThrow().removeHealth(15);
             garbageCollectorSystem.tick(0, entities);
             assertEquals(1, entities.size());
 
-            assert entities.peek() != null;
+            assertNotNull(entities.peek());
             entities.peek().get(HealthComponent.class).orElseThrow().removeHealth(15);
             garbageCollectorSystem.tick(0, entities);
             assertEquals(0, entities.size());
         }
 
+        enum SimpleState {
+            IDLE,
+            DYING,
+            NONEXISTENT
+        }
+
         @Test
-        public void removalWithStateMachine() {
+        public void removalWithStateMachineAndHealth() {
             ConcurrentLinkedQueue<Entity> entities = new ConcurrentLinkedQueue<>();
             Supplier<Entity> createEntity = () -> {
                 Entity entity = new Entity(EntityType.OTHER);
-                HealthComponent healthComponent = new HealthComponent(10, entity.getMarkForRemovalRunnable());
-                entity.put(HealthComponent.class, healthComponent);
+
+                StateMachine<SimpleState> stateMachine = new StateMachine<>(SimpleState.IDLE);
+                stateMachine.addState(SimpleState.IDLE, SimpleState.IDLE);
+                stateMachine.addState(SimpleState.DYING, SimpleState.NONEXISTENT, entity.getMarkForRemovalRunnable());
+                stateMachine.addState(SimpleState.NONEXISTENT, SimpleState.NONEXISTENT);
+                BasicStateComponent<SimpleState> stateComponent = new BasicStateComponent<>(stateMachine);
+
+                HealthComponent healthComponent = new HealthComponent(
+                        10, () -> stateMachine.setNextTmpState(SimpleState.DYING));
+
+                entity
+                        .put(StateComponent.class, stateComponent)
+                        .put(HealthComponent.class, healthComponent);
                 return entity;
+            };
+            Consumer<Entity> advanceState = (Entity entity) -> {
+                StateComponent stateComponent = entity.get(StateComponent.class).orElseThrow();
+                assertTrue(stateComponent instanceof BasicStateComponent<?>);
+                @SuppressWarnings("unchecked") BasicStateComponent<SimpleState> basicStateComponent = (BasicStateComponent<SimpleState>) stateComponent;
+                basicStateComponent.getGeneralStateMachine().advanceState();
             };
             entities.add(createEntity.get());
             entities.add(createEntity.get());
@@ -89,18 +116,24 @@ public class GarbageCollectorSystemTest {
 
             assertEquals(3, entities.size());
 
-            assert entities.peek() != null;
+            assertNotNull(entities.peek());
             entities.peek().get(HealthComponent.class).orElseThrow().removeHealth(15);
+            advanceState.accept(entities.peek());
+            advanceState.accept(entities.peek());
             garbageCollectorSystem.tick(0, entities);
             assertEquals(2, entities.size());
 
-            assert entities.peek() != null;
+            assertNotNull(entities.peek());
             entities.peek().get(HealthComponent.class).orElseThrow().removeHealth(15);
+            advanceState.accept(entities.peek());
+            advanceState.accept(entities.peek());
             garbageCollectorSystem.tick(0, entities);
             assertEquals(1, entities.size());
 
-            assert entities.peek() != null;
+            assertNotNull(entities.peek());
             entities.peek().get(HealthComponent.class).orElseThrow().removeHealth(15);
+            advanceState.accept(entities.peek());
+            advanceState.accept(entities.peek());
             garbageCollectorSystem.tick(0, entities);
             assertEquals(0, entities.size());
         }
