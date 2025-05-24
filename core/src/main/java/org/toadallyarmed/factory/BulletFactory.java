@@ -3,10 +3,10 @@ package org.toadallyarmed.factory;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
+import org.toadallyarmed.component.BasicStateComponent;
+import org.toadallyarmed.component.BasicStatefulRenderableComponent;
 import org.toadallyarmed.component.WorldTransformComponent;
-import org.toadallyarmed.component.bullet.BulletRenderableComponent;
 import org.toadallyarmed.state.BulletState;
-import org.toadallyarmed.component.bullet.BulletStateComponent;
 import org.toadallyarmed.component.interfaces.RenderableComponent;
 import org.toadallyarmed.component.interfaces.StateComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
@@ -14,6 +14,7 @@ import org.toadallyarmed.config.AnimationConfig;
 import org.toadallyarmed.config.GameConfig;
 import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.entity.EntityType;
+import org.toadallyarmed.util.StateMachine;
 import org.toadallyarmed.util.logger.Logger;
 import org.toadallyarmed.util.rendering.AnimatedSprite;
 import org.toadallyarmed.util.rendering.AnimatedStateSprite;
@@ -54,15 +55,18 @@ public class BulletFactory implements Disposable {
     private Entity createBullet(AnimatedStateSprite<BulletState> animatedStateSprite, Vector2 pos, GameConfig config) {
         Logger.trace("Creating Bullet Entity in factory");
         WorldTransformComponent transform = new WorldTransformComponent(pos, new Vector2(config.BulletSystemTickRate(), 0));
-        BulletStateComponent BulletState = new BulletStateComponent();
-        BulletRenderableComponent renderable =
-            new BulletRenderableComponent(
+        StateMachine<BulletState> stateMachine = new StateMachine<>(BulletState.IDLE);
+        stateMachine.addState(BulletState.IDLE, BulletState.IDLE);
+        stateMachine.addState(BulletState.NONEXISTENT, BulletState.NONEXISTENT);
+        BasicStateComponent<BulletState> state = new BasicStateComponent<>(stateMachine);
+        BasicStatefulRenderableComponent<BulletState> renderable =
+            new BasicStatefulRenderableComponent<>(
                 transform,
-                BulletState,
+                state,
                 animatedStateSprite);
         return new Entity(EntityType.BULLET)
             .put(TransformComponent.class, transform)
-            .put(StateComponent.class, BulletState)
+            .put(StateComponent.class, state)
             .put(RenderableComponent.class, renderable);
     }
     private AnimatedStateSprite<BulletState> createAnimatedStateSprite(boolean real) {

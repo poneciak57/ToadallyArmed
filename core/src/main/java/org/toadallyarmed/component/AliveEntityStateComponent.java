@@ -1,14 +1,12 @@
 package org.toadallyarmed.component;
 
-import org.toadallyarmed.component.interfaces.StateComponent;
 import org.toadallyarmed.util.StateMachine;
 
-public class AliveEntityStateComponent<State extends Enum<State>> implements StateComponent {
-    final StateMachine<State> generalStateMachine;
+public class AliveEntityStateComponent<State extends Enum<State>> extends BasicStateComponent<State> {
     volatile boolean isAttacked;
 
     public AliveEntityStateComponent(StateMachine<State> generalStateMachine) {
-        this.generalStateMachine = generalStateMachine;
+        super(generalStateMachine);
     }
 
     public boolean getIsAttacked() {
@@ -17,9 +15,5 @@ public class AliveEntityStateComponent<State extends Enum<State>> implements Sta
 
     public void setIsAttacked(boolean isAttacked) {
         this.isAttacked = isAttacked;
-    }
-
-    public StateMachine<State> getGeneralStateMachine() {
-        return generalStateMachine;
     }
 }

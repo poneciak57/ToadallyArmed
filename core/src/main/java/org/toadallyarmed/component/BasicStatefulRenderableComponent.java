@@ -1,27 +1,26 @@
-package org.toadallyarmed.component.hedgehog;
+package org.toadallyarmed.component;
 
 import org.toadallyarmed.component.interfaces.RenderableComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
-import org.toadallyarmed.state.HedgehogState;
 import org.toadallyarmed.util.rendering.AnimatedStateMachineSpriteInstance;
 import org.toadallyarmed.util.rendering.AnimatedStateSprite;
 import org.toadallyarmed.util.rendering.Renderer;
 
-public class HedgehogRenderableComponent implements RenderableComponent {
+public class BasicStatefulRenderableComponent<State extends Enum<State>> implements RenderableComponent {
     final TransformComponent transformComponent;
-    final HedgehogStateComponent fullStateComponent;
+    final BasicStateComponent<State> stateComponent;
 
-    AnimatedStateMachineSpriteInstance<HedgehogState> spriteInstance;
+    AnimatedStateMachineSpriteInstance<State> spriteInstance;
 
-    public HedgehogRenderableComponent(
+    public BasicStatefulRenderableComponent(
         TransformComponent transformComponent,
-        HedgehogStateComponent fullStateComponent,
-        AnimatedStateSprite<HedgehogState> animatedStateSprite) {
+        BasicStateComponent<State> stateComponent,
+        AnimatedStateSprite<State> animatedStateSprite) {
         this.transformComponent = transformComponent;
-        this.fullStateComponent = fullStateComponent;
+        this.stateComponent = stateComponent;
         spriteInstance = new AnimatedStateMachineSpriteInstance<>(
             animatedStateSprite,
-            fullStateComponent.getGeneralStateMachine()
+            stateComponent.getGeneralStateMachine()
         );
     }
 

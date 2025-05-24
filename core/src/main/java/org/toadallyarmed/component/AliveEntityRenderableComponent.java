@@ -6,6 +6,7 @@ import org.toadallyarmed.util.rendering.AnimatedStateMachineSpriteInstance;
 import org.toadallyarmed.util.rendering.AnimatedStateSprite;
 import org.toadallyarmed.util.rendering.Renderer;
 
+// TODO See #13. Implement it here.
 public class AliveEntityRenderableComponent<State extends Enum<State>> implements RenderableComponent {
     final TransformComponent transformComponent;
     final AliveEntityStateComponent<State> fullStateComponent;
