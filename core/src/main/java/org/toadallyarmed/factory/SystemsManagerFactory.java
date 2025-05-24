@@ -15,8 +15,8 @@ public class SystemsManagerFactory {
                     gameState.getGameConfig().GlobalIncomeDelta())
             )
             .addThrottledSystem(
-                gameState.getGameConfig().HealthSystemTickRate(),
-                new HealthSystem()
+                gameState.getGameConfig().GarbageCollectorSystemTickRate(),
+                new GarbageCollectorSystem()
             )
             .addThrottledSystem(
                 gameState.getGameConfig().CollisionSystemTickRate(),
