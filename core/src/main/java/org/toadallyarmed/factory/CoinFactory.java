@@ -6,7 +6,7 @@ import com.badlogic.gdx.utils.Disposable;
 import org.toadallyarmed.component.BasicStateComponent;
 import org.toadallyarmed.component.BasicStatefulRenderableComponent;
 import org.toadallyarmed.component.WorldTransformComponent;
-import org.toadallyarmed.state.CoinState;
+import org.toadallyarmed.state.BasicEntityState;
 import org.toadallyarmed.component.interfaces.RenderableComponent;
 import org.toadallyarmed.component.interfaces.StateComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
@@ -30,7 +30,7 @@ public class CoinFactory implements Disposable {
     )), specialCoinAnimationFactory=new AnimationFactory(new AnimationConfig(
         0.25f, new Vector2(0.15f, 0.15f), new Vector2(0.7f, 0.7f), 6, 1, false
     ));
-    private final AnimatedStateSprite<CoinState> coinAnimatedStateSprite, specialCoinAnimatedStateSprite;
+    private final AnimatedStateSprite<BasicEntityState> coinAnimatedStateSprite, specialCoinAnimatedStateSprite;
 
     private CoinFactory() {
         Logger.trace("Initializing CoinFactory");
@@ -56,14 +56,14 @@ public class CoinFactory implements Disposable {
     }
 
 
-    private Entity createCoin(AnimatedStateSprite<CoinState> animatedStateSprite, Vector2 pos) {
+    private Entity createCoin(AnimatedStateSprite<BasicEntityState> animatedStateSprite, Vector2 pos) {
         Logger.trace("Creating Coin Entity in factory");
         WorldTransformComponent transform = new WorldTransformComponent(pos, new Vector2());
-        StateMachine<CoinState> stateMachine = new StateMachine<CoinState>(CoinState.IDLE);
-        stateMachine.addState(CoinState.IDLE, CoinState.IDLE);
-        stateMachine.addState(CoinState.NONEXISTENT, CoinState.NONEXISTENT);
-        BasicStateComponent<CoinState> state = new BasicStateComponent<>(stateMachine);
-        BasicStatefulRenderableComponent<CoinState> renderable =
+        StateMachine<BasicEntityState> stateMachine = new StateMachine<>(BasicEntityState.IDLE);
+        stateMachine.addState(BasicEntityState.IDLE, BasicEntityState.IDLE);
+        stateMachine.addState(BasicEntityState.NONEXISTENT, BasicEntityState.NONEXISTENT);
+        BasicStateComponent<BasicEntityState> state = new BasicStateComponent<>(stateMachine);
+        BasicStatefulRenderableComponent<BasicEntityState> renderable =
             new BasicStatefulRenderableComponent<>(
                 transform,
                 state,
@@ -74,17 +74,17 @@ public class CoinFactory implements Disposable {
             .put(RenderableComponent.class, renderable);
     }
 
-    private AnimatedStateSprite<CoinState> createAnimatedStateSprite(Texture texture) {
-        Map<CoinState, AnimatedSprite> animatedSprites=new HashMap<>();
-        animatedSprites.put(CoinState.IDLE, coinAnimationFactory.Animation(texture, 0, 0, 5));
-        animatedSprites.put(CoinState.NONEXISTENT, AnimatedSprite.empty());
+    private AnimatedStateSprite<BasicEntityState> createAnimatedStateSprite(Texture texture) {
+        Map<BasicEntityState, AnimatedSprite> animatedSprites=new HashMap<>();
+        animatedSprites.put(BasicEntityState.IDLE, coinAnimationFactory.Animation(texture, 0, 0, 5));
+        animatedSprites.put(BasicEntityState.NONEXISTENT, AnimatedSprite.empty());
         return new AnimatedStateSprite<>(animatedSprites);
     }
 
-    private AnimatedStateSprite<CoinState> createSpecialAnimatedStateSprite(Texture texture) {
-        Map<CoinState, AnimatedSprite> animatedSprites = new HashMap<>();
-        animatedSprites.put(CoinState.IDLE, specialCoinAnimationFactory.Animation(texture, 0, 0, 5));
-        animatedSprites.put(CoinState.NONEXISTENT, AnimatedSprite.empty());
+    private AnimatedStateSprite<BasicEntityState> createSpecialAnimatedStateSprite(Texture texture) {
+        Map<BasicEntityState, AnimatedSprite> animatedSprites = new HashMap<>();
+        animatedSprites.put(BasicEntityState.IDLE, specialCoinAnimationFactory.Animation(texture, 0, 0, 5));
+        animatedSprites.put(BasicEntityState.NONEXISTENT, AnimatedSprite.empty());
         return new AnimatedStateSprite<>(animatedSprites);
     }
 }
