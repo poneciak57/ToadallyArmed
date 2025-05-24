@@ -16,6 +16,7 @@ import com.badlogic.gdx.math.Rectangle;
 import org.toadallyarmed.Main;
 import org.toadallyarmed.component.WalletComponent;
 import org.toadallyarmed.component.frog.FrogType;
+import org.toadallyarmed.component.hedgehog.HedgehogState;
 import org.toadallyarmed.config.GameConfig;
 import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.factory.*;
@@ -66,14 +67,15 @@ public class PlaceableFrogsScreen implements Screen {
         coinFactory = CoinFactory.get();
         gameState = new GlobalGameState(
             new WalletComponent(0),
-            DifficultyFactory.defaultGameConfig()
+            DifficultyFactory.defaultGameConfig(),
+            new HedgehogFactory()
         );
         wallet=gameState.getWallet();
         systemsManager = SystemsManagerFactory.getSystemsManagerForGameplay(gameState);
         entities = gameState.getEntities();
         config = gameState.getGameConfig();
 
-        coinFactory = CoinFactory.get();
+
         entities.add(coinFactory.createSpecialCoin(new Vector2(0, 5)));
 
         setFonts();

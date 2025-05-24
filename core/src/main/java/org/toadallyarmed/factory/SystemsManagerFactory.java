@@ -30,6 +30,13 @@ public class SystemsManagerFactory {
                 gameState.getGameConfig().ActionSystemTickRate(),
                 new ActionSystem(gameState)
             )
+            .addThrottledSystem(
+                gameState.getGameConfig().EnemyRenderSystemTickRate(),
+                new EnemyRenderSystem(
+                    gameState.getEnemyFactory(),
+                    gameState.getGameConfig()
+                )
+            )
             .build(gameState.getEntities());
     }
 }
