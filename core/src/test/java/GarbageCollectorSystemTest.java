@@ -5,7 +5,6 @@ import org.toadallyarmed.component.HealthComponent;
 import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.entity.EntityType;
 import org.toadallyarmed.system.GarbageCollectorSystem;
-import org.toadallyarmed.system.SystemsManager;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Supplier;
@@ -16,31 +15,30 @@ import static org.junit.Assert.*;
 public class GarbageCollectorSystemTest {
     public static class EntityRemovalTest {
         @Test
-        public void basicRemovalWithSystemsManager() throws InterruptedException {
+        public void basicRemoval() throws InterruptedException {
             ConcurrentLinkedQueue<Entity> entities = new ConcurrentLinkedQueue<>();
-            SystemsManager systemsManager = new SystemsManager.Builder()
-                .addThrottledSystem(5, new GarbageCollectorSystem())
-                .tickRate(30)
-                .build(entities);
-            systemsManager.start();
+            GarbageCollectorSystem garbageCollectorSystem = new GarbageCollectorSystem();
 
-            assertEquals(0, entities.size());
             entities.add(new Entity(EntityType.OTHER));
             entities.add(new Entity(EntityType.OTHER));
             entities.add(new Entity(EntityType.OTHER));
 
             assertEquals(3, entities.size());
 
-            assert entities.peek() != null; entities.peek().markForRemoval();
-            Thread.sleep(400); assertEquals(2, entities.size());
+            assert entities.peek() != null;
+            entities.peek().markForRemoval();
+            garbageCollectorSystem.tick(0, entities);
+            assertEquals(2, entities.size());
 
-            assert entities.peek() != null; entities.peek().markForRemoval();
-            Thread.sleep(400); assertEquals(1, entities.size());
+            assert entities.peek() != null;
+            entities.peek().markForRemoval();
+            garbageCollectorSystem.tick(0, entities);
+            assertEquals(1, entities.size());
 
-            assert entities.peek() != null; entities.peek().markForRemoval();
-            Thread.sleep(400); assertEquals(0, entities.size());
-
-            systemsManager.stop();
+            assert entities.peek() != null;
+            entities.peek().markForRemoval();
+            garbageCollectorSystem.tick(0, entities);
+            assertEquals(0, entities.size());
         }
 
         @Test
