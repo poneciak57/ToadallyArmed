@@ -4,8 +4,8 @@ import com.badlogic.gdx.math.Vector2;
 import org.toadallyarmed.util.StateMachine;
 
 public class AnimatedStateMachineSpriteInstance<State extends Enum<State>> {
-    AnimatedStateSprite<State> animatedStateSprite;
-    StateMachine<State> stateMachine;
+    final AnimatedStateSprite<State> animatedStateSprite;
+    final StateMachine<State> stateMachine;
     State prevState;
     float stateElapsedTime = 0f;
 

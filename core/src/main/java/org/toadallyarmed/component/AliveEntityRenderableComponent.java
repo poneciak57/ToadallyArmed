@@ -11,7 +11,7 @@ public class AliveEntityRenderableComponent<State extends Enum<State>> implement
     final TransformComponent transformComponent;
     final AliveEntityStateComponent<State> fullStateComponent;
 
-    AnimatedStateMachineSpriteInstance<State> spriteInstance;
+    final AnimatedStateMachineSpriteInstance<State> spriteInstance;
 
     public AliveEntityRenderableComponent(
         TransformComponent transformComponent,

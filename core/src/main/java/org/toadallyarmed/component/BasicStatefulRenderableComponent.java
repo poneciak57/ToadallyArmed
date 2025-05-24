@@ -10,7 +10,7 @@ public class BasicStatefulRenderableComponent<State extends Enum<State>> impleme
     final TransformComponent transformComponent;
     final BasicStateComponent<State> stateComponent;
 
-    AnimatedStateMachineSpriteInstance<State> spriteInstance;
+    final AnimatedStateMachineSpriteInstance<State> spriteInstance;
 
     public BasicStatefulRenderableComponent(
         TransformComponent transformComponent,

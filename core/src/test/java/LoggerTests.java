@@ -6,7 +6,7 @@ import org.toadallyarmed.util.logger.TerminalLoggerBackend;
 import java.lang.reflect.Field;
 import java.util.List;
 
-/// These are for manuall tests only
+/// These are for manual tests only
 public class LoggerTests {
     @Test
     public void testAllLoggerMethods() {

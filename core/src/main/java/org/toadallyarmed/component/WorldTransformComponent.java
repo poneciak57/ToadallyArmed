@@ -13,7 +13,7 @@ public class WorldTransformComponent implements TransformComponent {
         Vector2 velocity,
         float lastUpdateTime
     ){}
-    AtomicReference<WorldTransformPayload> payload = new AtomicReference<>(new WorldTransformPayload(
+    final AtomicReference<WorldTransformPayload> payload = new AtomicReference<>(new WorldTransformPayload(
         new Vector2(),
         new Vector2(),
         0.f

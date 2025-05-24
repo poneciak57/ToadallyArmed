@@ -1,7 +1,5 @@
 package org.toadallyarmed.util.logger;
 
-import org.lwjgl.Sys;
-
 import java.util.List;
 
 public class Logger {

@@ -76,6 +76,7 @@ public class GJK {
 
             // If abPerp is zero, AB and AO are parallel and we need another fallback
             if (abPerp.len2() < 0.000001f) {
+                //noinspection SuspiciousNameCombination
                 abPerp.set(ab.y, -ab.x); // Simple perpendicular
                 if (abPerp.dot(ao) < 0) {
                     abPerp.scl(-1);

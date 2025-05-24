@@ -6,7 +6,7 @@ import org.toadallyarmed.util.logger.Logger;
 import java.util.Map;
 
 public class AnimatedStateSprite<State extends Enum<State>> {
-    Map<State, AnimatedSprite> animations;
+    final Map<State, AnimatedSprite> animations;
 
     public AnimatedStateSprite(Map<State, AnimatedSprite> animations) {
         this.animations = animations;
