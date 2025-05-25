@@ -1,7 +1,9 @@
 package org.toadallyarmed.component.action;
 
+import com.badlogic.gdx.math.Vector2;
 import org.toadallyarmed.component.action.payload.BardActionPayload;
 import org.toadallyarmed.component.action.payload.BasicActionPayload;
+import org.toadallyarmed.component.interfaces.TransformComponent;
 import org.toadallyarmed.util.action.Action;
 import org.toadallyarmed.util.action.PayloadExtractor;
 
@@ -13,6 +15,7 @@ public class BardAction implements Action<BardActionPayload, BasicActionPayload>
             payload.walletComponent()
                 .access()
                 .addAndGet(payload.bardIncomeDelta());
+
         }
         firstTime = false;
     }
