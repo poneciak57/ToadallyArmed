@@ -109,12 +109,12 @@ public class GameplayScreen implements Screen {
         // Prepare your screen here.
     }
 
-    float timeFromLatKnightFrogAttack = 0f;
+    float timeFromLastKnightFrogAttack = 0f;
     @SuppressWarnings("unchecked")
     void attackKnightFrogPeriodically(float deltaTime) {
-        timeFromLatKnightFrogAttack += deltaTime;
-        if (timeFromLatKnightFrogAttack >= 1f) {
-            timeFromLatKnightFrogAttack = 0f;
+        timeFromLastKnightFrogAttack += deltaTime;
+        if (timeFromLastKnightFrogAttack >= 1f) {
+            timeFromLastKnightFrogAttack = 0f;
             ((AliveEntityStateComponent<FrogState>) knightFrog.get(StateComponent.class).orElseThrow())
                 .getIsAttackedStateMachine().setNextTmpState(BooleanState.TRUE);
         }
