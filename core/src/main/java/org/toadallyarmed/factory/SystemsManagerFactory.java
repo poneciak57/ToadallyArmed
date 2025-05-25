@@ -7,31 +7,31 @@ public class SystemsManagerFactory {
 
     public static SystemsManager getSystemsManagerForGameplay(GlobalGameState gameState) {
         return new SystemsManager.Builder()
-            .tickRate(gameState.getGameConfig().systemManagerTickRate())
+            .tickRate(gameState.getGameConfig().SystemManagerTickRate())
             .addThrottledSystem(
-                gameState.getGameConfig().globalIncomeSystemTickRate(),
+                gameState.getGameConfig().GlobalIncomeSystemTickRate(),
                 new GlobalIncomeSystem(
                     gameState.getWallet(),
-                    gameState.getGameConfig().globalIncomeDelta())
+                    gameState.getGameConfig().GlobalIncomeDelta())
             )
             .addThrottledSystem(
-                gameState.getGameConfig().healthSystemTickRate(),
+                gameState.getGameConfig().HealthSystemTickRate(),
                 new HealthSystem()
             )
             .addThrottledSystem(
-                gameState.getGameConfig().collisionSystemTickRate(),
+                gameState.getGameConfig().CollisionSystemTickRate(),
                 new CollisionSystem(gameState)
             )
             .addThrottledSystem(
-                gameState.getGameConfig().physicsSystemTickRate(),
+                gameState.getGameConfig().PhysicsSystemTickRate(),
                 new PhysicsSystem()
             )
             .addThrottledSystem(
-                gameState.getGameConfig().actionSystemTickRate(),
+                gameState.getGameConfig().ActionSystemTickRate(),
                 new ActionSystem(gameState)
             )
             .addThrottledSystem(
-                gameState.getGameConfig().enemySpawnerSystemTickRate(),
+                gameState.getGameConfig().EnemySpawnerSystemTickRate(),
                 new EnemySpawnerSystem(
                     gameState.getEnemyFactory(),
                     gameState.getGameConfig()

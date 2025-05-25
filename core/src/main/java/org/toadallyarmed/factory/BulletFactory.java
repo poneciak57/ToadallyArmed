@@ -53,7 +53,7 @@ public class BulletFactory implements Disposable {
 
     private Entity createBullet(AnimatedStateSprite<BulletState> animatedStateSprite, Vector2 pos, GameConfig config) {
         Logger.trace("Creating Bullet Entity in factory");
-        WorldTransformComponent transform = new WorldTransformComponent(pos, new Vector2(config.bulletSystemTickRate(), 0));
+        WorldTransformComponent transform = new WorldTransformComponent(pos, new Vector2(config.BulletSystemTickRate(), 0));
         BulletStateComponent BulletState = new BulletStateComponent();
         BulletRenderableComponent renderable =
             new BulletRenderableComponent(

@@ -17,7 +17,7 @@ public class EnemySpawnerSystem implements System {
     public EnemySpawnerSystem(HedgehogFactory hedgehogFactory, GameConfig config) {
         this.hedgehogFactory=hedgehogFactory;
         this.config=config;
-        this.remainingSpawns =config.enemySpawnerSystemQuantity();
+        this.remainingSpawns =config.EnemySpawnerSystemQuantity();
     }
 
     @Override
