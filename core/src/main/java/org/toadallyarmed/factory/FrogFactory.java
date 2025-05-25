@@ -31,6 +31,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.toadallyarmed.config.GameConfig.TILE_HEIGHT;
+import static org.toadallyarmed.config.GameConfig.TILE_WIDTH;
+
 public class FrogFactory implements Disposable {
     private static final FrogFactory factoryInstance = new FrogFactory();
     private final AnimationFactory animationFactory = new AnimationFactory(new AnimationConfig(
@@ -80,11 +83,14 @@ public class FrogFactory implements Disposable {
         entity.put(ColliderComponent.class, new ColliderComponent(
             List.of(
                 new ThrottledCollisionActionEntry(
-                    0.2f,
+                    config.atk_speed(),
                     new BasicColliderActionEntry(
-                        new RectangleShape(8, 0.5f, 0.f, 0.25f),
+                        new RectangleShape(config.attackRange(), TILE_HEIGHT / 2, 0.f, TILE_HEIGHT / 4),
                         new FrogAttackCollisionAction(
-                            vector2 -> BulletFactory.get().createFireball(vector2.add(0.5f, 0f), 30f)
+                            vector2 -> BulletFactory.get().createFireball(
+                                vector2.add(config.bulletConfig().offsetX(), config.bulletConfig().offsetY()),
+                                config.bulletConfig().speed()
+                            )
                         ),
                         ColliderType.ACTION,
                         new BasicCollisionActionFilter(EntityType.HEDGEHOG, ColliderType.ENTITY)
