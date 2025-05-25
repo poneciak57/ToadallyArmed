@@ -45,11 +45,8 @@ public class CollisionSystem implements System {
                    currentNanoTime
                 );
                 for (ColliderActionEntry entry : colliderComponent.get().getEntries()) {
-//                    Logger.debug("Entry: " + entity.type() + " " + entry.getColliderType());
                     for (ColliderActionEntry otherEntry : otherColliderComponent.get().getEntries()) {
-//                        Logger.debug("colliding: " + otherEntity.type() + " " + otherEntry.getColliderType());
                         if (!entry.filter(otherEntity.type(), otherEntry.getColliderType())) continue;
-//                        Logger.debug("CollisionSystem: collider action entry: " + entry);
                         boolean intersecting = GJK.intersects(
                             entry.getShape()
                                 .shiftedBy(
@@ -62,7 +59,7 @@ public class CollisionSystem implements System {
                                         .getAdvancedPosition(currentNanoTime)
                                 )
                         );
-                        if (intersecting) entry.run(deltaTime, payload);
+                        if (intersecting) entry.run(currentNanoTime, payload);
                     }
                 }
             }

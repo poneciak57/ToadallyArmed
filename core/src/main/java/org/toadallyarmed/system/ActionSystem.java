@@ -16,10 +16,11 @@ public class ActionSystem implements System {
 
     @Override
     public void tick(float deltaTime, ConcurrentLinkedQueue<Entity> entities) {
+        float currentNano = java.lang.System.nanoTime();
         for (Entity entity : entities) {
             BasicActionPayload basicActionPayload = new BasicActionPayload(gameState, entity);
             entity.get(ActionComponent.class)
-                .ifPresent(component -> component.run(deltaTime, basicActionPayload));
+                .ifPresent(component -> component.run(currentNano, basicActionPayload));
         }
     }
 }

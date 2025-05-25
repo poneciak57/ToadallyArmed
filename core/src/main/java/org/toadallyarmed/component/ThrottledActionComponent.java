@@ -8,6 +8,7 @@ public class ThrottledActionComponent implements ActionComponent {
     private final Action<?, BasicActionPayload> action;
     private final float interval;
     private float accumulatedTime;
+    private float lastTime = 0f;
 
     public ThrottledActionComponent(float tickRate, Action<?, BasicActionPayload> action) {
         this.interval = 1f / tickRate;
@@ -15,11 +16,13 @@ public class ThrottledActionComponent implements ActionComponent {
         this.accumulatedTime = interval;
     }
     @Override
-    public void run(float deltaTime, BasicActionPayload rawPayload) {
+    public void run(float currentNano, BasicActionPayload rawPayload) {
+        float deltaTime = (currentNano - lastTime) / 1_000_000_000f;
+        this.lastTime = currentNano;
         accumulatedTime += deltaTime;
         if (accumulatedTime >= interval) {
             action.extract_run(rawPayload);
-            accumulatedTime %= interval;
+            accumulatedTime = 0.f;
         }
     }
 }

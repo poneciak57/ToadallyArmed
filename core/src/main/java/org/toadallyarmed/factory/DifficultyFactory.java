@@ -9,7 +9,7 @@ public class DifficultyFactory {
         return new GameConfig(
             60,
             1f, //change to 0.1
-            1,
+            5f,
             5f,
             5,
             10,
@@ -23,7 +23,7 @@ public class DifficultyFactory {
             ), new CharacterConfig(//tank
                 1000, 0, 0, 0, 50, 0, null
             ), new CharacterConfig(//wizard
-                50, 25, 0.3f, 0, 125, 10, new BulletConfig(0.5f, 0f, 30)
+                50, 25, 0.5f, 0, 125, 10, new BulletConfig(0.5f, 0f, 30)
             ), new CharacterConfig(//basic
                 100, 25, 1.5f, -15, 0, -1, null
             ), new CharacterConfig(//fast

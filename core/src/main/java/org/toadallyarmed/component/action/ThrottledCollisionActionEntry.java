@@ -8,6 +8,7 @@ import org.toadallyarmed.util.collision.ConvexShape;
 public class ThrottledCollisionActionEntry implements org.toadallyarmed.component.interfaces.ColliderActionEntry {
     private final float interval;
     private float accumulator;
+    private float lastTime = 0.f;
     private final BasicColliderActionEntry entry;
 
     public ThrottledCollisionActionEntry(float tickRate, BasicColliderActionEntry entry) {
@@ -32,11 +33,13 @@ public class ThrottledCollisionActionEntry implements org.toadallyarmed.componen
     }
 
     @Override
-    public void run(float deltaTime, BasicCollisionActionPayload payload) {
+    public void run(float currentNano, BasicCollisionActionPayload payload) {
+        float deltaTime = (currentNano - lastTime) / 1_000_000_000f;
+        lastTime = currentNano;
         this.accumulator += deltaTime;
         if (this.accumulator >= interval) {
-            this.entry.run(deltaTime, payload);
-            this.accumulator %= interval;
+            this.entry.run(currentNano, payload);
+            this.accumulator = 0.f;
         }
     }
 }
