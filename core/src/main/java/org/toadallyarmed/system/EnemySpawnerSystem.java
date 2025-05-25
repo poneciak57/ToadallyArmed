@@ -9,24 +9,24 @@ import org.toadallyarmed.util.logger.Logger;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class EnemyRenderSystem implements System {
+public class EnemySpawnerSystem implements System {
     HedgehogFactory hedgehogFactory;
     GameConfig config;
-    int cnt;
+    int remainingSpawns;
 
-    public EnemyRenderSystem(HedgehogFactory hedgehogFactory, GameConfig config) {
+    public EnemySpawnerSystem(HedgehogFactory hedgehogFactory, GameConfig config) {
         this.hedgehogFactory=hedgehogFactory;
         this.config=config;
-        this.cnt=config.EnemyRenderSystemQuantity();
+        this.remainingSpawns =config.EnemySpawnerSystemQuantity();
     }
 
     @Override
     public void tick(float deltaTime, ConcurrentLinkedQueue<Entity> entities) {
-        Logger.trace("EnemyRenderSystem: tick");
-        if (cnt>0) {
+        Logger.trace("EnemySpawnerSystem: tick");
+        if (remainingSpawns>0) {
             Vector2 pos = new Vector2(10, ThreadLocalRandom.current().nextInt(0, 5));
             entities.add(hedgehogFactory.createRandomHedgehog(pos, config));
-            cnt--;
+            remainingSpawns--;
         }
     }
 }

@@ -9,8 +9,8 @@ public record GameConfig(
     float HealthSystemTickRate,
     float BulletSystemTickRate,
     float ActionSystemTickRate,
-    float EnemyRenderSystemTickRate,
-    int EnemyRenderSystemQuantity,
+    float EnemySpawnerSystemTickRate,
+    int EnemySpawnerSystemQuantity,
 
     // -- Values -- //
     CharacterConfig knightFrog,

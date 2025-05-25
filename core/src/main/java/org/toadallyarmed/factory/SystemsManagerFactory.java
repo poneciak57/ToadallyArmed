@@ -31,8 +31,8 @@ public class SystemsManagerFactory {
                 new ActionSystem(gameState)
             )
             .addThrottledSystem(
-                gameState.getGameConfig().EnemyRenderSystemTickRate(),
-                new EnemyRenderSystem(
+                gameState.getGameConfig().EnemySpawnerSystemTickRate(),
+                new EnemySpawnerSystem(
                     gameState.getEnemyFactory(),
                     gameState.getGameConfig()
                 )

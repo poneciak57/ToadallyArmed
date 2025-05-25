@@ -3,7 +3,6 @@ package org.toadallyarmed.gameplay;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -16,7 +15,6 @@ import com.badlogic.gdx.math.Rectangle;
 import org.toadallyarmed.Main;
 import org.toadallyarmed.component.WalletComponent;
 import org.toadallyarmed.component.frog.FrogType;
-import org.toadallyarmed.component.hedgehog.HedgehogState;
 import org.toadallyarmed.config.GameConfig;
 import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.factory.*;
@@ -27,8 +25,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import static com.badlogic.gdx.math.MathUtils.floor;
 
 public class PlaceableFrogsScreen implements Screen {
     final Main main;
@@ -66,9 +62,9 @@ public class PlaceableFrogsScreen implements Screen {
         frogFactory = FrogFactory.get();
         coinFactory = CoinFactory.get();
         gameState = new GlobalGameState(
-            new WalletComponent(0),
+            new WalletComponent(50),
             DifficultyFactory.defaultGameConfig(),
-            new HedgehogFactory()
+            HedgehogFactory.get()
         );
         wallet=gameState.getWallet();
         systemsManager = SystemsManagerFactory.getSystemsManagerForGameplay(gameState);
