@@ -84,7 +84,7 @@ public class FrogFactory implements Disposable {
                 new ThrottledCollisionActionEntry(
                     config.atk_speed(),
                     new BasicColliderActionEntry(
-                        new RectangleShape(config.attackRange(), TILE_HEIGHT / 2, 0.f, TILE_HEIGHT / 4),
+                        new RectangleShape(config.attackRange(), TILE_HEIGHT / 2, 0.f, -TILE_HEIGHT / 4),
                         new FrogAttackCollisionAction(
                             vector2 -> BulletFactory.get().createFireball(
                                 vector2.add(config.bulletConfig().offsetX(), config.bulletConfig().offsetY()),
