@@ -2,9 +2,7 @@ package org.toadallyarmed.component;
 
 import org.toadallyarmed.component.interfaces.RenderableComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
-import org.toadallyarmed.util.rendering.AnimatedStateMachineSpriteInstance;
-import org.toadallyarmed.util.rendering.AnimatedStateSprite;
-import org.toadallyarmed.util.rendering.Renderer;
+import org.toadallyarmed.util.rendering.*;
 
 // TODO See #13. Implement it here.
 public class AliveEntityRenderableComponent<State extends Enum<State>> implements RenderableComponent {
@@ -27,6 +25,9 @@ public class AliveEntityRenderableComponent<State extends Enum<State>> implement
 
     @Override
     public void render(Renderer renderer, float deltaTime, float currentNanoTime) {
-        spriteInstance.render(renderer, transformComponent.getAdvancedPosition(currentNanoTime), deltaTime);
+        if (fullStateComponent.getIsAttacked())
+            spriteInstance.render(new HurtEffectTextureRenderer(renderer, 0.5f), transformComponent.getAdvancedPosition(currentNanoTime), deltaTime);
+        else
+            spriteInstance.render(new SimpleTextureRenderer(renderer), transformComponent.getAdvancedPosition(currentNanoTime), deltaTime);
     }
 }

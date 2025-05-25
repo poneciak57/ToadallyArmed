@@ -1,7 +1,6 @@
 package org.toadallyarmed.util.rendering;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
@@ -32,13 +31,12 @@ public class AnimatedSprite {
         this.baseDimensions.set(baseDimensions);
     }
 
-    public void render(Renderer renderer, Vector2 position, float animationTimer) {
+    public void render(TextureRenderer textureRenderer, Vector2 position, float animationTimer) {
         if (animation == null)
             return;
 
-        SpriteBatch batch = renderer.getSpriteBatch();
         TextureRegion currentFrame = animation.getKeyFrame(animationTimer, false);
-        batch.draw(currentFrame,
+        textureRenderer.draw(currentFrame,
             offsetPosition.x+position.x,
             offsetPosition.y+position.y,
             baseDimensions.x,

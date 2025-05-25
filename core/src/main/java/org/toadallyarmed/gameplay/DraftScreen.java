@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import org.toadallyarmed.Main;
 import org.toadallyarmed.util.rendering.AnimatedSprite;
+import org.toadallyarmed.util.rendering.SimpleTextureRenderer;
 
 import java.util.Arrays;
 
@@ -72,7 +73,7 @@ public class DraftScreen implements Screen {
         // spriteBatch.draw(currentFrame, 0, 0);
         spriteBatch.draw(currentFrame, -0.3F, 0.1F, 1.5F, 1.5F);
         basicFrogAnimationSprite.render(
-            main.renderer,
+            new SimpleTextureRenderer(main.renderer),
             new Vector2(0, 1),
             animationTimer);
     }

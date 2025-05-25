@@ -1,6 +1,5 @@
 package org.toadallyarmed.util.rendering;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
@@ -19,9 +18,8 @@ public class Sprite {
         this.baseDimensions.set(baseDimensions);
     }
 
-    public void render(Renderer renderer, Vector2 position) {
-        SpriteBatch batch = renderer.getSpriteBatch();
-        batch.draw(textureRegion,
+    public void render(TextureRenderer textureRenderer, Vector2 position) {
+        textureRenderer.draw(textureRegion,
             offsetPosition.x+position.x,
             offsetPosition.y+position.y,
             baseDimensions.x,
