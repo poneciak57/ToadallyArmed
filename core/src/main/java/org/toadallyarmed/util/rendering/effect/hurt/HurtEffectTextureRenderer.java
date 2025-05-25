@@ -1,10 +1,12 @@
-package org.toadallyarmed.util.rendering;
+package org.toadallyarmed.util.rendering.effect.hurt;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 import org.toadallyarmed.util.logger.Logger;
+import org.toadallyarmed.util.rendering.Renderer;
+import org.toadallyarmed.util.rendering.TextureRenderer;
 
 public class HurtEffectTextureRenderer implements TextureRenderer {
     static final Color DESTINATION_COLOR = Color.RED;
@@ -19,7 +21,7 @@ public class HurtEffectTextureRenderer implements TextureRenderer {
         Logger.errorIfNot(0f <= ratio && ratio <= 1f, "HurtEffectTextureRenderer: ratio should be between 0.0f and 1.0f.");
         this.renderer = renderer;
 
-        final Color start = renderer.DEFAULT_COLOR;
+        final Color start = renderer.getDefaultColor();
         final Color end = DESTINATION_COLOR;
 
         color = new Color(
@@ -35,6 +37,6 @@ public class HurtEffectTextureRenderer implements TextureRenderer {
         SpriteBatch spriteBatch = renderer.getSpriteBatch();
         spriteBatch.setColor(color);
         spriteBatch.draw(region, x, y, width, height);
-        spriteBatch.setColor(renderer.DEFAULT_COLOR);
+        spriteBatch.setColor(renderer.getDefaultColor());
     }
 }

@@ -3,13 +3,14 @@ package org.toadallyarmed.component;
 import org.toadallyarmed.component.interfaces.RenderableComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
 import org.toadallyarmed.util.rendering.*;
+import org.toadallyarmed.util.rendering.effect.hurt.HurtEffect;
 
-// TODO See #13. Implement it here.
 public class AliveEntityRenderableComponent<State extends Enum<State>> implements RenderableComponent {
     final TransformComponent transformComponent;
     final AliveEntityStateComponent<State> fullStateComponent;
 
     final AnimatedStateMachineSpriteInstance<State> spriteInstance;
+    final HurtEffect hurtEffect;
 
     public AliveEntityRenderableComponent(
         TransformComponent transformComponent,
@@ -17,17 +18,21 @@ public class AliveEntityRenderableComponent<State extends Enum<State>> implement
         AnimatedStateSprite<State> animatedStateSprite) {
         this.transformComponent = transformComponent;
         this.fullStateComponent = fullStateComponent;
-        spriteInstance = new AnimatedStateMachineSpriteInstance<>(
+        this.spriteInstance = new AnimatedStateMachineSpriteInstance<>(
             animatedStateSprite,
             fullStateComponent.getGeneralStateMachine()
+        );
+        this.hurtEffect = new HurtEffect(
+            fullStateComponent.getIsAttackedStateMachine(),
+            0.5f
         );
     }
 
     @Override
     public void render(Renderer renderer, float deltaTime, float currentNanoTime) {
-        if (fullStateComponent.getIsAttacked())
-            spriteInstance.render(new HurtEffectTextureRenderer(renderer, 0.5f), transformComponent.getAdvancedPosition(currentNanoTime), deltaTime);
-        else
-            spriteInstance.render(new SimpleTextureRenderer(renderer), transformComponent.getAdvancedPosition(currentNanoTime), deltaTime);
+        spriteInstance.render(
+            hurtEffect.getTextureRenderer(renderer, deltaTime),
+            transformComponent.getAdvancedPosition(currentNanoTime),
+            deltaTime);
     }
 }
