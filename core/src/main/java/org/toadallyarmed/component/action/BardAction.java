@@ -6,11 +6,13 @@ import org.toadallyarmed.util.action.Action;
 import org.toadallyarmed.util.action.PayloadExtractor;
 
 public class BardAction implements Action<BardActionPayload, BasicActionPayload> {
+    boolean firstTime = true;
     @Override
     public void run(BardActionPayload payload) {
-        payload.walletComponent()
+        if (!firstTime) payload.walletComponent()
             .access()
             .addAndGet(payload.bardIncomeDelta());
+        firstTime = false;
     }
 
     @Override

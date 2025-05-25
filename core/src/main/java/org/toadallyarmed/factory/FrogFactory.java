@@ -3,19 +3,10 @@ package org.toadallyarmed.factory;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
-import org.toadallyarmed.component.AliveEntityRenderableComponent;
-import org.toadallyarmed.component.AliveEntityStateComponent;
-import org.toadallyarmed.component.ColliderComponent;
-import org.toadallyarmed.component.WorldTransformComponent;
-import org.toadallyarmed.component.action.BasicColliderActionEntry;
-import org.toadallyarmed.component.action.BasicCollisionActionFilter;
-import org.toadallyarmed.component.action.FrogAttackCollisionAction;
-import org.toadallyarmed.component.action.ThrottledCollisionActionEntry;
-import org.toadallyarmed.component.interfaces.ColliderType;
+import org.toadallyarmed.component.*;
+import org.toadallyarmed.component.action.*;
+import org.toadallyarmed.component.interfaces.*;
 import org.toadallyarmed.state.FrogState;
-import org.toadallyarmed.component.interfaces.RenderableComponent;
-import org.toadallyarmed.component.interfaces.StateComponent;
-import org.toadallyarmed.component.interfaces.TransformComponent;
 import org.toadallyarmed.config.AnimationConfig;
 import org.toadallyarmed.config.CharacterConfig;
 import org.toadallyarmed.entity.Entity;
@@ -75,7 +66,15 @@ public class FrogFactory implements Disposable {
 
     public Entity createBasicFrog(Vector2 pos, CharacterConfig config) { return createFrog(basicFrogAnimatedStateSprite, pos, config); }
     public Entity createKnightFrog(Vector2 pos, CharacterConfig config) { return createFrog(knightFrogAnimatedStateSprite, pos, config); }
-    public Entity createMoneyFrog(Vector2 pos, CharacterConfig config) { return createFrog(moneyFrogAnimatedStateSprite, pos, config); }
+    public Entity createMoneyFrog(Vector2 pos, CharacterConfig config) {
+        var entity= createFrog(moneyFrogAnimatedStateSprite, pos, config);
+
+        entity.put(ActionComponent.class, new ThrottledActionComponent(
+            config.atk_speed(), new BardAction()
+        ));
+
+        return entity;
+    }
     public Entity createTankFrog(Vector2 pos, CharacterConfig config) { return createFrog(tankFrogAnimatedStateSprite, pos, config); }
     public Entity createWizardFrog(Vector2 pos, CharacterConfig config) {
         var entity = createFrog(wizardFrogAnimatedStateSprite, pos, config);
