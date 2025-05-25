@@ -155,6 +155,7 @@ public class PlaceableFrogsScreen implements Screen {
                         case KNIGHT -> frogFactory.createKnightFrog(gridPos, config.knightFrog());
                         default -> frogFactory.createWizardFrog(gridPos, config.wizardFrog());
                     };
+                    Logger.info("Created a frog");
                     entities.add(entity);
                     taken.add(gridPos);
                     bought = FrogType.NONE;

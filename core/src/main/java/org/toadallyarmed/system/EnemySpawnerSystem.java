@@ -24,7 +24,7 @@ public class EnemySpawnerSystem implements System {
     public void tick(float deltaTime, ConcurrentLinkedQueue<Entity> entities) {
         Logger.trace("EnemySpawnerSystem: tick");
         if (remainingSpawns>0) {
-            Vector2 pos = new Vector2(10, ThreadLocalRandom.current().nextInt(0, 5));
+            Vector2 pos = new Vector2(11, ThreadLocalRandom.current().nextInt(0, 5));
             entities.add(hedgehogFactory.createRandomHedgehog(pos, config));
             remainingSpawns--;
         }
