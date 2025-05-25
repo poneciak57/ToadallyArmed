@@ -5,15 +5,20 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Disposable;
 
 public class Renderer implements Disposable {
-    final SpriteBatch spriteBatch;
-    final protected Color DEFAULT_COLOR = Color.WHITE;
+    private final SpriteBatch spriteBatch;
+    private final Color defaultColor;
 
     public Renderer() {
         this.spriteBatch = new SpriteBatch();
+        this.defaultColor = Color.WHITE;
     }
 
     public SpriteBatch getSpriteBatch() {
         return spriteBatch;
+    }
+
+    public Color getDefaultColor() {
+        return defaultColor;
     }
 
     @Override

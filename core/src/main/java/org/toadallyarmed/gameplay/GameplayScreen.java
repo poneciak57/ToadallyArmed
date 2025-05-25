@@ -14,6 +14,7 @@ import org.toadallyarmed.component.WalletComponent;
 import org.toadallyarmed.component.interfaces.StateComponent;
 import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.factory.*;
+import org.toadallyarmed.state.BooleanState;
 import org.toadallyarmed.state.FrogState;
 import org.toadallyarmed.system.SystemsManager;
 import org.toadallyarmed.util.logger.Logger;
@@ -36,11 +37,12 @@ public class GameplayScreen implements Screen {
     private final GlobalGameState gameState;
     private final SystemsManager systemsManager;
 
+    private final Entity knightFrog;
+
     BitmapFont pixelFont, font;
     final WalletComponent wallet;
     AtomicInteger money;
 
-    @SuppressWarnings("unchecked")
     public GameplayScreen(Main main) {
         Logger.info("creating a new gameplay screen");
         this.main = main;
@@ -62,7 +64,7 @@ public class GameplayScreen implements Screen {
         entities = gameState.getEntities();
         var config = gameState.getGameConfig();
         Entity basicFrog  = frogFactory.createBasicFrog(new Vector2(0, 0), config.knightFrog());
-        Entity knightFrog = frogFactory.createKnightFrog(new Vector2(0, 1), config.knightFrog());
+        knightFrog = frogFactory.createKnightFrog(new Vector2(0, 1), config.knightFrog());
         Entity moneyFrog  = frogFactory.createMoneyFrog(new Vector2(0, 2), config.moneyFrog());
         Entity tankFrog   = frogFactory.createTankFrog(new Vector2(0, 3), config.tankFrog());
         Entity wizardFrog = frogFactory.createWizardFrog(new Vector2(0, 4), config.wizardFrog());
@@ -78,8 +80,6 @@ public class GameplayScreen implements Screen {
         bulletFactory = BulletFactory.get();
         Entity real = bulletFactory.createFireball(new Vector2(3, 3), config.BulletSystemTickRate());
         Entity fake = bulletFactory.createBullet(new Vector2(4, 4), config.BulletSystemTickRate());
-
-        ((AliveEntityStateComponent<FrogState>) knightFrog.get(StateComponent.class).orElseThrow()).setIsAttacked(true);
 
         entities.addAll(List.of(
             basicFrog, knightFrog, moneyFrog, tankFrog, wizardFrog,
@@ -109,8 +109,21 @@ public class GameplayScreen implements Screen {
         // Prepare your screen here.
     }
 
+    float timeFromLatKnightFrogAttack = 0f;
+    @SuppressWarnings("unchecked")
+    void attackKnightFrogPeriodically(float deltaTime) {
+        timeFromLatKnightFrogAttack += deltaTime;
+        if (timeFromLatKnightFrogAttack >= 1f) {
+            timeFromLatKnightFrogAttack = 0f;
+            ((AliveEntityStateComponent<FrogState>) knightFrog.get(StateComponent.class).orElseThrow())
+                .getIsAttackedStateMachine().setNextTmpState(BooleanState.TRUE);
+        }
+    }
+
     @Override
     public void render(float delta) {
+        attackKnightFrogPeriodically(delta);
+
         ScreenUtils.clear(Color.BLACK);
         viewport.apply();
         main.renderer.getSpriteBatch().setProjectionMatrix(viewport.getCamera().combined);

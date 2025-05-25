@@ -51,16 +51,17 @@ public class StateMachine<State extends Enum<State>> {
         else curState = curStateNode.next;
     }
 
-    public void addState(State state, State next) {
-        addState(state, next, null);
+    public StateMachine<State> addState(State state, State next) {
+        return addState(state, next, null);
     }
 
-    public void addState(State state, State next, Runnable afterStateAction) {
+    public StateMachine<State> addState(State state, State next, Runnable afterStateAction) {
         StateNode<State> newStateNode = new StateNode<>(next, afterStateAction);
         if (states.putIfAbsent(state, newStateNode) != null) {
             Logger.error("State " + state + " already exists. Overwriting!!!");
             states.put(state, newStateNode);
         }
+        return this;
     }
 
     public void setNextTmpState(State from, State to, Runnable afterStateAction) {
