@@ -2,15 +2,15 @@ package org.toadallyarmed.config;
 
 public record GameConfig(
     // -- TickRates -- //
-    float SystemManagerTickRate,
-    float GlobalIncomeSystemTickRate,
-    float CollisionSystemTickRate,
-    float PhysicsSystemTickRate,
-    float HealthSystemTickRate,
-    float BulletSystemTickRate,
-    float ActionSystemTickRate,
-    float EnemySpawnerSystemTickRate,
-    int EnemySpawnerSystemQuantity,
+    float systemManagerTickRate,
+    float globalIncomeSystemTickRate,
+    float collisionSystemTickRate,
+    float physicsSystemTickRate,
+    float healthSystemTickRate,
+    float bulletSystemTickRate,
+    float actionSystemTickRate,
+    float enemySpawnerSystemTickRate,
+    int enemySpawnerSystemQuantity,
 
     // -- Values -- //
     CharacterConfig knightFrog,
@@ -24,7 +24,7 @@ public record GameConfig(
     CharacterConfig healthyHedgehog,
 
     // how much player will earn periodically
-    int GlobalIncomeDelta
+    int globalIncomeDelta
 ) {
     public static final float VELOCITY_SCALE = 0.005f;
 }
