@@ -14,6 +14,9 @@ public class DifficultyFactory {
             5,
             10,
             5,
+            0.1f,
+            2,
+            15,
             new CharacterConfig( //knight
                 300, 20, 1, 0, 75, 1, null
             ), new CharacterConfig( //money
@@ -31,8 +34,6 @@ public class DifficultyFactory {
             ), new CharacterConfig(//healthy
                 300, 20, 2, -10, 0, -1, null
             ),
-            7,
-            15,
             25
         );
     }
