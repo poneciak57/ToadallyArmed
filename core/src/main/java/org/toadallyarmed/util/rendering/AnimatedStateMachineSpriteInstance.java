@@ -4,33 +4,18 @@ import com.badlogic.gdx.math.Vector2;
 import org.toadallyarmed.util.StateMachine;
 
 public class AnimatedStateMachineSpriteInstance<State extends Enum<State>> {
-    final AnimatedStateSprite<State> animatedStateSprite;
-    final StateMachine<State> stateMachine;
-    State prevState;
-    float stateElapsedTime = 0f;
+    private final AnimatedStateSprite<State> animatedStateSprite;
+    private final EffectController<State> effectController;
 
     public AnimatedStateMachineSpriteInstance(
         AnimatedStateSprite<State> animatedStateSprite,
         StateMachine<State> stateMachine) {
         this.animatedStateSprite = animatedStateSprite;
-        this.stateMachine = stateMachine;
-
-        prevState = stateMachine.getCurState();
+        this.effectController = new EffectController<>(stateMachine, animatedStateSprite);
     }
 
     public void render(TextureRenderer textureRenderer, Vector2 position, float deltaTime) {
-        stateElapsedTime += deltaTime;
-        State state = getAndUpdateState();
-        animatedStateSprite.render(textureRenderer, position, state, stateElapsedTime);
-    }
-
-
-    State getAndUpdateState() {
-        if (stateElapsedTime >= animatedStateSprite.getAnimationDurationForState(prevState)) {
-            stateElapsedTime = 0f;
-            stateMachine.advanceState();
-            prevState = stateMachine.getCurState();
-        }
-        return prevState;
+        final var timedState = effectController.performEffect(deltaTime);
+        animatedStateSprite.render(textureRenderer, position, timedState.state(), timedState.elapsedTime());
     }
 }
