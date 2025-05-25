@@ -18,7 +18,7 @@ public class DifficultyFactory {
             2,
             15,
             new CharacterConfig( //knight
-                300, 20, 1, 0, 75, 1, null
+                300, 20, 1, 0, 75, 2, new BulletConfig(0.5f, 0f, 30)
             ), new CharacterConfig( //money
                 50, 25 /*he gives money not damage*/, 0.1f, 0, 50, 0, null
             ), new CharacterConfig(//tank
@@ -34,7 +34,7 @@ public class DifficultyFactory {
             ), new CharacterConfig(//healthy
                 300, 20, 2, -10, 0, -1, null
             ),
-            25, 25
+            300, 25
         );
     }
 }

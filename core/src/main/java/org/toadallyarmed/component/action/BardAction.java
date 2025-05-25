@@ -9,9 +9,11 @@ public class BardAction implements Action<BardActionPayload, BasicActionPayload>
     boolean firstTime = true;
     @Override
     public void run(BardActionPayload payload) {
-        if (!firstTime) payload.walletComponent()
-            .access()
-            .addAndGet(payload.bardIncomeDelta());
+        if (!firstTime){
+            payload.walletComponent()
+                .access()
+                .addAndGet(payload.bardIncomeDelta());
+        }
         firstTime = false;
     }
 

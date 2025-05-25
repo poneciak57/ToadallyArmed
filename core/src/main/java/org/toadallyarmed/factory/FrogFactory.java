@@ -65,7 +65,28 @@ public class FrogFactory implements Disposable {
     }
 
     public Entity createBasicFrog(Vector2 pos, CharacterConfig config) { return createFrog(basicFrogAnimatedStateSprite, pos, config); }
-    public Entity createKnightFrog(Vector2 pos, CharacterConfig config) { return createFrog(knightFrogAnimatedStateSprite, pos, config); }
+    public Entity createKnightFrog(Vector2 pos, CharacterConfig config) {
+        var entity= createFrog(knightFrogAnimatedStateSprite, pos, config);
+
+        entity.put(ColliderComponent.class, new ColliderComponent(
+            List.of(
+                new ThrottledCollisionActionEntry(
+                    config.atk_speed(),
+                    new BasicColliderActionEntry(
+                        new RectangleShape(config.attackRange(), TILE_HEIGHT / 2, 0.f, -TILE_HEIGHT / 4),
+                        new FrogAttackCollisionAction(
+                            vector2 -> BulletFactory.get().createBullet(
+                                vector2.add(config.bulletConfig().offsetX(), config.bulletConfig().offsetY()),
+                                config.bulletConfig().speed()
+                            )
+                        ),
+                        ColliderType.ACTION,
+                        new BasicCollisionActionFilter(EntityType.HEDGEHOG, ColliderType.ENTITY)
+                    ))
+            )
+        ));
+        return entity;
+    }
     public Entity createMoneyFrog(Vector2 pos, CharacterConfig config) {
         var entity= createFrog(moneyFrogAnimatedStateSprite, pos, config);
 
