@@ -10,7 +10,7 @@ public class DifficultyFactory {
             60,
             1f, //change to 0.1
             5f,
-            5f,
+            1f,
             5,
             10,
             5,

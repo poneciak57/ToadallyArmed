@@ -14,7 +14,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public record FrogAttackCollisionActionPayload(
     Vector2 pos,
-    float currentNano,
     StateMachine<FrogState> stateMachine,
     ConcurrentLinkedQueue<Entity> entities
 ) {
@@ -32,7 +31,6 @@ public record FrogAttackCollisionActionPayload(
             return Optional.of(
                 new FrogAttackCollisionActionPayload(
                     pos.get().getAdvancedPosition(basicCollisionActionPayload.currentNanoTime()),
-                    basicCollisionActionPayload.currentNanoTime(),
                     frogESC.getGeneralStateMachine(),
                     basicCollisionActionPayload.gameState().getEntities()
                 )

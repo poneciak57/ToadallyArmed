@@ -25,14 +25,12 @@ public class FrogAttackCollisionAction implements Action<FrogAttackCollisionActi
         payload.stateMachine().setNextTmpState(FrogState.IDLE, FrogState.ACTION, () -> {
             var bullet = bulletProduce.apply(payload.pos());
             var pos = bullet.get(TransformComponent.class);
-
+            float currentNano = java.lang.System.nanoTime();
             /// We need to shift spawn origin of bullet to make it spawn in fron of a frog for better UI
             if (pos.isEmpty()) Logger.error("Bullet has no position at FrogAttackCollisionAction");
-            else pos.get().setPosition(pos.get().getAdvancedPosition(payload.currentNano()), payload.currentNano());
+            else pos.get().setPosition(pos.get().getAdvancedPosition(currentNano), currentNano);
 
-            payload.entities().add(
-                bulletProduce.apply(payload.pos())
-            );
+            payload.entities().add(bullet);
         });
     }
 
