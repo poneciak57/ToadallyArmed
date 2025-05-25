@@ -57,7 +57,7 @@ public class PlaceableFrogsScreen implements Screen {
         viewport = new FitViewport(10.66F, 6);
         this.main.updateFontScale(viewport);
 
-        backgroundTexture = new Texture("GameScreen/background.jpg");
+        backgroundTexture = new Texture("GameScreen/level_background.jpg");
 
         frogFactory = FrogFactory.get();
         coinFactory = CoinFactory.get();
@@ -183,9 +183,8 @@ public class PlaceableFrogsScreen implements Screen {
         if (Gdx.input.justTouched())
             analyzeTouch(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
 
-        SpriteBatch sb = main.renderer.getSpriteBatch();
         money = wallet.access();
-        pixelFont.draw(sb, Integer.toString(money.get()), 1, 6);
+        pixelFont.draw(main.renderer.getSpriteBatch(), Integer.toString(money.get()), 1, 6);
         main.renderer.getSpriteBatch().end();
     }
 

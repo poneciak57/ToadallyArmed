@@ -40,7 +40,7 @@ public class DraftScreen implements Screen {
         viewport = new FitViewport(10.66F, 6);
         this.main.updateFontScale(viewport);
 
-        backgroundTexture = new Texture("GameScreen/background.jpg");
+        backgroundTexture = new Texture("GameScreen/level_background.jpg");
         setFrogTextures();
         setFrogAnimations();
         setFonts();
