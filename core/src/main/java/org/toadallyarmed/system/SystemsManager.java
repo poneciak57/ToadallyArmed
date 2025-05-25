@@ -104,7 +104,7 @@ public class SystemsManager {
 
     public static class Builder {
         float tickRate = 60;
-        List<System> systems = new ArrayList<>();
+        final List<System> systems = new ArrayList<>();
         public Builder() {}
 
         public Builder addSystem(System system) {

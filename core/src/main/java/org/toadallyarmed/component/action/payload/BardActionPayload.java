@@ -9,13 +9,8 @@ public record BardActionPayload(
     WalletComponent walletComponent,
     int bardIncomeDelta
 ) {
-    public static final PayloadExtractor<BardActionPayload, BasicActionPayload> EXTRACTOR = new PayloadExtractor<BardActionPayload, BasicActionPayload>() {
-        @Override
-        public Optional<BardActionPayload> extract(BasicActionPayload rawPayload) {
-            return Optional.of(new BardActionPayload(
-                rawPayload.gameState().getWallet(),
-                rawPayload.gameState().getGameConfig().moneyFrog().damage()
-            ));
-        }
-    };
+    public static final PayloadExtractor<BardActionPayload, BasicActionPayload> EXTRACTOR = rawPayload -> Optional.of(new BardActionPayload(
+        rawPayload.gameState().getWallet(),
+        rawPayload.gameState().getGameConfig().moneyFrog().damage()
+    ));
 }

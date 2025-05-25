@@ -1,4 +1,4 @@
-package org.toadallyarmed.component.coin;
+package org.toadallyarmed.component;
 
 import org.toadallyarmed.component.interfaces.RenderableComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
@@ -6,16 +6,17 @@ import org.toadallyarmed.util.rendering.AnimatedStateMachineSpriteInstance;
 import org.toadallyarmed.util.rendering.AnimatedStateSprite;
 import org.toadallyarmed.util.rendering.Renderer;
 
-public class CoinRenderableComponent implements RenderableComponent {
+// TODO See #13. Implement it here.
+public class AliveEntityRenderableComponent<State extends Enum<State>> implements RenderableComponent {
     final TransformComponent transformComponent;
-    final CoinStateComponent fullStateComponent;
+    final AliveEntityStateComponent<State> fullStateComponent;
 
-    AnimatedStateMachineSpriteInstance<CoinState> spriteInstance;
+    final AnimatedStateMachineSpriteInstance<State> spriteInstance;
 
-    public CoinRenderableComponent(
+    public AliveEntityRenderableComponent(
         TransformComponent transformComponent,
-        CoinStateComponent fullStateComponent,
-        AnimatedStateSprite<CoinState> animatedStateSprite) {
+        AliveEntityStateComponent<State> fullStateComponent,
+        AnimatedStateSprite<State> animatedStateSprite) {
         this.transformComponent = transformComponent;
         this.fullStateComponent = fullStateComponent;
         spriteInstance = new AnimatedStateMachineSpriteInstance<>(
@@ -25,7 +26,7 @@ public class CoinRenderableComponent implements RenderableComponent {
     }
 
     @Override
-    public void render(Renderer renderer, float deltaTime, float currentTimestamp) {
-        spriteInstance.render(renderer, transformComponent.getAdvancedPosition(currentTimestamp), deltaTime);
+    public void render(Renderer renderer, float deltaTime, float currentNanoTime) {
+        spriteInstance.render(renderer, transformComponent.getAdvancedPosition(currentNanoTime), deltaTime);
     }
 }

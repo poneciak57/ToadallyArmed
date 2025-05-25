@@ -1,7 +1,5 @@
 package org.toadallyarmed.util.logger;
 
-import org.lwjgl.Sys;
-
 import java.util.List;
 
 public class Logger {
@@ -43,5 +41,10 @@ public class Logger {
 
     public static void error(String msg) {
         log(LogLevel.ERROR, msg);
+    }
+
+    public static void errorIfNot(boolean condition, String msg) {
+        if (!condition)
+            error(msg);
     }
 }

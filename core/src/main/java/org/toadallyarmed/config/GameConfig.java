@@ -6,7 +6,7 @@ public record GameConfig(
     float GlobalIncomeSystemTickRate,
     float CollisionSystemTickRate,
     float PhysicsSystemTickRate,
-    float HealthSystemTickRate,
+    float GarbageCollectorSystemTickRate,
     float BulletSystemTickRate,
     float ActionSystemTickRate,
     float EnemySpawnerSystemTickRate,

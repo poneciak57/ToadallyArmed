@@ -5,11 +5,11 @@ import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.entity.EntityType;
 import org.toadallyarmed.exception.NotBaseComponentException;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;
 
+@SuppressWarnings("OptionalGetWithoutIsPresent")
 public class EntityComponentsTests {
     static class TestComponent1 implements Component {}
     static class TestComponent2 implements Component {}

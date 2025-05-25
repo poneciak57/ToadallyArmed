@@ -12,8 +12,8 @@ import java.util.Arrays;
 public class AnimationFactory {
     final float FRAME_DURATION;
     final Vector2 OFFSET, BASE_DIMENSIONS;
-    int width, height;
-    boolean reverse;
+    final int width, height;
+    final boolean reverse;
 
     AnimationFactory(AnimationConfig config) {
         FRAME_DURATION=config.FRAME_DURATION();

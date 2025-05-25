@@ -5,9 +5,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 public class Sprite {
-    TextureRegion textureRegion;
-    Vector2 offsetPosition = new Vector2();
-    Vector2 baseDimensions = new Vector2();
+    final TextureRegion textureRegion;
+    final Vector2 offsetPosition = new Vector2();
+    final Vector2 baseDimensions = new Vector2();
 
     public Sprite(TextureRegion textureRegion) {
         this.textureRegion = textureRegion;

@@ -28,26 +28,26 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class PlaceableFrogsScreen implements Screen {
     final Main main;
-    FitViewport viewport;
+    final FitViewport viewport;
 
-    Texture backgroundTexture;
+    final Texture backgroundTexture;
 
-    FrogFactory frogFactory;
-    CoinFactory coinFactory;
+    final FrogFactory frogFactory;
+    final CoinFactory coinFactory;
     private final GlobalGameState gameState;
-    GameConfig config;
+    final GameConfig config;
     private final SystemsManager systemsManager;
 
     BitmapFont pixelFont, font;
-    WalletComponent wallet;
+    final WalletComponent wallet;
     AtomicInteger money;
 
     //--BUTTONS--//
     Texture buttonTexture;
-    Rectangle buttonBoundswizard, buttonBoundsbard, buttonBoundsknight, buttonBoundstank;
+    Rectangle buttonBoundsWizard, buttonBoundsBard, buttonBoundsKnight, buttonBoundsTank;
     FrogType bought=FrogType.NONE;
-    ConcurrentLinkedQueue<Entity> entities;
-    Set<Vector2> taken=new HashSet<>();
+    final ConcurrentLinkedQueue<Entity> entities;
+    final Set<Vector2> taken=new HashSet<>();
 
 
     public PlaceableFrogsScreen(Main main) {
@@ -71,7 +71,6 @@ public class PlaceableFrogsScreen implements Screen {
         entities = gameState.getEntities();
         config = gameState.getGameConfig();
 
-
         entities.add(coinFactory.createSpecialCoin(new Vector2(0, 5)));
 
         setFonts();
@@ -92,36 +91,36 @@ public class PlaceableFrogsScreen implements Screen {
     }
     private void setButtons(){
         buttonTexture=new Texture("GameScreen/button.png");
-        buttonBoundswizard=new Rectangle(10.66F-1.5F, 5, 1.5F, 1);
-        buttonBoundsknight=new Rectangle(10.66F-3F, 5, 1.5F, 1);
-        buttonBoundsbard=new Rectangle(10.66F-4.5F, 5, 1.5F, 1);
-        buttonBoundstank=new Rectangle(10.66F-6F, 5, 1.5F, 1);
+        buttonBoundsWizard =new Rectangle(10.66F-1.5F, 5, 1.5F, 1);
+        buttonBoundsKnight =new Rectangle(10.66F-3F, 5, 1.5F, 1);
+        buttonBoundsBard =new Rectangle(10.66F-4.5F, 5, 1.5F, 1);
+        buttonBoundsTank =new Rectangle(10.66F-6F, 5, 1.5F, 1);
     }
     private void analyzeTouch(Vector3 touchPos){//touch position is obtained  (in terms of x, y)
         viewport.unproject(touchPos);
 
-        boolean hitwizard = buttonBoundswizard.contains(touchPos.x, touchPos.y);
-        boolean hitbard = buttonBoundsbard.contains(touchPos.x, touchPos.y);
-        boolean hitknight = buttonBoundsknight.contains(touchPos.x, touchPos.y);
-        boolean hittank = buttonBoundstank.contains(touchPos.x, touchPos.y);
-        boolean onButton = hitwizard || hitbard || hitknight || hittank;
+        boolean hitWizard = buttonBoundsWizard.contains(touchPos.x, touchPos.y);
+        boolean hitBard = buttonBoundsBard.contains(touchPos.x, touchPos.y);
+        boolean hitKnight = buttonBoundsKnight.contains(touchPos.x, touchPos.y);
+        boolean hitTank = buttonBoundsTank.contains(touchPos.x, touchPos.y);
+        boolean onButton = hitWizard || hitBard || hitKnight || hitTank;
 
         if (bought == FrogType.NONE && onButton) {//bought a frog
-            if (hitwizard) {
+            if (hitWizard) {
                 int cost = config.wizardFrog().cost();
                 if (cost <= wallet.access().get()) {
                     wallet.pay(cost);
                     Logger.info("Wizard bought");
                     bought = FrogType.WIZARD;
                 }
-            } else if (hitbard) {
+            } else if (hitBard) {
                 int cost = config.moneyFrog().cost();
                 if (cost <= wallet.access().get()) {
                     wallet.pay(cost);
                     Logger.info("Bard bought");
                     bought = FrogType.BARD;
                 }
-            } else if (hitknight) {
+            } else if (hitKnight) {
                 int cost = config.knightFrog().cost();
                 if (cost <= wallet.access().get()) {
                     wallet.pay(cost);
@@ -138,7 +137,7 @@ public class PlaceableFrogsScreen implements Screen {
             }
         }
         else if (bought != FrogType.NONE && !onButton) {
-            if (touchPos.y >= 0 && touchPos.y < 5f && touchPos.x >= 0 && touchPos.x < viewport.getWorldWidth()) {//tryna place a frog
+            if (touchPos.y >= 0 && touchPos.y < 5f && touchPos.x >= 0 && touchPos.x < viewport.getWorldWidth()) { // Trying to place a frog.
                 float cellWidth  = viewport.getWorldWidth()/10.66f;
                 float cellHeight = viewport.getWorldHeight()/6;
 

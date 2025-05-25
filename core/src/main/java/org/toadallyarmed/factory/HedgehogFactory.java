@@ -3,12 +3,12 @@ package org.toadallyarmed.factory;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
+import org.toadallyarmed.component.AliveEntityRenderableComponent;
+import org.toadallyarmed.component.AliveEntityStateComponent;
 import org.toadallyarmed.component.HealthComponent;
 import org.toadallyarmed.component.WorldTransformComponent;
-import org.toadallyarmed.component.hedgehog.HedgehogRenderableComponent;
-import org.toadallyarmed.component.hedgehog.HedgehogState;
-import org.toadallyarmed.component.hedgehog.HedgehogStateComponent;
 import org.toadallyarmed.component.interfaces.RenderableComponent;
+import org.toadallyarmed.state.HedgehogState;
 import org.toadallyarmed.component.interfaces.StateComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
 import org.toadallyarmed.config.AnimationConfig;
@@ -16,6 +16,7 @@ import org.toadallyarmed.config.CharacterConfig;
 import org.toadallyarmed.config.GameConfig;
 import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.entity.EntityType;
+import org.toadallyarmed.util.StateMachine;
 import org.toadallyarmed.util.rendering.AnimatedSprite;
 import org.toadallyarmed.util.rendering.AnimatedStateSprite;
 import org.toadallyarmed.util.logger.Logger;
@@ -88,15 +89,21 @@ public class HedgehogFactory implements Disposable {
         Entity entity = new Entity(EntityType.HEDGEHOG);
         WorldTransformComponent transform = new WorldTransformComponent(pos, new Vector2(config.speed(), 0.f));
         HealthComponent health = new HealthComponent(config.hp());
-        HedgehogStateComponent hedgehogState = new HedgehogStateComponent(entity.getMarkForRemovalRunnable());
-        HedgehogRenderableComponent renderable =
-            new HedgehogRenderableComponent(
+        StateMachine<HedgehogState> generalStateMachine = new StateMachine<>(HedgehogState.WALKING);
+        generalStateMachine.addState(HedgehogState.IDLE, HedgehogState.IDLE);
+        generalStateMachine.addState(HedgehogState.WALKING, HedgehogState.WALKING);
+        generalStateMachine.addState(HedgehogState.ACTION, HedgehogState.IDLE);
+        generalStateMachine.addState(HedgehogState.DYING, HedgehogState.NONEXISTENT, entity.getMarkForRemovalRunnable());
+        generalStateMachine.addState(HedgehogState.NONEXISTENT, HedgehogState.NONEXISTENT);
+        AliveEntityStateComponent<HedgehogState> state = new AliveEntityStateComponent<>(generalStateMachine);
+        AliveEntityRenderableComponent<HedgehogState> renderable =
+            new AliveEntityRenderableComponent<>(
                 transform,
-                hedgehogState,
+                state,
                 animatedStateSprite);
         entity
             .put(TransformComponent.class, transform)
-            .put(StateComponent.class, hedgehogState)
+            .put(StateComponent.class, state)
             .put(RenderableComponent.class, renderable)
             .put(HealthComponent.class, health);
         return entity;

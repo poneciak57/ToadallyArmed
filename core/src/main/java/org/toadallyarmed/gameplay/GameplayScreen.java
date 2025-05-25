@@ -21,20 +21,20 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class GameplayScreen implements Screen {
     final Main main;
-    FitViewport viewport;
+    final FitViewport viewport;
 
-    Texture backgroundTexture;
+    final Texture backgroundTexture;
 
-    FrogFactory frogFactory;
-    HedgehogFactory hedgehogFactory;
-    CoinFactory coinFactory;
-    BulletFactory bulletFactory;
-    ConcurrentLinkedQueue<Entity> entities = new ConcurrentLinkedQueue<>();
+    final FrogFactory frogFactory;
+    final HedgehogFactory hedgehogFactory;
+    final CoinFactory coinFactory;
+    final BulletFactory bulletFactory;
+    final ConcurrentLinkedQueue<Entity> entities;
     private final GlobalGameState gameState;
     private final SystemsManager systemsManager;
 
     BitmapFont pixelFont, font;
-    WalletComponent wallet;
+    final WalletComponent wallet;
     AtomicInteger money;
 
     public GameplayScreen(Main main) {
