@@ -76,14 +76,15 @@ public class FrogFactory implements Disposable {
     public Entity createTankFrog(Vector2 pos, CharacterConfig config) { return createFrog(tankFrogAnimatedStateSprite, pos, config); }
     public Entity createWizardFrog(Vector2 pos, CharacterConfig config) {
         var entity = createFrog(wizardFrogAnimatedStateSprite, pos, config);
+
         entity.put(ColliderComponent.class, new ColliderComponent(
             List.of(
                 new ThrottledCollisionActionEntry(
-                    1f,
+                    0.2f,
                     new BasicColliderActionEntry(
-                        new RectangleShape(4, 0.5f, 0.f, 0.25f),
+                        new RectangleShape(8, 0.5f, 0.f, 0.25f),
                         new FrogAttackCollisionAction(
-                            vector2 -> BulletFactory.get().createFireball(vector2, 10f)
+                            vector2 -> BulletFactory.get().createFireball(vector2.add(0.5f, 0f), 30f)
                         ),
                         ColliderType.ACTION,
                         new BasicCollisionActionFilter(EntityType.HEDGEHOG, ColliderType.ENTITY)
