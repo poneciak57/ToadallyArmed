@@ -5,6 +5,7 @@ import org.toadallyarmed.component.interfaces.TransformComponent;
 import org.toadallyarmed.util.rendering.AnimatedStateMachineSpriteInstance;
 import org.toadallyarmed.util.rendering.AnimatedStateSprite;
 import org.toadallyarmed.util.rendering.Renderer;
+import org.toadallyarmed.util.rendering.SimpleTextureRenderer;
 
 public class BasicStatefulRenderableComponent<State extends Enum<State>> implements RenderableComponent {
     final TransformComponent transformComponent;
@@ -26,6 +27,6 @@ public class BasicStatefulRenderableComponent<State extends Enum<State>> impleme
 
     @Override
     public void render(Renderer renderer, float deltaTime, float currentNanoTime) {
-        spriteInstance.render(renderer, transformComponent.getAdvancedPosition(currentNanoTime), deltaTime);
+        spriteInstance.render(new SimpleTextureRenderer(renderer), transformComponent.getAdvancedPosition(currentNanoTime), deltaTime);
     }
 }

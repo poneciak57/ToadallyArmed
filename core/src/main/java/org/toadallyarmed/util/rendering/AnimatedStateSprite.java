@@ -18,10 +18,10 @@ public class AnimatedStateSprite<State extends Enum<State>> {
         else return animatedSprite.getAnimationDuration();
     }
 
-    public void render(Renderer renderer, Vector2 position, State state, float animationTimer) {
+    public void render(TextureRenderer textureRenderer, Vector2 position, State state, float animationTimer) {
         AnimatedSprite animatedSprite = getAnimatedSpriteForState(state);
         if (animatedSprite != null) {
-            animatedSprite.render(renderer, position, animationTimer);
+            animatedSprite.render(textureRenderer, position, animationTimer);
         }
     }
 

@@ -9,9 +9,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import org.toadallyarmed.Main;
+import org.toadallyarmed.component.AliveEntityStateComponent;
 import org.toadallyarmed.component.WalletComponent;
+import org.toadallyarmed.component.interfaces.StateComponent;
 import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.factory.*;
+import org.toadallyarmed.state.FrogState;
 import org.toadallyarmed.system.SystemsManager;
 import org.toadallyarmed.util.logger.Logger;
 
@@ -37,6 +40,7 @@ public class GameplayScreen implements Screen {
     final WalletComponent wallet;
     AtomicInteger money;
 
+    @SuppressWarnings("unchecked")
     public GameplayScreen(Main main) {
         Logger.info("creating a new gameplay screen");
         this.main = main;
@@ -73,6 +77,8 @@ public class GameplayScreen implements Screen {
         bulletFactory = BulletFactory.get();
         Entity real = bulletFactory.createFireball(new Vector2(3, 3), config);
         Entity fake = bulletFactory.createBullet(new Vector2(4, 4), config);
+
+        ((AliveEntityStateComponent<FrogState>) knightFrog.get(StateComponent.class).orElseThrow()).setIsAttacked(true);
 
         entities.addAll(List.of(
             basicFrog, knightFrog, moneyFrog, tankFrog, wizardFrog,

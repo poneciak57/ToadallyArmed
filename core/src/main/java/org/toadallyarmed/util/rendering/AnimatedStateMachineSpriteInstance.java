@@ -18,10 +18,10 @@ public class AnimatedStateMachineSpriteInstance<State extends Enum<State>> {
         prevState = stateMachine.getCurState();
     }
 
-    public void render(Renderer renderer, Vector2 position, float deltaTime) {
+    public void render(TextureRenderer textureRenderer, Vector2 position, float deltaTime) {
         stateElapsedTime += deltaTime;
         State state = getAndUpdateState();
-        animatedStateSprite.render(renderer, position, state, stateElapsedTime);
+        animatedStateSprite.render(textureRenderer, position, state, stateElapsedTime);
     }
 
 
