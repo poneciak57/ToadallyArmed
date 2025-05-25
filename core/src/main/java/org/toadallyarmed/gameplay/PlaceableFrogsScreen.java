@@ -62,7 +62,7 @@ public class PlaceableFrogsScreen implements Screen {
         frogFactory = FrogFactory.get();
         coinFactory = CoinFactory.get();
         gameState = new GlobalGameState(
-            new WalletComponent(50),
+            new WalletComponent(DifficultyFactory.defaultGameConfig().StartingMoney()),
             DifficultyFactory.defaultGameConfig(),
             HedgehogFactory.get()
         );

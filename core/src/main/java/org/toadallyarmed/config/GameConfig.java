@@ -25,6 +25,7 @@ public record GameConfig(
     CharacterConfig healthyHedgehog,
 
     // how much player will earn periodically
+    int StartingMoney,
     int GlobalIncomeDelta
 ) {
     public static final float VELOCITY_SCALE = 0.05f;

@@ -8,7 +8,7 @@ public class DifficultyFactory {
     public static GameConfig defaultGameConfig() {
         return new GameConfig(
             60,
-            1f, //change to 0.1
+            0.1f,
             5f,
             1f,
             5,
@@ -20,7 +20,7 @@ public class DifficultyFactory {
             new CharacterConfig( //knight
                 300, 20, 1, 0, 75, 1, null
             ), new CharacterConfig( //money
-                50, 25 /*he gives money not damage*/, 7, 0, 50, 0, null
+                50, 25 /*he gives money not damage*/, 0.1f, 0, 50, 0, null
             ), new CharacterConfig(//tank
                 1000, 0, 0, 0, 50, 0, null
             ), new CharacterConfig(//wizard
@@ -34,7 +34,7 @@ public class DifficultyFactory {
             ), new CharacterConfig(//healthy
                 300, 20, 2, -10, 0, -1, null
             ),
-            25
+            25, 25
         );
     }
 }
