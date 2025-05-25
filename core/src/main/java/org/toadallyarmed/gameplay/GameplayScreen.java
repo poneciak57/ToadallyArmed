@@ -50,7 +50,8 @@ public class GameplayScreen implements Screen {
         hedgehogFactory = HedgehogFactory.get();
         gameState = new GlobalGameState(
             new WalletComponent(0),
-            DifficultyFactory.defaultGameConfig()
+            DifficultyFactory.defaultGameConfig(),
+            hedgehogFactory
         );
         wallet=gameState.getWallet();
         systemsManager = SystemsManagerFactory.getSystemsManagerForGameplay(gameState);

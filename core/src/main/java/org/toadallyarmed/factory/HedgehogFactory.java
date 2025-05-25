@@ -13,6 +13,7 @@ import org.toadallyarmed.component.interfaces.StateComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
 import org.toadallyarmed.config.AnimationConfig;
 import org.toadallyarmed.config.CharacterConfig;
+import org.toadallyarmed.config.GameConfig;
 import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.entity.EntityType;
 import org.toadallyarmed.util.StateMachine;
@@ -22,6 +23,7 @@ import org.toadallyarmed.util.logger.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class HedgehogFactory implements Disposable {
     private static final HedgehogFactory factoryInstance = new HedgehogFactory();
@@ -62,6 +64,15 @@ public class HedgehogFactory implements Disposable {
     public Entity createFastHedgehog(Vector2 pos, CharacterConfig config) { return createHedgehog(fastHedgehogAnimatedStateSprite, pos, config); }
     public Entity createStrongHedgehog(Vector2 pos, CharacterConfig config) { return createHedgehog(strongHedgehogAnimatedStateSprite, pos, config); }
     public Entity createHealthyHedgehog(Vector2 pos, CharacterConfig config) { return createHedgehog(healthyHedgehogAnimatedStateSprite, pos, config); }
+    public Entity createRandomHedgehog(Vector2 pos, GameConfig config) {
+        int enemyType= ThreadLocalRandom.current().nextInt(0, 4);
+        return switch (enemyType) {
+            case 1 -> createFastHedgehog(pos, config.fastHedgehog());
+            case 2 -> createStrongHedgehog(pos, config.strongHedgehog());
+            case 3 -> createHealthyHedgehog(pos, config.healthyHedgehog());
+            default -> createBasicHedgehog(pos, config.basicHedgehog());
+        };
+    }
 
     @Override
     public void dispose() {
