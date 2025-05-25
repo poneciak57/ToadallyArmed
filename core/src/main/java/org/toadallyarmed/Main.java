@@ -30,7 +30,7 @@ public class Main extends Game {
         renderer = new Renderer();
         font = new BitmapFont();
         renderingSystem = new RenderingSystem(renderer);
-        Logger.init(List.of(new TerminalLoggerBackend(LogLevel.DEBUG)), LogLevel.TRACE);
+        Logger.init(List.of(new TerminalLoggerBackend(LogLevel.TRACE)), LogLevel.TRACE);
         setScreen(new GameplayScreen(this));
         // setScreen(new DraftScreen(this));
         // setScreen(new PlaceableFrogsScreen(this));

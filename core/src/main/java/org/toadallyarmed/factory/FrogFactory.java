@@ -9,7 +9,7 @@ import org.toadallyarmed.component.ColliderComponent;
 import org.toadallyarmed.component.WorldTransformComponent;
 import org.toadallyarmed.component.action.BasicColliderActionEntry;
 import org.toadallyarmed.component.action.BasicCollisionActionFilter;
-import org.toadallyarmed.component.action.OnCollisionShootAction;
+import org.toadallyarmed.component.action.FrogAttackCollisionAction;
 import org.toadallyarmed.component.action.ThrottledCollisionActionEntry;
 import org.toadallyarmed.component.interfaces.ColliderType;
 import org.toadallyarmed.state.FrogState;
@@ -82,7 +82,7 @@ public class FrogFactory implements Disposable {
                     1f,
                     new BasicColliderActionEntry(
                         new RectangleShape(4, 0.5f, 0.f, 0.25f),
-                        new OnCollisionShootAction(
+                        new FrogAttackCollisionAction(
                             vector2 -> BulletFactory.get().createFireball(vector2, 10f)
                         ),
                         ColliderType.ACTION,
