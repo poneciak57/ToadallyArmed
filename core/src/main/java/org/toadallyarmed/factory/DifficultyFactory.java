@@ -8,8 +8,8 @@ public class DifficultyFactory {
         return new GameConfig(
             60,
             1f, //change to 0.1
-            5,
-            5,
+            1,
+            5f,
             5,
             10,
             5,

@@ -32,20 +32,24 @@ public class CollisionSystem implements System {
                 continue;
             }
             for (Entity otherEntity : entities) {
-                if (entity.equals(otherEntity)) continue;
-                Optional<ColliderComponent> otherColliderComponent = entity.get(ColliderComponent.class);
-                Optional<TransformComponent> otherTransformComponent = entity.get(TransformComponent.class);
+                if (entity == otherEntity) continue;
+                Optional<ColliderComponent> otherColliderComponent = otherEntity.get(ColliderComponent.class);
+                Optional<TransformComponent> otherTransformComponent = otherEntity.get(TransformComponent.class);
                 if (otherColliderComponent.isEmpty() || otherTransformComponent.isEmpty()) {
                     continue;
                 }
                 BasicCollisionActionPayload payload = new BasicCollisionActionPayload(
                    this.gameState,
                    entity,
-                   otherEntity
+                   otherEntity,
+                   currentNanoTime
                 );
                 for (ColliderActionEntry entry : colliderComponent.get().getEntries()) {
+//                    Logger.debug("Entry: " + entity.type() + " " + entry.getColliderType());
                     for (ColliderActionEntry otherEntry : otherColliderComponent.get().getEntries()) {
+//                        Logger.debug("colliding: " + otherEntity.type() + " " + otherEntry.getColliderType());
                         if (!entry.filter(otherEntity.type(), otherEntry.getColliderType())) continue;
+//                        Logger.debug("CollisionSystem: collider action entry: " + entry);
                         boolean intersecting = GJK.intersects(
                             entry.getShape()
                                 .shiftedBy(
