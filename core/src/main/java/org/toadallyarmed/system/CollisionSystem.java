@@ -32,16 +32,17 @@ public class CollisionSystem implements System {
                 continue;
             }
             for (Entity otherEntity : entities) {
-                if (entity.equals(otherEntity)) continue;
-                Optional<ColliderComponent> otherColliderComponent = entity.get(ColliderComponent.class);
-                Optional<TransformComponent> otherTransformComponent = entity.get(TransformComponent.class);
+                if (entity == otherEntity) continue;
+                Optional<ColliderComponent> otherColliderComponent = otherEntity.get(ColliderComponent.class);
+                Optional<TransformComponent> otherTransformComponent = otherEntity.get(TransformComponent.class);
                 if (otherColliderComponent.isEmpty() || otherTransformComponent.isEmpty()) {
                     continue;
                 }
                 BasicCollisionActionPayload payload = new BasicCollisionActionPayload(
                    this.gameState,
                    entity,
-                   otherEntity
+                   otherEntity,
+                   currentNanoTime
                 );
                 for (ColliderActionEntry entry : colliderComponent.get().getEntries()) {
                     for (ColliderActionEntry otherEntry : otherColliderComponent.get().getEntries()) {
@@ -58,7 +59,7 @@ public class CollisionSystem implements System {
                                         .getAdvancedPosition(currentNanoTime)
                                 )
                         );
-                        if (intersecting) entry.run(deltaTime, payload);
+                        if (intersecting) entry.run(currentNanoTime, payload);
                     }
                 }
             }

@@ -21,5 +21,5 @@ public interface ColliderActionEntry {
     boolean filter(EntityType otherType, ColliderType otherColliderType);
 
     /// Should run this entry action
-    void run(float deltaTime, BasicCollisionActionPayload payload);
+    void run(float currentNano, BasicCollisionActionPayload payload);
 }

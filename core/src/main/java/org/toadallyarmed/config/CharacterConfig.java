@@ -5,6 +5,10 @@ public record CharacterConfig(
     int damage,
     float atk_speed,
     float speed,
-    int cost
+    int cost,
+
+    // range for attacks for most of the characters
+    float attackRange,
+    BulletConfig bulletConfig
 ) {
 }

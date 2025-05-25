@@ -8,11 +8,12 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 public class ThrottledSystem implements System {
     private final System system;
     private final float interval;
-    private float accumulatedTime = 0;
+    private float accumulatedTime;
 
     public ThrottledSystem(float tickRate, System system) {
         this.interval = 1f / tickRate;
         this.system = system;
+        this.accumulatedTime = interval;
     }
 
     @Override
