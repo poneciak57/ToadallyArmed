@@ -6,6 +6,7 @@ import org.toadallyarmed.gameplay.GlobalGameState;
 public record BasicCollisionActionPayload (
     GlobalGameState gameState,
     Entity entity,
-    Entity other
+    Entity other,
+    float currentNanoTime
 )
 { }

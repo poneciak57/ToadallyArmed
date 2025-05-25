@@ -43,8 +43,8 @@ public class BulletFactory implements Disposable {
     public static BulletFactory get() {
         return factoryInstance;
     }
-    public Entity createBullet(Vector2 pos, GameConfig config){ return createBullet(bulletAnimatedStateSprite, pos, config);}
-    public Entity createFireball(Vector2 pos, GameConfig config){return createBullet(fireballAnimatedStateSprite, pos, config);}
+    public Entity createBullet(Vector2 pos, float speed){ return createBullet(bulletAnimatedStateSprite, pos, speed);}
+    public Entity createFireball(Vector2 pos, float speed){return createBullet(fireballAnimatedStateSprite, pos, speed);}
 
     @Override
     public void dispose() {
@@ -52,9 +52,10 @@ public class BulletFactory implements Disposable {
         fireballTexture.dispose();
     }
 
-    private Entity createBullet(AnimatedStateSprite<BasicEntityState> animatedStateSprite, Vector2 pos, GameConfig config) {
+    private Entity createBullet(AnimatedStateSprite<BasicEntityState> animatedStateSprite, Vector2 pos, float speed) {
         Logger.trace("Creating Bullet Entity in factory");
-        WorldTransformComponent transform = new WorldTransformComponent(pos, new Vector2(config.BulletSystemTickRate(), 0));
+        Logger.debug("Creating bullet at pos: " + pos);
+        WorldTransformComponent transform = new WorldTransformComponent(pos, new Vector2(speed, 0));
         StateMachine<BasicEntityState> stateMachine = new StateMachine<>(BasicEntityState.IDLE);
         stateMachine.addState(BasicEntityState.IDLE, BasicEntityState.IDLE);
         stateMachine.addState(BasicEntityState.NONEXISTENT, BasicEntityState.NONEXISTENT);

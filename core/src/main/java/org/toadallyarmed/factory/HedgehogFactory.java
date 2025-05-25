@@ -3,11 +3,11 @@ package org.toadallyarmed.factory;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
-import org.toadallyarmed.component.AliveEntityRenderableComponent;
-import org.toadallyarmed.component.AliveEntityStateComponent;
-import org.toadallyarmed.component.HealthComponent;
-import org.toadallyarmed.component.WorldTransformComponent;
+import org.toadallyarmed.component.*;
+import org.toadallyarmed.component.action.BasicNonActionColliderEntry;
+import org.toadallyarmed.component.interfaces.ColliderType;
 import org.toadallyarmed.component.interfaces.RenderableComponent;
+import org.toadallyarmed.config.GameConfig;
 import org.toadallyarmed.state.HedgehogState;
 import org.toadallyarmed.component.interfaces.StateComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
@@ -16,12 +16,15 @@ import org.toadallyarmed.config.CharacterConfig;
 import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.entity.EntityType;
 import org.toadallyarmed.util.StateMachine;
+import org.toadallyarmed.util.collision.RectangleShape;
 import org.toadallyarmed.util.rendering.AnimatedSprite;
 import org.toadallyarmed.util.rendering.AnimatedStateSprite;
 import org.toadallyarmed.util.logger.Logger;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class HedgehogFactory implements Disposable {
     private static final HedgehogFactory factoryInstance = new HedgehogFactory();
@@ -62,6 +65,16 @@ public class HedgehogFactory implements Disposable {
     public Entity createFastHedgehog(Vector2 pos, CharacterConfig config) { return createHedgehog(fastHedgehogAnimatedStateSprite, pos, config); }
     public Entity createStrongHedgehog(Vector2 pos, CharacterConfig config) { return createHedgehog(strongHedgehogAnimatedStateSprite, pos, config); }
     public Entity createHealthyHedgehog(Vector2 pos, CharacterConfig config) { return createHedgehog(healthyHedgehogAnimatedStateSprite, pos, config); }
+    public Entity createRandomHedgehog(Vector2 pos, GameConfig config) {
+        int enemyType= ThreadLocalRandom.current().nextInt(0, 4);
+        return switch (enemyType) {
+            case 1 -> createFastHedgehog(pos, config.fastHedgehog());
+            case 2 -> createStrongHedgehog(pos, config.strongHedgehog());
+            case 3 -> createHealthyHedgehog(pos, config.healthyHedgehog());
+            default -> createBasicHedgehog(pos, config.basicHedgehog());
+        };
+    }
+
 
     @Override
     public void dispose() {
@@ -90,11 +103,20 @@ public class HedgehogFactory implements Disposable {
                 transform,
                 state,
                 animatedStateSprite);
+        ColliderComponent colliderComponent = new ColliderComponent(
+            List.of(
+                new BasicNonActionColliderEntry(
+                    new RectangleShape(1f, 1f),
+                    ColliderType.ENTITY
+                )
+            )
+        );
         entity
             .put(TransformComponent.class, transform)
             .put(StateComponent.class, state)
             .put(RenderableComponent.class, renderable)
-            .put(HealthComponent.class, health);
+            .put(HealthComponent.class, health)
+            .put(ColliderComponent.class, colliderComponent);
         return entity;
     }
 

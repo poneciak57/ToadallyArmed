@@ -53,6 +53,6 @@ public class WorldTransformComponent implements TransformComponent {
         var oldPayload = payload.get();
         if (oldPayload.lastUpdateTime == 0) return oldPayload.position.cpy();
         float deltaTime = (currentNanoTime - oldPayload.lastUpdateTime) / 1_000_000_000f;
-        return oldPayload.position().add(oldPayload.velocity().cpy().scl(deltaTime * VELOCITY_SCALE));
+        return oldPayload.position().cpy().add(oldPayload.velocity().cpy().scl(deltaTime * VELOCITY_SCALE));
     }
 }

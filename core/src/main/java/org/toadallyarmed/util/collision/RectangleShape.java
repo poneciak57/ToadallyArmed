@@ -15,6 +15,16 @@ public class RectangleShape implements ConvexShape {
         shape = new PolygonShape(vertices);
     }
 
+    /// Creates rectangle with given properties
+    public RectangleShape(float width, float height, float originX, float originY) {
+        final Vector2[] vertices = new Vector2[4];
+        vertices[0] = new Vector2(originX, originY);
+        vertices[1] = new Vector2(width + originX, originY);
+        vertices[2] = new Vector2(width + originX, -height + originY);
+        vertices[3] = new Vector2(originX, -height + originY);
+        shape = new PolygonShape(vertices);
+    }
+
     private RectangleShape(PolygonShape shape) {
         this.shape = shape;
     }

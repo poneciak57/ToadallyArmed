@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import org.toadallyarmed.gameplay.GameplayScreen;
+import org.toadallyarmed.gameplay.PlaceableFrogsScreen;
 import org.toadallyarmed.system.RenderingSystem;
 import org.toadallyarmed.util.rendering.Renderer;
 import org.toadallyarmed.util.logger.LogLevel;
@@ -30,10 +31,10 @@ public class Main extends Game {
         renderer = new Renderer();
         font = new BitmapFont();
         renderingSystem = new RenderingSystem(renderer);
-        Logger.init(List.of(new TerminalLoggerBackend(LogLevel.TRACE)), LogLevel.TRACE);
-        setScreen(new GameplayScreen(this));
+        Logger.init(List.of(new TerminalLoggerBackend(LogLevel.DEBUG)), LogLevel.TRACE);
+        //setScreen(new GameplayScreen(this));
         // setScreen(new DraftScreen(this));
-        // setScreen(new PlaceableFrogsScreen(this));
+         setScreen(new PlaceableFrogsScreen(this));
     }
 
     @Override

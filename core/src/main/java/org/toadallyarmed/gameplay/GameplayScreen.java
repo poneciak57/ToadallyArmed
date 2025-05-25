@@ -56,7 +56,8 @@ public class GameplayScreen implements Screen {
         hedgehogFactory = HedgehogFactory.get();
         gameState = new GlobalGameState(
             new WalletComponent(0),
-            DifficultyFactory.defaultGameConfig()
+            DifficultyFactory.defaultGameConfig(),
+            HedgehogFactory.get()
         );
         wallet=gameState.getWallet();
         systemsManager = SystemsManagerFactory.getSystemsManagerForGameplay(gameState);
@@ -77,8 +78,8 @@ public class GameplayScreen implements Screen {
         Entity coin = coinFactory.createCoin(new Vector2(0, 2));
         Entity Scoin = coinFactory.createSpecialCoin(new Vector2(0, 5));
         bulletFactory = BulletFactory.get();
-        Entity real = bulletFactory.createFireball(new Vector2(3, 3), config);
-        Entity fake = bulletFactory.createBullet(new Vector2(4, 4), config);
+        Entity real = bulletFactory.createFireball(new Vector2(3, 3), config.BulletSystemTickRate());
+        Entity fake = bulletFactory.createBullet(new Vector2(4, 4), config.BulletSystemTickRate());
 
         entities.addAll(List.of(
             basicFrog, knightFrog, moneyFrog, tankFrog, wizardFrog,

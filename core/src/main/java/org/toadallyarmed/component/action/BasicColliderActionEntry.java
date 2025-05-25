@@ -42,7 +42,7 @@ public class BasicColliderActionEntry implements org.toadallyarmed.component.int
     }
 
     @Override
-    public void run(float deltaTime, BasicCollisionActionPayload payload) {
+    public void run(float currentNano, BasicCollisionActionPayload payload) {
         action.extract_run(payload);
     }
 }

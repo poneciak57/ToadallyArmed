@@ -3,25 +3,27 @@ package org.toadallyarmed.factory;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
-import org.toadallyarmed.component.AliveEntityRenderableComponent;
-import org.toadallyarmed.component.AliveEntityStateComponent;
-import org.toadallyarmed.component.WorldTransformComponent;
+import org.toadallyarmed.component.*;
+import org.toadallyarmed.component.action.*;
+import org.toadallyarmed.component.interfaces.*;
 import org.toadallyarmed.state.FrogState;
-import org.toadallyarmed.component.interfaces.RenderableComponent;
-import org.toadallyarmed.component.interfaces.StateComponent;
-import org.toadallyarmed.component.interfaces.TransformComponent;
 import org.toadallyarmed.config.AnimationConfig;
 import org.toadallyarmed.config.CharacterConfig;
 import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.entity.EntityType;
 import org.toadallyarmed.util.StateMachine;
+import org.toadallyarmed.util.collision.RectangleShape;
 import org.toadallyarmed.util.rendering.AnimatedSprite;
 import org.toadallyarmed.util.rendering.AnimatedStateSprite;
 import org.toadallyarmed.util.logger.Logger;
 
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import static org.toadallyarmed.config.GameConfig.TILE_HEIGHT;
+import static org.toadallyarmed.config.GameConfig.TILE_WIDTH;
 
 public class FrogFactory implements Disposable {
     private static final FrogFactory factoryInstance = new FrogFactory();
@@ -64,9 +66,38 @@ public class FrogFactory implements Disposable {
 
     public Entity createBasicFrog(Vector2 pos, CharacterConfig config) { return createFrog(basicFrogAnimatedStateSprite, pos, config); }
     public Entity createKnightFrog(Vector2 pos, CharacterConfig config) { return createFrog(knightFrogAnimatedStateSprite, pos, config); }
-    public Entity createMoneyFrog(Vector2 pos, CharacterConfig config) { return createFrog(moneyFrogAnimatedStateSprite, pos, config); }
+    public Entity createMoneyFrog(Vector2 pos, CharacterConfig config) {
+        var entity= createFrog(moneyFrogAnimatedStateSprite, pos, config);
+
+        entity.put(ActionComponent.class, new ThrottledActionComponent(
+            config.atk_speed(), new BardAction()
+        ));
+
+        return entity;
+    }
     public Entity createTankFrog(Vector2 pos, CharacterConfig config) { return createFrog(tankFrogAnimatedStateSprite, pos, config); }
-    public Entity createWizardFrog(Vector2 pos, CharacterConfig config) { return createFrog(wizardFrogAnimatedStateSprite, pos, config); }
+    public Entity createWizardFrog(Vector2 pos, CharacterConfig config) {
+        var entity = createFrog(wizardFrogAnimatedStateSprite, pos, config);
+
+        entity.put(ColliderComponent.class, new ColliderComponent(
+            List.of(
+                new ThrottledCollisionActionEntry(
+                    config.atk_speed(),
+                    new BasicColliderActionEntry(
+                        new RectangleShape(config.attackRange(), TILE_HEIGHT / 2, 0.f, TILE_HEIGHT / 4),
+                        new FrogAttackCollisionAction(
+                            vector2 -> BulletFactory.get().createFireball(
+                                vector2.add(config.bulletConfig().offsetX(), config.bulletConfig().offsetY()),
+                                config.bulletConfig().speed()
+                            )
+                        ),
+                        ColliderType.ACTION,
+                        new BasicCollisionActionFilter(EntityType.HEDGEHOG, ColliderType.ENTITY)
+                        ))
+            )
+        ));
+        return entity;
+    }
 
     @Override
     public void dispose() {

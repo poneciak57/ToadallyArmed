@@ -51,7 +51,7 @@ public class PlaceableFrogsScreen implements Screen {
 
 
     public PlaceableFrogsScreen(Main main) {
-        Logger.info("Working on Nat's screen");
+        Logger.info("Placeable Frogs screen");
         this.main = main;
 
         viewport = new FitViewport(10.66F, 6);
@@ -62,8 +62,9 @@ public class PlaceableFrogsScreen implements Screen {
         frogFactory = FrogFactory.get();
         coinFactory = CoinFactory.get();
         gameState = new GlobalGameState(
-            new WalletComponent(0),
-            DifficultyFactory.defaultGameConfig()
+            new WalletComponent(DifficultyFactory.defaultGameConfig().StartingMoney()),
+            DifficultyFactory.defaultGameConfig(),
+            HedgehogFactory.get()
         );
         wallet=gameState.getWallet();
         systemsManager = SystemsManagerFactory.getSystemsManagerForGameplay(gameState);
