@@ -1,9 +1,8 @@
 package org.toadallyarmed.component.action;
 
-import com.badlogic.gdx.math.Vector2;
 import org.toadallyarmed.component.action.payload.BardActionPayload;
 import org.toadallyarmed.component.action.payload.BasicActionPayload;
-import org.toadallyarmed.component.interfaces.TransformComponent;
+import org.toadallyarmed.state.FrogState;
 import org.toadallyarmed.util.action.Action;
 import org.toadallyarmed.util.action.PayloadExtractor;
 
@@ -12,10 +11,9 @@ public class BardAction implements Action<BardActionPayload, BasicActionPayload>
     @Override
     public void run(BardActionPayload payload) {
         if (!firstTime){
-            payload.walletComponent()
-                .access()
-                .addAndGet(payload.bardIncomeDelta());
-
+            payload.stateMachine().setNextTmpState(FrogState.IDLE, FrogState.HOP, () -> {
+                payload.walletComponent().access().addAndGet(payload.bardIncomeDelta());//upload money
+            });
         }
         firstTime = false;
     }
