@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public record BardActionPayload(
-    Optional<TransformComponent> pos,
+    TransformComponent pos,
     StateMachine<FrogState> stateMachine,
     ConcurrentLinkedQueue<Entity> entities,
     WalletComponent walletComponent,
@@ -27,7 +27,7 @@ public record BardActionPayload(
 
         AliveEntityStateComponent<FrogState> frogESC = (AliveEntityStateComponent<FrogState>) stateComponent.get();
         return Optional.of(new BardActionPayload(
-            pos,
+            pos.get(),
             frogESC.getGeneralStateMachine(),
             rawPayload.gameState().getEntities(),
             rawPayload.gameState().getWallet(),
