@@ -138,6 +138,7 @@ public class FrogFactory implements Disposable {
         StateMachine<FrogState> generalStateMachine = new StateMachine<>(FrogState.IDLE);
         generalStateMachine.addState(FrogState.IDLE, FrogState.IDLE);
         generalStateMachine.addState(FrogState.ACTION, FrogState.IDLE);
+        generalStateMachine.addState(FrogState.HOP, FrogState.IDLE);
         generalStateMachine.addState(FrogState.DYING, FrogState.NONEXISTENT, entity.getMarkForRemovalRunnable());
         generalStateMachine.addState(FrogState.NONEXISTENT, FrogState.NONEXISTENT);
         AliveEntityStateComponent<FrogState> state = new AliveEntityStateComponent<>(generalStateMachine);
@@ -157,6 +158,7 @@ public class FrogFactory implements Disposable {
         Map<FrogState, AnimatedSprite> animatedSprites = new HashMap<>();
 
         animatedSprites.put(FrogState.IDLE, animationFactory.Animation(texture, 0, 0, 7));
+        animatedSprites.put(FrogState.HOP, animationFactory.Animation(texture, 1, 0, 6));
         animatedSprites.put(FrogState.ACTION, animationFactory.Animation(texture, 2, 0, 5));
         animatedSprites.put(FrogState.DYING, animationFactory.Animation(texture, 4, 0, 8));
         animatedSprites.put(FrogState.NONEXISTENT, AnimatedSprite.empty());
