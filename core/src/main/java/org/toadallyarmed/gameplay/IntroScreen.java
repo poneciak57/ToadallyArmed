@@ -72,7 +72,9 @@ public class IntroScreen implements Screen {
         viewport.unproject(touchPos);
         if (startButtonBounds.contains(touchPos.x, touchPos.y)){
             Logger.info("Clicked");
+            main.setScreen(new PlaceableFrogsScreen(main));
         }
+
     }
 
     @Override
