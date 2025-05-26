@@ -4,77 +4,64 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.math.Rectangle;
 import org.toadallyarmed.Main;
-import org.toadallyarmed.component.WalletComponent;
 import org.toadallyarmed.config.GameConfig;
-import org.toadallyarmed.entity.Entity;
-import org.toadallyarmed.factory.*;
-import org.toadallyarmed.system.SystemsManager;
+import org.toadallyarmed.factory.DifficultyFactory;
 import org.toadallyarmed.util.logger.Logger;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
-
-public class IntroScreen implements Screen {
+public class LevelChoosingScreen implements Screen {
     final Main main;
     final FitViewport viewport;
 
     final Texture backgroundTexture;
-
-    final FrogFactory frogFactory;
-    private final GlobalGameState gameState;
-    final GameConfig config;
-    private final SystemsManager systemsManager;
-
-    //--BUTTONS--//
-    Rectangle startButtonBounds;
-    final ConcurrentLinkedQueue<Entity> entities;
+    Rectangle easyButtonBounds, mediumButtonBounds, hardButtonBounds, devilishButtonBounds;
 
 
-    public IntroScreen(Main main) {
-        Logger.info("Introduction screen");
+    public LevelChoosingScreen(Main main) {
+        Logger.info("Level Choosing screen");
         this.main = main;
 
         viewport = new FitViewport(10.66F, 6);
         this.main.updateFontScale(viewport);
 
-        backgroundTexture = new Texture("GameScreen/intro_background.jpg");
-
-        frogFactory = FrogFactory.get();
-        gameState = new GlobalGameState(
-            new WalletComponent(DifficultyFactory.defaultGameConfig().StartingMoney()),
-            DifficultyFactory.defaultGameConfig(),
-            null
-        );
-        systemsManager = SystemsManagerFactory.getSystemsManagerForGameplay(gameState);
-        entities = gameState.getEntities();
-        config = gameState.getGameConfig();
-
+        backgroundTexture = new Texture("GameScreen/level_choosing_background.jpg");
         setButtons();
 
-        Logger.info("Created a new gameplay screen successfully");
+        Logger.info("Created a level choosing screen successfully");
     }
     private void setButtons(){
-        startButtonBounds =new Rectangle(4f, 1, 3, 1);
+        easyButtonBounds=new Rectangle(1.5f, 2, 3, 1);
+        mediumButtonBounds=new Rectangle(5.5f, 2, 3, 1);
+        hardButtonBounds=new Rectangle(1.5f, 0.5f, 3, 1);
+        devilishButtonBounds=new Rectangle(5.5f, 0.5f, 3, 1);
     }
     private void analyzeTouch(Vector3 touchPos){//touch position is obtained  (in terms of x, y)
         viewport.unproject(touchPos);
-        if (startButtonBounds.contains(touchPos.x, touchPos.y)){
+        boolean clicked=easyButtonBounds.contains(touchPos.x, touchPos.y) ||
+            mediumButtonBounds.contains(touchPos.x, touchPos.y) ||  hardButtonBounds.contains(touchPos.x, touchPos.y)
+            || devilishButtonBounds.contains(touchPos.x, touchPos.y);
+        if (clicked){
             Logger.info("Clicked");
-            main.setScreen(new LevelChoosingScreen(main));
+            GameConfig config=DifficultyFactory.defaultGameConfig();
+            if (easyButtonBounds.contains(touchPos.x, touchPos.y))
+                config=DifficultyFactory.easy();
+            else if (mediumButtonBounds.contains(touchPos.x, touchPos.y))
+                config=DifficultyFactory.medium();
+            else if (hardButtonBounds.contains(touchPos.x, touchPos.y))
+                config=DifficultyFactory.hard();
+            else if (devilishButtonBounds.contains(touchPos.x, touchPos.y))
+                config=DifficultyFactory.devilish();
+            main.setScreen(new LevelScreen(main, config));
         }
-
     }
 
     @Override
     public void show() {
-        systemsManager.start();
-        // Prepare your screen here.
-        entities.add(FrogFactory.get().createKnightFrog(new Vector2(8, 3.735f), config.knightFrog()));
+        // Prepare your screen here
     }
 
     @Override
@@ -88,7 +75,6 @@ public class IntroScreen implements Screen {
         float worldWidth = viewport.getWorldWidth();
         float worldHeight = viewport.getWorldHeight();
         main.renderer.getSpriteBatch().draw(backgroundTexture, 0, 0, worldWidth, worldHeight);
-        main.renderingSystem.tick(delta, gameState.getEntities());
 
         if (Gdx.input.justTouched())
             analyzeTouch(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
@@ -107,19 +93,16 @@ public class IntroScreen implements Screen {
     @Override
     public void pause() {
         // Invoked when your application is paused.
-        systemsManager.pause();
     }
 
     @Override
     public void resume() {
         // Invoked when your application is resumed after pause.
-        systemsManager.resume();
     }
 
     @Override
     public void hide() {
         // This method is called when another screen replaces this one.
-        systemsManager.stop();
     }
 
     @Override
@@ -127,6 +110,5 @@ public class IntroScreen implements Screen {
         Logger.info("disposing a gameplay screen");
         // Destroy screen's assets here.
         backgroundTexture.dispose();
-        systemsManager.stop();
     }
 }

@@ -31,7 +31,6 @@ public class Main extends Game {
         font = new BitmapFont();
         renderingSystem = new RenderingSystem(renderer);
         Logger.init(List.of(new TerminalLoggerBackend(LogLevel.DEBUG)), LogLevel.TRACE);
-        //setScreen(new LevelScreen(this));
         setScreen(new IntroScreen(this));
     }
 

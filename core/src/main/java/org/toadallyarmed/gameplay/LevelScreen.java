@@ -49,9 +49,10 @@ public class LevelScreen implements Screen {
     final Set<Vector2> taken=new HashSet<>();
 
 
-    public LevelScreen(Main main) {
+    public LevelScreen(Main main, GameConfig config) {
         Logger.info("Placeable Frogs screen");
         this.main = main;
+        this.config = config;
 
         viewport = new FitViewport(10.66F, 6);
         this.main.updateFontScale(viewport);
@@ -61,14 +62,13 @@ public class LevelScreen implements Screen {
         frogFactory = FrogFactory.get();
         coinFactory = CoinFactory.get();
         gameState = new GlobalGameState(
-            new WalletComponent(DifficultyFactory.defaultGameConfig().StartingMoney()),
-            DifficultyFactory.defaultGameConfig(),
+            new WalletComponent(config.StartingMoney()),
+            config,
             HedgehogFactory.get()
         );
         wallet=gameState.getWallet();
         systemsManager = SystemsManagerFactory.getSystemsManagerForGameplay(gameState);
         entities = gameState.getEntities();
-        config = gameState.getGameConfig();
 
         entities.add(coinFactory.createSpecialCoin(new Vector2(0, 5)));
 
