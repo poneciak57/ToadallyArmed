@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import org.toadallyarmed.component.*;
-import org.toadallyarmed.component.action.BasicNonActionColliderEntry;
+import org.toadallyarmed.component.action.BasicNoActionColliderEntry;
 import org.toadallyarmed.component.interfaces.ColliderType;
 import org.toadallyarmed.component.interfaces.RenderableComponent;
 import org.toadallyarmed.config.GameConfig;
@@ -105,7 +105,7 @@ public class HedgehogFactory implements Disposable {
                 animatedStateSprite);
         ColliderComponent colliderComponent = new ColliderComponent(
             List.of(
-                new BasicNonActionColliderEntry(
+                new BasicNoActionColliderEntry(
                     new RectangleShape(1f, 1f),
                     ColliderType.ENTITY
                 )

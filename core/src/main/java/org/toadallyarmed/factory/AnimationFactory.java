@@ -10,15 +10,15 @@ import org.toadallyarmed.util.rendering.AnimatedSprite;
 import java.util.Arrays;
 
 public class AnimationFactory {
-    final float FRAME_DURATION;
-    final Vector2 OFFSET, BASE_DIMENSIONS;
+    final float frameDuration;
+    final Vector2 offset, baseDimensions;
     final int width, height;
     final boolean reverse;
 
     AnimationFactory(AnimationConfig config) {
-        FRAME_DURATION=config.FRAME_DURATION();
-        OFFSET=config.OFFSET();
-        BASE_DIMENSIONS=config.BASE_DIMENSIONS();
+        frameDuration=config.frameDuration();
+        offset=config.offset();
+        baseDimensions=config.baseDimensions();
         width=config.width();
         height=config.height();
         reverse=config.reversed();
@@ -35,8 +35,8 @@ public class AnimationFactory {
 
         frames = Arrays.copyOfRange(framesGrid[index], from, to);
         if (reverse) reverseInPlace(frames);
-        animation = new Animation<>(FRAME_DURATION, frames);
-        return new AnimatedSprite(animation, OFFSET, BASE_DIMENSIONS);
+        animation = new Animation<>(frameDuration, frames);
+        return new AnimatedSprite(animation, offset, baseDimensions);
     }
 
     private void reverseInPlace(TextureRegion[] array) {

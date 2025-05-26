@@ -1,7 +1,5 @@
 package org.toadallyarmed.component.action;
 
-import com.badlogic.gdx.math.Vector2;
-import org.toadallyarmed.component.AliveEntityStateComponent;
 import org.toadallyarmed.component.BasicStateComponent;
 import org.toadallyarmed.component.action.payload.BardActionPayload;
 import org.toadallyarmed.component.action.payload.BasicActionPayload;

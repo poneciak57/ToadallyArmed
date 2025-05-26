@@ -5,7 +5,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -26,7 +25,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class PlaceableFrogsScreen implements Screen {
+public class LevelScreen implements Screen {
     final Main main;
     final FitViewport viewport;
 
@@ -50,7 +49,7 @@ public class PlaceableFrogsScreen implements Screen {
     final Set<Vector2> taken=new HashSet<>();
 
 
-    public PlaceableFrogsScreen(Main main) {
+    public LevelScreen(Main main) {
         Logger.info("Placeable Frogs screen");
         this.main = main;
 
