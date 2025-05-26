@@ -25,7 +25,7 @@ public class DraftScreen implements Screen {
     float animationTimer = 0f;
 
     Texture backgroundTexture;
-    Texture moneyFrogTexture, tankFrogTexture, knightFrogTexture, basicFrogTexture, wizardFrogTexture;
+    Texture bardFrogTexture, tankFrogTexture, knightFrogTexture, basicFrogTexture, wizardFrogTexture;
     Texture randomHedgehogTexture;
     Texture coinTexture;
     Animation<TextureRegion> basicFrogAnimation;
@@ -47,7 +47,7 @@ public class DraftScreen implements Screen {
     }
     private void setFrogTextures(){
         //upload files
-        moneyFrogTexture = new Texture("GameScreen/Frogs/moneyFrog.png");
+        bardFrogTexture = new Texture("GameScreen/Frogs/bardFrog.png");
         tankFrogTexture = new Texture("GameScreen/Frogs/tankFrog.png");
         knightFrogTexture = new Texture("GameScreen/Frogs/knightFrog.png");
         basicFrogTexture= new Texture("GameScreen/Frogs/basicFrog.png");
@@ -142,7 +142,7 @@ public class DraftScreen implements Screen {
     public void dispose() {
         // Destroy screen's assets here.
         backgroundTexture.dispose();
-        moneyFrogTexture.dispose();
+        bardFrogTexture.dispose();
         tankFrogTexture.dispose();
         knightFrogTexture.dispose();
         basicFrogTexture.dispose();

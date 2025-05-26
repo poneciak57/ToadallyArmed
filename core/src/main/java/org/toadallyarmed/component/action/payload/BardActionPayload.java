@@ -31,7 +31,7 @@ public record BardActionPayload(
             frogESC.getGeneralStateMachine(),
             rawPayload.gameState().getEntities(),
             rawPayload.gameState().getWallet(),
-            rawPayload.gameState().getGameConfig().moneyFrog().damage()
+            rawPayload.gameState().getGameConfig().bardFrog().damage()
         ));
     };
 }

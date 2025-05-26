@@ -65,7 +65,7 @@ public class GameplayScreen implements Screen {
         var config = gameState.getGameConfig();
         Entity basicFrog  = frogFactory.createBasicFrog(new Vector2(0, 0), config.knightFrog());
         knightFrog = frogFactory.createKnightFrog(new Vector2(0, 1), config.knightFrog());
-        Entity moneyFrog  = frogFactory.createMoneyFrog(new Vector2(0, 2), config.moneyFrog());
+        Entity bardFrog  = frogFactory.createBardFrog(new Vector2(0, 2), config.bardFrog());
         Entity tankFrog   = frogFactory.createTankFrog(new Vector2(0, 3), config.tankFrog());
         Entity wizardFrog = frogFactory.createWizardFrog(new Vector2(0, 4), config.wizardFrog());
 
@@ -82,7 +82,7 @@ public class GameplayScreen implements Screen {
         Entity fake = bulletFactory.createBullet(new Vector2(4, 4), config.BulletSystemTickRate());
 
         entities.addAll(List.of(
-            basicFrog, knightFrog, moneyFrog, tankFrog, wizardFrog,
+            basicFrog, knightFrog, bardFrog, tankFrog, wizardFrog,
             basicHedgehog, fastHedgehog, strongHedgehog, healthyHedgehog,
             coin, Scoin, real, fake
         ));

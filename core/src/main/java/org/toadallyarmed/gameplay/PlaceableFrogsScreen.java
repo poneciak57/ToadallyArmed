@@ -114,7 +114,7 @@ public class PlaceableFrogsScreen implements Screen {
                     bought = FrogType.WIZARD;
                 }
             } else if (hitBard) {
-                int cost = config.moneyFrog().cost();
+                int cost = config.bardFrog().cost();
                 if (cost <= wallet.access().get()) {
                     wallet.pay(cost);
                     Logger.info("Bard bought");
@@ -149,7 +149,7 @@ public class PlaceableFrogsScreen implements Screen {
 
                 if (!taken.contains(gridPos) && cellX<=9) {
                     Entity entity = switch (bought) {
-                        case BARD -> frogFactory.createMoneyFrog(gridPos, config.moneyFrog());
+                        case BARD -> frogFactory.createBardFrog(gridPos, config.bardFrog());
                         case TANK -> frogFactory.createTankFrog(gridPos, config.tankFrog());
                         case KNIGHT -> frogFactory.createKnightFrog(gridPos, config.knightFrog());
                         default -> frogFactory.createWizardFrog(gridPos, config.wizardFrog());

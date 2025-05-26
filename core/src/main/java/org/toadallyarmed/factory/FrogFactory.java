@@ -33,12 +33,12 @@ public class FrogFactory implements Disposable {
 
     private final Texture basicFrogTexture;
     private final Texture knightFrogTexture;
-    private final Texture moneyFrogTexture;
+    private final Texture bardFrogTexture;
     private final Texture tankFrogTexture;
     private final Texture wizardFrogTexture;
     private final AnimatedStateSprite<FrogState> basicFrogAnimatedStateSprite;
     private final AnimatedStateSprite<FrogState> knightFrogAnimatedStateSprite;
-    private final AnimatedStateSprite<FrogState> moneyFrogAnimatedStateSprite;
+    private final AnimatedStateSprite<FrogState> bardFrogAnimatedStateSprite;
     private final AnimatedStateSprite<FrogState> tankFrogAnimatedStateSprite;
     private final AnimatedStateSprite<FrogState> wizardFrogAnimatedStateSprite;
 
@@ -47,13 +47,13 @@ public class FrogFactory implements Disposable {
 
         basicFrogTexture  = new Texture("GameScreen/Frogs/basicFrog.png");
         knightFrogTexture = new Texture("GameScreen/Frogs/knightFrog.png");
-        moneyFrogTexture  = new Texture("GameScreen/Frogs/moneyFrog.png");
+        bardFrogTexture   = new Texture("GameScreen/Frogs/bardFrog.png");
         tankFrogTexture   = new Texture("GameScreen/Frogs/tankFrog.png");
         wizardFrogTexture = new Texture("GameScreen/Frogs/wizardFrog.png");
 
         basicFrogAnimatedStateSprite   = createAnimatedStateSprite(basicFrogTexture);
         knightFrogAnimatedStateSprite  = createAnimatedStateSprite(knightFrogTexture);
-        moneyFrogAnimatedStateSprite   = createAnimatedStateSprite(moneyFrogTexture);
+        bardFrogAnimatedStateSprite    = createAnimatedStateSprite(bardFrogTexture);
         tankFrogAnimatedStateSprite    = createAnimatedStateSprite(tankFrogTexture);
         wizardFrogAnimatedStateSprite  = createAnimatedStateSprite(wizardFrogTexture);
 
@@ -87,8 +87,8 @@ public class FrogFactory implements Disposable {
         ));
         return entity;
     }
-    public Entity createMoneyFrog(Vector2 pos, CharacterConfig config) {
-        var entity= createFrog(moneyFrogAnimatedStateSprite, pos, config);
+    public Entity createBardFrog(Vector2 pos, CharacterConfig config) {
+        var entity= createFrog(bardFrogAnimatedStateSprite, pos, config);
 
         entity.put(ActionComponent.class, new ThrottledActionComponent(
             config.atk_speed(), new BardAction()
@@ -125,7 +125,7 @@ public class FrogFactory implements Disposable {
         Logger.trace("Disposing FrogFactory");
         basicFrogTexture.dispose();
         knightFrogTexture.dispose();
-        moneyFrogTexture.dispose();
+        bardFrogTexture.dispose();
         tankFrogTexture.dispose();
         wizardFrogTexture.dispose();
     }
