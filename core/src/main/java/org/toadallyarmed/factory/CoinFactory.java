@@ -28,7 +28,7 @@ public class CoinFactory implements Disposable {
     final AnimationFactory coinAnimationFactory=new AnimationFactory(new AnimationConfig(
         0.12f, new Vector2(0.3f, 0.8f), new Vector2(0.3f, 0.3f), 6, 1, false
     )), specialCoinAnimationFactory=new AnimationFactory(new AnimationConfig(
-        0.25f, new Vector2(0.15f, 0.15f), new Vector2(0.7f, 0.7f), 6, 1, false
+        0.10f, new Vector2(0.15f, 0.15f), new Vector2(0.7f, 0.7f), 6, 1, false
     ));
     private final AnimatedStateSprite<BasicEntityState> coinAnimatedStateSprite, specialCoinAnimatedStateSprite;
 
