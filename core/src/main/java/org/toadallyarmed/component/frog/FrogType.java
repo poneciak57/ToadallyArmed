@@ -5,5 +5,6 @@ public enum FrogType {
     BARD,
     KNIGHT,
     TANK,
+    BASIC,
     NONE
 }

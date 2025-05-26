@@ -157,6 +157,7 @@ public class PlaceableFrogsScreen implements Screen {
                     entities.add(entity);
                     taken.add(gridPos);
                     bought = FrogType.NONE;
+                    Logger.info("Frog placed");
                 }
             }
         }

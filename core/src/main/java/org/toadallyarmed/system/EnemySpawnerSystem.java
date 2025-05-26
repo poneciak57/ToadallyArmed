@@ -22,7 +22,7 @@ public class EnemySpawnerSystem implements System {
 
     @Override
     public void tick(float deltaTime, ConcurrentLinkedQueue<Entity> entities) {
-        Logger.trace("EnemySpawnerSystem: tick");
+        Logger.trace("EnemySpawnerSystem: placing an enemy");
         if (remainingSpawns>0) {
             Vector2 pos = new Vector2(11, ThreadLocalRandom.current().nextInt(0, 5));
             entities.add(hedgehogFactory.createRandomHedgehog(pos, config));
