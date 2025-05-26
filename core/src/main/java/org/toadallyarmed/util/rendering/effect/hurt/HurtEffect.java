@@ -32,7 +32,7 @@ public class HurtEffect {
             return new SimpleTextureRenderer(renderer);
         else {
             final float ratio = 1f - Math.abs(0.5f - elapsedTime / hurtAnimationDuration) * 2f;
-            return new HurtEffectTextureRenderer(renderer, ratio);
+            return new HurtEffectTextureRenderer(renderer, 1);//would be ratio, but aesthetic said no
         }
     }
 }
