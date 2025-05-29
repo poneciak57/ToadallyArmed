@@ -1,8 +1,11 @@
 package org.toadallyarmed.util.rendering.effect.hurt;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Interpolation;
 import org.toadallyarmed.util.logger.Logger;
 import org.toadallyarmed.util.rendering.Renderer;
@@ -12,7 +15,7 @@ public class HurtEffectTextureRenderer implements TextureRenderer {
     static final Color DESTINATION_COLOR = Color.RED;
 
     final Renderer renderer;
-    final Color color;
+    final float ratio;
 
     /**
      * @param ratio Value between 0f and 1f determining how much has the hurt effect advanced.
@@ -23,20 +26,18 @@ public class HurtEffectTextureRenderer implements TextureRenderer {
 
         final Color start = renderer.getDefaultColor();
         final Color end = DESTINATION_COLOR;
-
-        color = new Color(
-            Interpolation.linear.apply(start.r, end.r, ratio),
-            Interpolation.linear.apply(start.g, end.g, ratio),
-            Interpolation.linear.apply(start.b, end.b, ratio),
-            Interpolation.linear.apply(start.a, end.a, ratio)
-        );
+        this.ratio = ratio;
     }
 
     @Override
     public void draw(TextureRegion region, float x, float y, float width, float height) {
         SpriteBatch spriteBatch = renderer.getSpriteBatch();
-        spriteBatch.setColor(color);
+        ShaderProgram shader = renderer.getHurtEffectShader();
+
+        spriteBatch.setShader(shader);
+        shader.setUniformf("ratio", ratio);
         spriteBatch.draw(region, x, y, width, height);
-        spriteBatch.setColor(renderer.getDefaultColor());
+
+        spriteBatch.setShader(renderer.getDefaultShader());
     }
 }

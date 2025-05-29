@@ -28,10 +28,10 @@ public class Main extends Game {
 
     @Override
     public void create() {
+        Logger.init(List.of(new TerminalLoggerBackend(LogLevel.DEBUG)), LogLevel.TRACE);
         renderer = new Renderer();
         font = new BitmapFont();
         renderingSystem = new RenderingSystem(renderer);
-        Logger.init(List.of(new TerminalLoggerBackend(LogLevel.DEBUG)), LogLevel.TRACE);
         setScreen(new IntroScreen(this));
         // setScreen(new BulletDamageTestScreen(this));
     }
