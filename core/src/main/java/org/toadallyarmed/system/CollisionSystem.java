@@ -25,7 +25,7 @@ public class CollisionSystem implements System {
         Logger.trace("CollisionSystem: tick");
         float currentNanoTime = java.lang.System.nanoTime();
         for (Entity entity : entities) {
-            if (entity.markedForRemoval()) continue;
+            if (entity.isMarkedForRemoval()) continue;
 
             Optional<ColliderComponent> colliderComponent = entity.get(ColliderComponent.class);
             Optional<TransformComponent> transformComponent = entity.get(TransformComponent.class);
@@ -33,7 +33,7 @@ public class CollisionSystem implements System {
                 continue;
             }
             for (Entity otherEntity : entities) {
-                if (otherEntity.markedForRemoval()) continue;
+                if (otherEntity.isMarkedForRemoval()) continue;
                 if (entity == otherEntity) continue;
                 Optional<ColliderComponent> otherColliderComponent = otherEntity.get(ColliderComponent.class);
                 Optional<TransformComponent> otherTransformComponent = otherEntity.get(TransformComponent.class);
