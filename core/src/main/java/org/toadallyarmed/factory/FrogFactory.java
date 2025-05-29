@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Disposable;
 import org.toadallyarmed.component.*;
 import org.toadallyarmed.component.action.*;
 import org.toadallyarmed.component.interfaces.*;
+import org.toadallyarmed.state.BooleanState;
 import org.toadallyarmed.state.FrogState;
 import org.toadallyarmed.config.AnimationConfig;
 import org.toadallyarmed.config.CharacterConfig;
@@ -166,13 +167,18 @@ public class FrogFactory implements Disposable {
         Logger.trace("Creating Frog Entity in factory");
         Entity entity = new Entity(EntityType.FROG);
         WorldTransformComponent transform = new WorldTransformComponent(pos, new Vector2(config.speed(), 0));
-        StateMachine<FrogState> generalStateMachine = new StateMachine<>(FrogState.IDLE);
-        generalStateMachine.addState(FrogState.IDLE, FrogState.IDLE);
-        generalStateMachine.addState(FrogState.ACTION, FrogState.IDLE);
-        generalStateMachine.addState(FrogState.HOP, FrogState.IDLE);
-        generalStateMachine.addState(FrogState.DYING, FrogState.NONEXISTENT, entity.getMarkForRemovalRunnable());
-        generalStateMachine.addState(FrogState.NONEXISTENT, FrogState.NONEXISTENT);
-        AliveEntityStateComponent<FrogState> state = new AliveEntityStateComponent<>(generalStateMachine);
+        AliveEntityStateComponent<FrogState> state = new AliveEntityStateComponent<>(
+            new StateMachine<>(FrogState.IDLE)
+                .addState(FrogState.IDLE, FrogState.IDLE)
+                .addState(FrogState.ACTION, FrogState.IDLE)
+                .addState(FrogState.HOP, FrogState.IDLE)
+                .addState(FrogState.DYING, FrogState.NONEXISTENT, entity.getMarkForRemovalRunnable())
+                .addState(FrogState.NONEXISTENT, FrogState.NONEXISTENT)
+        );
+        HealthComponent health =
+            new HealthComponent(config.hp())
+                .setRemoveHealthAction(() -> state.getIsAttackedStateMachine().setNextTmpState(BooleanState.TRUE))
+                .setNoHealthAction(() -> state.getGeneralStateMachine().setNextTmpState(FrogState.DYING));
         AliveEntityRenderableComponent<FrogState> renderable =
             new AliveEntityRenderableComponent<>(
                 transform,
@@ -181,7 +187,8 @@ public class FrogFactory implements Disposable {
         entity
             .put(TransformComponent.class, transform)
             .put(StateComponent.class, state)
-            .put(RenderableComponent.class, renderable);
+            .put(RenderableComponent.class, renderable)
+            .put(HealthComponent.class, health);
         return entity;
     }
 

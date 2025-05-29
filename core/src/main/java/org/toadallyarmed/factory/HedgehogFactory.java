@@ -8,6 +8,7 @@ import org.toadallyarmed.component.action.BasicNoActionColliderEntry;
 import org.toadallyarmed.component.interfaces.ColliderType;
 import org.toadallyarmed.component.interfaces.RenderableComponent;
 import org.toadallyarmed.config.GameConfig;
+import org.toadallyarmed.state.BooleanState;
 import org.toadallyarmed.state.HedgehogState;
 import org.toadallyarmed.component.interfaces.StateComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
@@ -90,7 +91,6 @@ public class HedgehogFactory implements Disposable {
         Logger.trace("Creating Hedgehog Entity in factory");
         Entity entity = new Entity(EntityType.HEDGEHOG);
         WorldTransformComponent transform = new WorldTransformComponent(pos, new Vector2(config.speed(), 0.f));
-        HealthComponent health = new HealthComponent(config.hp());
         AliveEntityStateComponent<HedgehogState> state = new AliveEntityStateComponent<>(
             new StateMachine<>(HedgehogState.WALKING)
                 .addState(HedgehogState.IDLE, HedgehogState.IDLE)
@@ -99,6 +99,10 @@ public class HedgehogFactory implements Disposable {
                 .addState(HedgehogState.DYING, HedgehogState.NONEXISTENT, entity.getMarkForRemovalRunnable())
                 .addState(HedgehogState.NONEXISTENT, HedgehogState.NONEXISTENT)
         );
+        HealthComponent health =
+            new HealthComponent(config.hp())
+                .setRemoveHealthAction(() -> state.getIsAttackedStateMachine().setNextTmpState(BooleanState.TRUE))
+                .setNoHealthAction(() -> state.getGeneralStateMachine().setNextTmpState(HedgehogState.DYING));
         AliveEntityRenderableComponent<HedgehogState> renderable =
             new AliveEntityRenderableComponent<>(
                 transform,
