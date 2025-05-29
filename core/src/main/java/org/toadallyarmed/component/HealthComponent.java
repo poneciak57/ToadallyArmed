@@ -43,9 +43,9 @@ public class HealthComponent implements Component {
 
     public void removeHealth(int healthChange) {
         Logger.errorIfNot(healthChange > 0, "Health change must be greater than 0.");
-        if (this.health.updateAndGet(x -> max(x - healthChange, 0)) <= 0 && noHealthAction != null)
+        if (noHealthAction != null && this.health.updateAndGet(x -> max(x - healthChange, 0)) <= 0)
             noHealthAction.run();
-        else
+        else if (removeHealthAction != null)
             removeHealthAction.run();
         Logger.debug("Removing " + healthChange + " health. Health left: " + getHealth());
     }
