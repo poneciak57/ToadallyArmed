@@ -91,13 +91,14 @@ public class HedgehogFactory implements Disposable {
         Entity entity = new Entity(EntityType.HEDGEHOG);
         WorldTransformComponent transform = new WorldTransformComponent(pos, new Vector2(config.speed(), 0.f));
         HealthComponent health = new HealthComponent(config.hp());
-        StateMachine<HedgehogState> generalStateMachine = new StateMachine<>(HedgehogState.WALKING);
-        generalStateMachine.addState(HedgehogState.IDLE, HedgehogState.IDLE);
-        generalStateMachine.addState(HedgehogState.WALKING, HedgehogState.WALKING);
-        generalStateMachine.addState(HedgehogState.ACTION, HedgehogState.IDLE);
-        generalStateMachine.addState(HedgehogState.DYING, HedgehogState.NONEXISTENT, entity.getMarkForRemovalRunnable());
-        generalStateMachine.addState(HedgehogState.NONEXISTENT, HedgehogState.NONEXISTENT);
-        AliveEntityStateComponent<HedgehogState> state = new AliveEntityStateComponent<>(generalStateMachine);
+        AliveEntityStateComponent<HedgehogState> state = new AliveEntityStateComponent<>(
+            new StateMachine<>(HedgehogState.WALKING)
+                .addState(HedgehogState.IDLE, HedgehogState.IDLE)
+                .addState(HedgehogState.WALKING, HedgehogState.WALKING)
+                .addState(HedgehogState.ACTION, HedgehogState.IDLE)
+                .addState(HedgehogState.DYING, HedgehogState.NONEXISTENT, entity.getMarkForRemovalRunnable())
+                .addState(HedgehogState.NONEXISTENT, HedgehogState.NONEXISTENT)
+        );
         AliveEntityRenderableComponent<HedgehogState> renderable =
             new AliveEntityRenderableComponent<>(
                 transform,

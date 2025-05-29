@@ -77,12 +77,16 @@ public class FrogFactory implements Disposable {
                         new FrogAttackCollisionAction(
                             vector2 -> BulletFactory.get().createBullet(
                                 vector2.add(config.bulletConfig().offsetX(), config.bulletConfig().offsetY()),
-                                config.bulletConfig().speed()
+                                config.bulletConfig().speed(),
+                                config.damage(),
+                                EntityType.HEDGEHOG
                             )
                         ),
                         ColliderType.ACTION,
                         new BasicCollisionActionFilter(EntityType.HEDGEHOG, ColliderType.ENTITY)
-                    ))
+                    )
+                ),
+                createEntityCollider()
             )
         ));
         return entity;
@@ -93,10 +97,15 @@ public class FrogFactory implements Disposable {
         entity.put(ActionComponent.class, new ThrottledActionComponent(
             config.atk_speed(), new BardAction()
         ));
+        addBasicColliderComponent(entity);
 
         return entity;
     }
-    public Entity createTankFrog(Vector2 pos, CharacterConfig config) { return createFrog(tankFrogAnimatedStateSprite, pos, config); }
+    public Entity createTankFrog(Vector2 pos, CharacterConfig config) {
+        Entity entity = createFrog(tankFrogAnimatedStateSprite, pos, config);
+        addBasicColliderComponent(entity);
+        return entity;
+    }
     public Entity createWizardFrog(Vector2 pos, CharacterConfig config) {
         var entity = createFrog(wizardFrogAnimatedStateSprite, pos, config);
 
@@ -109,15 +118,37 @@ public class FrogFactory implements Disposable {
                         new FrogAttackCollisionAction(
                             vector2 -> BulletFactory.get().createFireball(
                                 vector2.add(config.bulletConfig().offsetX(), config.bulletConfig().offsetY()),
-                                config.bulletConfig().speed()
+                                config.bulletConfig().speed(),
+                                config.damage(),
+                                EntityType.HEDGEHOG
                             )
                         ),
                         ColliderType.ACTION,
                         new BasicCollisionActionFilter(EntityType.HEDGEHOG, ColliderType.ENTITY)
-                        ))
+                        )
+                ),
+                createEntityCollider()
             )
         ));
         return entity;
+    }
+
+    BasicNoActionColliderEntry createEntityCollider() {
+        return new BasicNoActionColliderEntry(
+                new RectangleShape(TILE_WIDTH, TILE_HEIGHT),
+                ColliderType.ENTITY
+            );
+    }
+
+    void addBasicColliderComponent(Entity entity) {
+        var colliderComponentOpt = entity.get(ColliderComponent.class);
+        ColliderComponent colliderComonent = null;
+        if (colliderComponentOpt.isEmpty()) {
+            colliderComonent = new ColliderComponent(List.of(createEntityCollider()));
+            entity.put(ColliderComponent.class, colliderComonent);
+        } else {
+            Logger.error("Trying to add basic collider component to a frog, which already has a collider component.");
+        }
     }
 
     @Override

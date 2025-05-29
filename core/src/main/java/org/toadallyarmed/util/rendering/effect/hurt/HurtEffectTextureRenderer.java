@@ -9,7 +9,7 @@ import org.toadallyarmed.util.rendering.Renderer;
 import org.toadallyarmed.util.rendering.TextureRenderer;
 
 public class HurtEffectTextureRenderer implements TextureRenderer {
-    static final Color DESTINATION_COLOR = Color.WHITE;
+    static final Color DESTINATION_COLOR = Color.RED;
 
     final Renderer renderer;
     final Color color;
