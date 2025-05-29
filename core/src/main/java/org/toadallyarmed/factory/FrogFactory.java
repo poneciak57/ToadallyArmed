@@ -18,6 +18,7 @@ import org.toadallyarmed.util.rendering.AnimatedStateSprite;
 import org.toadallyarmed.util.logger.Logger;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,31 +65,29 @@ public class FrogFactory implements Disposable {
         return factoryInstance;
     }
 
-    public Entity createBasicFrog(Vector2 pos, CharacterConfig config) { return createFrog(basicFrogAnimatedStateSprite, pos, config); }
+    public Entity createBasicFrog(Vector2 pos, CharacterConfig config) { return createFrog(basicFrogAnimatedStateSprite, pos, config, new ArrayList<>()); }
     public Entity createKnightFrog(Vector2 pos, CharacterConfig config) {
-        var entity= createFrog(knightFrogAnimatedStateSprite, pos, config);
-
-        entity.put(ColliderComponent.class, new ColliderComponent(
-            List.of(
-                new ThrottledCollisionActionEntry(
-                    config.atk_speed(),
-                    new BasicColliderActionEntry(
-                        new RectangleShape(config.attackRange(), TILE_HEIGHT / 2, 0.f, -TILE_HEIGHT / 4),
-                        new FrogAttackCollisionAction(
-                            vector2 -> BulletFactory.get().createBullet(
-                                vector2.add(config.bulletConfig().offsetX(), config.bulletConfig().offsetY()),
-                                config.bulletConfig().speed()
-                            )
-                        ),
-                        ColliderType.ACTION,
-                        new BasicCollisionActionFilter(EntityType.HEDGEHOG, ColliderType.ENTITY)
-                    ))
+        List<ColliderActionEntry> colliders = new ArrayList<>(List.of(
+            new ThrottledCollisionActionEntry(
+                config.atk_speed(),
+                new BasicColliderActionEntry(
+                    new RectangleShape(config.attackRange(), TILE_HEIGHT / 2, 0.f, -TILE_HEIGHT / 4),
+                    new FrogAttackCollisionAction(
+                        vector2 -> BulletFactory.get().createBullet(
+                            vector2.add(config.bulletConfig().offsetX(), config.bulletConfig().offsetY()),
+                            config.bulletConfig().speed()
+                        )
+                    ),
+                    ColliderType.ACTION,
+                    new BasicCollisionActionFilter(EntityType.HEDGEHOG, ColliderType.ENTITY)
+                )
             )
         ));
-        return entity;
+
+        return createFrog(knightFrogAnimatedStateSprite, pos, config, colliders);
     }
     public Entity createMoneyFrog(Vector2 pos, CharacterConfig config) {
-        var entity= createFrog(moneyFrogAnimatedStateSprite, pos, config);
+        var entity= createFrog(moneyFrogAnimatedStateSprite, pos, config, new ArrayList<>());
 
         entity.put(ActionComponent.class, new ThrottledActionComponent(
             config.atk_speed(), new BardAction()
@@ -96,28 +95,26 @@ public class FrogFactory implements Disposable {
 
         return entity;
     }
-    public Entity createTankFrog(Vector2 pos, CharacterConfig config) { return createFrog(tankFrogAnimatedStateSprite, pos, config); }
+    public Entity createTankFrog(Vector2 pos, CharacterConfig config) { return createFrog(tankFrogAnimatedStateSprite, pos, config, new ArrayList<>()); }
     public Entity createWizardFrog(Vector2 pos, CharacterConfig config) {
-        var entity = createFrog(wizardFrogAnimatedStateSprite, pos, config);
-
-        entity.put(ColliderComponent.class, new ColliderComponent(
-            List.of(
-                new ThrottledCollisionActionEntry(
-                    config.atk_speed(),
-                    new BasicColliderActionEntry(
-                        new RectangleShape(config.attackRange(), TILE_HEIGHT / 2, 0.f, -TILE_HEIGHT / 4),
-                        new FrogAttackCollisionAction(
-                            vector2 -> BulletFactory.get().createFireball(
-                                vector2.add(config.bulletConfig().offsetX(), config.bulletConfig().offsetY()),
-                                config.bulletConfig().speed()
-                            )
-                        ),
-                        ColliderType.ACTION,
-                        new BasicCollisionActionFilter(EntityType.HEDGEHOG, ColliderType.ENTITY)
-                        ))
+        List<ColliderActionEntry> colliders = new ArrayList<>(List.of(
+            new ThrottledCollisionActionEntry(
+                config.atk_speed(),
+                new BasicColliderActionEntry(
+                    new RectangleShape(config.attackRange(), TILE_HEIGHT / 2, 0.f, -TILE_HEIGHT / 4),
+                    new FrogAttackCollisionAction(
+                        vector2 -> BulletFactory.get().createFireball(
+                            vector2.add(config.bulletConfig().offsetX(), config.bulletConfig().offsetY()),
+                            config.bulletConfig().speed()
+                        )
+                    ),
+                    ColliderType.ACTION,
+                    new BasicCollisionActionFilter(EntityType.HEDGEHOG, ColliderType.ENTITY)
+                )
             )
         ));
-        return entity;
+
+        return createFrog(wizardFrogAnimatedStateSprite, pos, config, colliders);
     }
 
     @Override
@@ -131,7 +128,7 @@ public class FrogFactory implements Disposable {
     }
 
 
-    private Entity createFrog(AnimatedStateSprite<FrogState> animatedStateSprite, Vector2 pos, CharacterConfig config) {
+    private Entity createFrog(AnimatedStateSprite<FrogState> animatedStateSprite, Vector2 pos, CharacterConfig config, List<ColliderActionEntry> colliderActions) {
         Logger.trace("Creating Frog Entity in factory");
         Entity entity = new Entity(EntityType.FROG);
         WorldTransformComponent transform = new WorldTransformComponent(pos, new Vector2(config.speed(), 0));
@@ -146,9 +143,18 @@ public class FrogFactory implements Disposable {
                 transform,
                 state,
                 animatedStateSprite);
+        colliderActions.add(
+            new BasicNonActionColliderEntry(
+                new RectangleShape(1f, 1f),
+                ColliderType.ENTITY
+            )
+        );
+        ColliderComponent collider = new ColliderComponent(colliderActions);
         entity
             .put(TransformComponent.class, transform)
             .put(StateComponent.class, state)
+            .put(ColliderComponent.class, collider)
+            .put(HealthComponent.class, new HealthComponent(config.hp(), () -> generalStateMachine.setNextTmpState(FrogState.DYING)))
             .put(RenderableComponent.class, renderable);
         return entity;
     }
