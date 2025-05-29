@@ -9,6 +9,7 @@ public interface TransformComponent extends Component {
     Vector2 getPosition();
 
     void setPosition(Vector2 position, float currentNanoTime);
+    void setVelocity(Vector2 velocity, float currentNanoTime);
 
     Vector2 getAdvancedPosition(float currentNanoTime);
 }
