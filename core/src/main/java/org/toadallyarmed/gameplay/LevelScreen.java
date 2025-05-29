@@ -75,6 +75,8 @@ public class LevelScreen implements Screen {
         setFonts();
         setButtons();
 
+        wallet.access().addAndGet(1000); // For debugging purposes
+
         Logger.info("Created a new gameplay screen successfully");
     }
     private void setFonts(){
