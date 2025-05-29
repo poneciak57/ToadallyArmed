@@ -4,14 +4,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import org.toadallyarmed.component.*;
-import org.toadallyarmed.component.action.BasicNoActionColliderEntry;
-import org.toadallyarmed.component.interfaces.ColliderType;
-import org.toadallyarmed.component.interfaces.RenderableComponent;
+import org.toadallyarmed.component.action.*;
+import org.toadallyarmed.component.interfaces.*;
 import org.toadallyarmed.config.GameConfig;
 import org.toadallyarmed.state.BooleanState;
 import org.toadallyarmed.state.HedgehogState;
-import org.toadallyarmed.component.interfaces.StateComponent;
-import org.toadallyarmed.component.interfaces.TransformComponent;
 import org.toadallyarmed.config.AnimationConfig;
 import org.toadallyarmed.config.CharacterConfig;
 import org.toadallyarmed.entity.Entity;
@@ -113,12 +110,29 @@ public class HedgehogFactory implements Disposable {
                 new BasicNoActionColliderEntry(
                     new RectangleShape(1f, 1f),
                     ColliderType.ENTITY
+                ),
+                new ThrottledCollisionActionEntry(
+                    config.atk_speed(),
+                    new BasicColliderActionEntry(
+                        new RectangleShape(1f, 0.5f, -0.5f, -0.25f),
+                        new HeadgehogAttackCollisionAction(config.damage()),
+                        ColliderType.ACTION,
+                        (otherType, otherColliderType) ->
+                            otherType.equals(EntityType.FROG) && otherColliderType.equals(ColliderType.ENTITY)
+                    )
                 )
             )
+        );
+        var timerAction = new HeadgehogAttackTimerComponent();
+        var actionReset = new HeadgehogAttackResetAction(
+            (long) (1_000_000_000 * config.atk_speed() * 1.2),
+                new Vector2(config.speed(), 0)
         );
         entity
             .put(TransformComponent.class, transform)
             .put(StateComponent.class, state)
+            .put(HeadgehogAttackTimerComponent.class, timerAction)
+            .put(ActionComponent.class, new SingleActionComponent(actionReset))
             .put(RenderableComponent.class, renderable)
             .put(HealthComponent.class, health)
             .put(ColliderComponent.class, colliderComponent);

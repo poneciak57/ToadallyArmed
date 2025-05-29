@@ -47,6 +47,14 @@ public class WorldTransformComponent implements TransformComponent {
     public Vector2 getVelocity() {
         return this.payload.get().velocity.cpy();
     }
+    public void setVelocity(Vector2 velocity, float currentNanoTime) {
+        var oldPayload = payload.get();
+        payload.set(new WorldTransformPayload(
+            oldPayload.position.cpy(),
+            velocity.cpy(),
+            currentNanoTime
+        ));
+    }
 
     @Override
     public Vector2 getAdvancedPosition(float currentNanoTime) {
