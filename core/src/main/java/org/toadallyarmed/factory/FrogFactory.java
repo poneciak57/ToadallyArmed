@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Disposable;
 import org.toadallyarmed.component.*;
 import org.toadallyarmed.component.action.*;
 import org.toadallyarmed.component.interfaces.*;
+import org.toadallyarmed.state.BooleanState;
 import org.toadallyarmed.state.FrogState;
 import org.toadallyarmed.config.AnimationConfig;
 import org.toadallyarmed.config.CharacterConfig;
@@ -34,12 +35,12 @@ public class FrogFactory implements Disposable {
 
     private final Texture basicFrogTexture;
     private final Texture knightFrogTexture;
-    private final Texture moneyFrogTexture;
+    private final Texture bardFrogTexture;
     private final Texture tankFrogTexture;
     private final Texture wizardFrogTexture;
     private final AnimatedStateSprite<FrogState> basicFrogAnimatedStateSprite;
     private final AnimatedStateSprite<FrogState> knightFrogAnimatedStateSprite;
-    private final AnimatedStateSprite<FrogState> moneyFrogAnimatedStateSprite;
+    private final AnimatedStateSprite<FrogState> bardFrogAnimatedStateSprite;
     private final AnimatedStateSprite<FrogState> tankFrogAnimatedStateSprite;
     private final AnimatedStateSprite<FrogState> wizardFrogAnimatedStateSprite;
 
@@ -48,13 +49,13 @@ public class FrogFactory implements Disposable {
 
         basicFrogTexture  = new Texture("GameScreen/Frogs/basicFrog.png");
         knightFrogTexture = new Texture("GameScreen/Frogs/knightFrog.png");
-        moneyFrogTexture  = new Texture("GameScreen/Frogs/moneyFrog.png");
+        bardFrogTexture   = new Texture("GameScreen/Frogs/bardFrog.png");
         tankFrogTexture   = new Texture("GameScreen/Frogs/tankFrog.png");
         wizardFrogTexture = new Texture("GameScreen/Frogs/wizardFrog.png");
 
         basicFrogAnimatedStateSprite   = createAnimatedStateSprite(basicFrogTexture);
         knightFrogAnimatedStateSprite  = createAnimatedStateSprite(knightFrogTexture);
-        moneyFrogAnimatedStateSprite   = createAnimatedStateSprite(moneyFrogTexture);
+        bardFrogAnimatedStateSprite    = createAnimatedStateSprite(bardFrogTexture);
         tankFrogAnimatedStateSprite    = createAnimatedStateSprite(tankFrogTexture);
         wizardFrogAnimatedStateSprite  = createAnimatedStateSprite(wizardFrogTexture);
 
@@ -75,7 +76,9 @@ public class FrogFactory implements Disposable {
                     new FrogAttackCollisionAction(
                         vector2 -> BulletFactory.get().createBullet(
                             vector2.add(config.bulletConfig().offsetX(), config.bulletConfig().offsetY()),
-                            config.bulletConfig().speed()
+                            config.bulletConfig().speed(),
+                            config.damage(),
+                            EntityType.HEDGEHOG
                         )
                     ),
                     ColliderType.ACTION,
@@ -86,8 +89,8 @@ public class FrogFactory implements Disposable {
 
         return createFrog(knightFrogAnimatedStateSprite, pos, config, colliders);
     }
-    public Entity createMoneyFrog(Vector2 pos, CharacterConfig config) {
-        var entity= createFrog(moneyFrogAnimatedStateSprite, pos, config, new ArrayList<>());
+    public Entity createBardFrog(Vector2 pos, CharacterConfig config) {
+        var entity= createFrog(bardFrogAnimatedStateSprite, pos, config, new ArrayList<>());
 
         entity.put(ActionComponent.class, new ThrottledActionComponent(
             config.atk_speed(), new BardAction()
@@ -105,7 +108,9 @@ public class FrogFactory implements Disposable {
                     new FrogAttackCollisionAction(
                         vector2 -> BulletFactory.get().createFireball(
                             vector2.add(config.bulletConfig().offsetX(), config.bulletConfig().offsetY()),
-                            config.bulletConfig().speed()
+                            config.bulletConfig().speed(),
+                            config.damage(),
+                            EntityType.HEDGEHOG
                         )
                     ),
                     ColliderType.ACTION,
@@ -122,7 +127,7 @@ public class FrogFactory implements Disposable {
         Logger.trace("Disposing FrogFactory");
         basicFrogTexture.dispose();
         knightFrogTexture.dispose();
-        moneyFrogTexture.dispose();
+        bardFrogTexture.dispose();
         tankFrogTexture.dispose();
         wizardFrogTexture.dispose();
     }
@@ -132,19 +137,25 @@ public class FrogFactory implements Disposable {
         Logger.trace("Creating Frog Entity in factory");
         Entity entity = new Entity(EntityType.FROG);
         WorldTransformComponent transform = new WorldTransformComponent(pos, new Vector2(config.speed(), 0));
-        StateMachine<FrogState> generalStateMachine = new StateMachine<>(FrogState.IDLE);
-        generalStateMachine.addState(FrogState.IDLE, FrogState.IDLE);
-        generalStateMachine.addState(FrogState.ACTION, FrogState.IDLE);
-        generalStateMachine.addState(FrogState.DYING, FrogState.NONEXISTENT, entity.getMarkForRemovalRunnable());
-        generalStateMachine.addState(FrogState.NONEXISTENT, FrogState.NONEXISTENT);
-        AliveEntityStateComponent<FrogState> state = new AliveEntityStateComponent<>(generalStateMachine);
+        AliveEntityStateComponent<FrogState> state = new AliveEntityStateComponent<>(
+            new StateMachine<>(FrogState.IDLE)
+                .addState(FrogState.IDLE, FrogState.IDLE)
+                .addState(FrogState.ACTION, FrogState.IDLE)
+                .addState(FrogState.HOP, FrogState.IDLE)
+                .addState(FrogState.DYING, FrogState.NONEXISTENT, entity.getMarkForRemovalRunnable())
+                .addState(FrogState.NONEXISTENT, FrogState.NONEXISTENT)
+        );
+        HealthComponent health =
+            new HealthComponent(config.hp())
+                .setRemoveHealthAction(() -> state.getIsAttackedStateMachine().setNextTmpState(BooleanState.TRUE))
+                .setNoHealthAction(() -> state.getGeneralStateMachine().setNextTmpState(FrogState.DYING));
         AliveEntityRenderableComponent<FrogState> renderable =
             new AliveEntityRenderableComponent<>(
                 transform,
                 state,
                 animatedStateSprite);
         colliderActions.add(
-            new BasicNonActionColliderEntry(
+            new BasicNoActionColliderEntry(
                 new RectangleShape(1f, 1f),
                 ColliderType.ENTITY
             )
@@ -153,9 +164,9 @@ public class FrogFactory implements Disposable {
         entity
             .put(TransformComponent.class, transform)
             .put(StateComponent.class, state)
-            .put(ColliderComponent.class, collider)
-            .put(HealthComponent.class, new HealthComponent(config.hp(), () -> generalStateMachine.setNextTmpState(FrogState.DYING)))
-            .put(RenderableComponent.class, renderable);
+            .put(RenderableComponent.class, renderable)
+            .put(HealthComponent.class, health)
+            .put(ColliderComponent.class, collider);
         return entity;
     }
 
@@ -163,6 +174,7 @@ public class FrogFactory implements Disposable {
         Map<FrogState, AnimatedSprite> animatedSprites = new HashMap<>();
 
         animatedSprites.put(FrogState.IDLE, animationFactory.Animation(texture, 0, 0, 7));
+        animatedSprites.put(FrogState.HOP, animationFactory.Animation(texture, 1, 0, 6));
         animatedSprites.put(FrogState.ACTION, animationFactory.Animation(texture, 2, 0, 5));
         animatedSprites.put(FrogState.DYING, animationFactory.Animation(texture, 4, 0, 8));
         animatedSprites.put(FrogState.NONEXISTENT, AnimatedSprite.empty());

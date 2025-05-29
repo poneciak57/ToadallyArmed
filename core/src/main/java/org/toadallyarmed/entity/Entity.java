@@ -36,12 +36,17 @@ public class Entity {
 
     /// Entity marked for removal should not be used
     /// and should be removed when viable.
-    public boolean markedForRemoval() {
+    public boolean isMarkedForRemoval() {
         return markedForRemoval;
     }
 
+    /// Such entities can be used safely.
+    public boolean isActive() {
+        return !isMarkedForRemoval();
+    }
+
     public void assertNotMarkedForRemoval() {
-        if (markedForRemoval()) {
+        if (isMarkedForRemoval()) {
             Logger.error("Illegal usage of marked-for-removal entity!");
         }
     }

@@ -4,77 +4,41 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.math.Rectangle;
 import org.toadallyarmed.Main;
-import org.toadallyarmed.component.WalletComponent;
-import org.toadallyarmed.config.GameConfig;
-import org.toadallyarmed.entity.Entity;
-import org.toadallyarmed.factory.*;
-import org.toadallyarmed.system.SystemsManager;
 import org.toadallyarmed.util.logger.Logger;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
-
-public class IntroScreen implements Screen {
+public class StoryScreen implements Screen {
     final Main main;
     final FitViewport viewport;
 
     final Texture backgroundTexture;
 
-    final FrogFactory frogFactory;
-    private final GlobalGameState gameState;
-    final GameConfig config;
-    private final SystemsManager systemsManager;
-
-    //--BUTTONS--//
-    Rectangle startButtonBounds;
-    final ConcurrentLinkedQueue<Entity> entities;
+    Rectangle nextButton;
 
 
-    public IntroScreen(Main main) {
-        Logger.info("Introduction screen");
+    public StoryScreen(Main main) {
+        Logger.info("Story screen");
         this.main = main;
 
         viewport = new FitViewport(10.66F, 6);
         this.main.updateFontScale(viewport);
 
-        backgroundTexture = new Texture("GameScreen/intro_background.jpg");
-
-        frogFactory = FrogFactory.get();
-        gameState = new GlobalGameState(
-            new WalletComponent(DifficultyFactory.defaultGameConfig().StartingMoney()),
-            DifficultyFactory.defaultGameConfig(),
-            null
-        );
-        systemsManager = SystemsManagerFactory.getSystemsManagerForGameplay(gameState);
-        entities = gameState.getEntities();
-        config = gameState.getGameConfig();
-
+        backgroundTexture = new Texture("GameScreen/story_background.jpg");
         setButtons();
 
         Logger.info("Created a new gameplay screen successfully");
     }
     private void setButtons(){
-        startButtonBounds =new Rectangle(4f, 1, 3, 1);
-    }
-    private void analyzeTouch(Vector3 touchPos){//touch position is obtained  (in terms of x, y)
-        viewport.unproject(touchPos);
-        if (startButtonBounds.contains(touchPos.x, touchPos.y)){
-            Logger.info("Clicked");
-            main.setScreen(new StoryScreen(main));
-        }
-
+        nextButton =new Rectangle(4f, 1, 3, 1);
     }
 
     @Override
     public void show() {
-        systemsManager.start();
         // Prepare your screen here.
-        entities.add(FrogFactory.get().createKnightFrog(new Vector2(8, 3.735f), config.knightFrog()));
     }
 
     @Override
@@ -88,10 +52,9 @@ public class IntroScreen implements Screen {
         float worldWidth = viewport.getWorldWidth();
         float worldHeight = viewport.getWorldHeight();
         main.renderer.getSpriteBatch().draw(backgroundTexture, 0, 0, worldWidth, worldHeight);
-        main.renderingSystem.tick(delta, gameState.getEntities());
 
         if (Gdx.input.justTouched())
-            analyzeTouch(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+            main.setScreen(new LevelChoosingScreen(main));
 
         main.renderer.getSpriteBatch().end();
     }
@@ -107,19 +70,16 @@ public class IntroScreen implements Screen {
     @Override
     public void pause() {
         // Invoked when your application is paused.
-        systemsManager.pause();
     }
 
     @Override
     public void resume() {
         // Invoked when your application is resumed after pause.
-        systemsManager.resume();
     }
 
     @Override
     public void hide() {
         // This method is called when another screen replaces this one.
-        systemsManager.stop();
     }
 
     @Override
@@ -127,6 +87,5 @@ public class IntroScreen implements Screen {
         Logger.info("disposing a gameplay screen");
         // Destroy screen's assets here.
         backgroundTexture.dispose();
-        systemsManager.stop();
     }
 }

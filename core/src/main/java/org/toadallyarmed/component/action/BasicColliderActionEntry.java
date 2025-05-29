@@ -6,8 +6,9 @@ import org.toadallyarmed.entity.EntityType;
 import org.toadallyarmed.util.action.Action;
 import org.toadallyarmed.util.action.CollisionActionFilter;
 import org.toadallyarmed.util.collision.ConvexShape;
+import org.toadallyarmed.component.interfaces.ColliderActionEntry;
 
-public class BasicColliderActionEntry implements org.toadallyarmed.component.interfaces.ColliderActionEntry {
+public class BasicColliderActionEntry implements ColliderActionEntry {
     private final ConvexShape shape;
     private final Action<?, BasicCollisionActionPayload> action;
     private final ColliderType colliderType;

@@ -6,11 +6,11 @@ import org.toadallyarmed.component.interfaces.ColliderType;
 import org.toadallyarmed.entity.EntityType;
 import org.toadallyarmed.util.collision.ConvexShape;
 
-public class BasicNonActionColliderEntry implements ColliderActionEntry {
+public class BasicNoActionColliderEntry implements ColliderActionEntry {
     private final ConvexShape shape;
     private final ColliderType type;
 
-    public BasicNonActionColliderEntry(ConvexShape shape, ColliderType type) {
+    public BasicNoActionColliderEntry(ConvexShape shape, ColliderType type) {
         this.shape = shape;
         this.type = type;
     }

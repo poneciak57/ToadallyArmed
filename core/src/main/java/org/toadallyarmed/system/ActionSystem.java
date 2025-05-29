@@ -18,6 +18,7 @@ public class ActionSystem implements System {
     public void tick(float deltaTime, ConcurrentLinkedQueue<Entity> entities) {
         float currentNano = java.lang.System.nanoTime();
         for (Entity entity : entities) {
+            if (entity.isMarkedForRemoval()) continue;
             BasicActionPayload basicActionPayload = new BasicActionPayload(gameState, entity);
             entity.get(ActionComponent.class)
                 .ifPresent(component -> component.run(currentNano, basicActionPayload));

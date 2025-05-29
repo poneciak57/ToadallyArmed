@@ -50,7 +50,7 @@ public class GarbageCollectorSystemTest {
             ConcurrentLinkedQueue<Entity> entities = new ConcurrentLinkedQueue<>();
             Supplier<Entity> createEntityRemovedWhenNoHealth = () -> {
                 Entity entity = new Entity(EntityType.OTHER);
-                HealthComponent healthComponent = new HealthComponent(10, entity.getMarkForRemovalRunnable());
+                HealthComponent healthComponent = new HealthComponent(10).setNoHealthAction(entity.getMarkForRemovalRunnable());
                 entity.put(HealthComponent.class, healthComponent);
                 return entity;
             };
@@ -96,7 +96,7 @@ public class GarbageCollectorSystemTest {
                 BasicStateComponent<SimpleState> stateComponent = new BasicStateComponent<>(stateMachine);
 
                 HealthComponent healthComponent = new HealthComponent(
-                        10, () -> stateMachine.setNextTmpState(SimpleState.DYING));
+                        10).setNoHealthAction(() -> stateMachine.setNextTmpState(SimpleState.DYING));
 
                 entity
                         .put(StateComponent.class, stateComponent)

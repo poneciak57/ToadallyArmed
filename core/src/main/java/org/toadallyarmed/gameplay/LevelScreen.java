@@ -5,7 +5,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -26,7 +25,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class PlaceableFrogsScreen implements Screen {
+public class LevelScreen implements Screen {
     final Main main;
     final FitViewport viewport;
 
@@ -50,9 +49,10 @@ public class PlaceableFrogsScreen implements Screen {
     final Set<Vector2> taken=new HashSet<>();
 
 
-    public PlaceableFrogsScreen(Main main) {
+    public LevelScreen(Main main, GameConfig config) {
         Logger.info("Placeable Frogs screen");
         this.main = main;
+        this.config = config;
 
         viewport = new FitViewport(10.66F, 6);
         this.main.updateFontScale(viewport);
@@ -62,19 +62,20 @@ public class PlaceableFrogsScreen implements Screen {
         frogFactory = FrogFactory.get();
         coinFactory = CoinFactory.get();
         gameState = new GlobalGameState(
-            new WalletComponent(DifficultyFactory.defaultGameConfig().StartingMoney()),
-            DifficultyFactory.defaultGameConfig(),
+            new WalletComponent(config.StartingMoney()),
+            config,
             HedgehogFactory.get()
         );
         wallet=gameState.getWallet();
         systemsManager = SystemsManagerFactory.getSystemsManagerForGameplay(gameState);
         entities = gameState.getEntities();
-        config = gameState.getGameConfig();
 
         entities.add(coinFactory.createSpecialCoin(new Vector2(0, 5)));
 
         setFonts();
         setButtons();
+
+        wallet.access().addAndGet(1000); // For debugging purposes
 
         Logger.info("Created a new gameplay screen successfully");
     }
@@ -114,7 +115,7 @@ public class PlaceableFrogsScreen implements Screen {
                     bought = FrogType.WIZARD;
                 }
             } else if (hitBard) {
-                int cost = config.moneyFrog().cost();
+                int cost = config.bardFrog().cost();
                 if (cost <= wallet.access().get()) {
                     wallet.pay(cost);
                     Logger.info("Bard bought");
@@ -149,7 +150,7 @@ public class PlaceableFrogsScreen implements Screen {
 
                 if (!taken.contains(gridPos) && cellX<=9) {
                     Entity entity = switch (bought) {
-                        case BARD -> frogFactory.createMoneyFrog(gridPos, config.moneyFrog());
+                        case BARD -> frogFactory.createBardFrog(gridPos, config.bardFrog());
                         case TANK -> frogFactory.createTankFrog(gridPos, config.tankFrog());
                         case KNIGHT -> frogFactory.createKnightFrog(gridPos, config.knightFrog());
                         default -> frogFactory.createWizardFrog(gridPos, config.wizardFrog());
@@ -157,6 +158,7 @@ public class PlaceableFrogsScreen implements Screen {
                     entities.add(entity);
                     taken.add(gridPos);
                     bought = FrogType.NONE;
+                    Logger.info("Frog placed");
                 }
             }
         }

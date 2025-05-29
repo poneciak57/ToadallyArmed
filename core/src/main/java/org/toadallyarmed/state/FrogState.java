@@ -4,5 +4,6 @@ public enum FrogState {
     IDLE,
     ACTION,
     DYING,
+    HOP,
     NONEXISTENT,
 }

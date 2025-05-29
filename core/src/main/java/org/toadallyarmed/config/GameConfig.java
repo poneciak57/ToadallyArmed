@@ -15,7 +15,7 @@ public record GameConfig(
 
     // -- Values -- //
     CharacterConfig knightFrog,
-    CharacterConfig moneyFrog,
+    CharacterConfig bardFrog,
     CharacterConfig tankFrog,
     CharacterConfig wizardFrog,
 
