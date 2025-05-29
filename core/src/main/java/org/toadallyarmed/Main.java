@@ -32,8 +32,8 @@ public class Main extends Game {
         renderer = new Renderer();
         font = new BitmapFont();
         renderingSystem = new RenderingSystem(renderer);
-        setScreen(new IntroScreen(this));
-        // setScreen(new BulletDamageTestScreen(this));
+        // setScreen(new IntroScreen(this));
+        setScreen(new BulletDamageTestScreen(this));
     }
 
     @Override

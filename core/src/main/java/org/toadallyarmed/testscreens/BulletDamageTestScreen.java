@@ -17,6 +17,7 @@ import org.toadallyarmed.state.FrogState;
 import org.toadallyarmed.system.SystemsManager;
 import org.toadallyarmed.util.logger.Logger;
 import org.toadallyarmed.component.interfaces.StateComponent;
+import org.toadallyarmed.util.rendering.effect.fog.FogEffect;
 
 public class BulletDamageTestScreen implements Screen {
     final Main main;
@@ -27,7 +28,8 @@ public class BulletDamageTestScreen implements Screen {
     private final GlobalGameState gameState;
     private final SystemsManager systemsManager;
 
-    Entity knightFrog;
+    private final float TILE_SIZE = 48;
+    final private FogEffect fogEffect;
 
     public BulletDamageTestScreen(Main main) {
         Logger.info("Placeable Frogs screen");
@@ -50,8 +52,6 @@ public class BulletDamageTestScreen implements Screen {
         systemsManager = SystemsManagerFactory.getSystemsManagerForGameplay(gameState);
         final var entities = gameState.getEntities();
 
-        knightFrog = frogFactory.createKnightFrog(new Vector2(1, 1), config.knightFrog());
-        entities.add(knightFrog);
         entities.add(frogFactory.createWizardFrog(new Vector2(5, 4), config.wizardFrog()));
         entities.add(frogFactory.createWizardFrog(new Vector2(5, 3), config.wizardFrog()));
         entities.add(frogFactory.createWizardFrog(new Vector2(5, 2), config.wizardFrog()));
@@ -63,7 +63,9 @@ public class BulletDamageTestScreen implements Screen {
         entities.add(frogFactory.createWizardFrog(new Vector2(0, 1), config.wizardFrog()));
         entities.add(frogFactory.createWizardFrog(new Vector2(0, 0), config.wizardFrog()));
 
-       wallet.access().addAndGet(1000);
+        fogEffect = new FogEffect(new Vector2(viewport.getWorldWidth() * TILE_SIZE, viewport.getWorldHeight() * TILE_SIZE), TILE_SIZE);
+
+        wallet.access().addAndGet(1000);
 
         Logger.info("Created a new gameplay screen successfully");
     }
@@ -74,21 +76,8 @@ public class BulletDamageTestScreen implements Screen {
         // Prepare your screen here.
     }
 
-    float timeFromLastKnightFrogAttack = 0f;
-    @SuppressWarnings("unchecked")
-    void attackKnightFrogPeriodically(float deltaTime) {
-        timeFromLastKnightFrogAttack += deltaTime;
-        if (timeFromLastKnightFrogAttack >= 1f) {
-            timeFromLastKnightFrogAttack = 0f;
-            ((AliveEntityStateComponent<FrogState>) knightFrog.get(StateComponent.class).orElseThrow())
-                .getIsAttackedStateMachine().setNextTmpState(BooleanState.TRUE);
-        }
-    }
-
     @Override
     public void render(float delta) {
-        attackKnightFrogPeriodically(delta);
-
         ScreenUtils.clear(Color.BLACK);
         viewport.apply();
         main.renderer.getSpriteBatch().setProjectionMatrix(viewport.getCamera().combined);
@@ -98,6 +87,8 @@ public class BulletDamageTestScreen implements Screen {
         float worldHeight = viewport.getWorldHeight();
         main.renderer.getSpriteBatch().draw(backgroundTexture, 0, 0, worldWidth, worldHeight);
         main.renderingSystem.tick(delta, gameState.getEntities());
+
+        fogEffect.render(main.renderer);
 
         main.renderer.getSpriteBatch().end();
     }

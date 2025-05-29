@@ -12,6 +12,7 @@ public class Renderer implements Disposable {
     private final Color defaultColor;
     private final ShaderProgram defaultShader;
     private ShaderProgram hurtEffectShader;
+    private ShaderProgram fogEffectShader;
 
     public Renderer() {
         this.spriteBatch = new SpriteBatch();
@@ -37,10 +38,15 @@ public class Renderer implements Disposable {
         return hurtEffectShader;
     }
 
+    public ShaderProgram getFogEffectShader() {
+        return fogEffectShader;
+    }
+
     @Override
     public void dispose() {
         spriteBatch.dispose();
         hurtEffectShader.dispose();
+        fogEffectShader.dispose();
     }
 
     private void setupShaders() {
@@ -50,6 +56,14 @@ public class Renderer implements Disposable {
         );
         if (!hurtEffectShader.isCompiled()) {
             Logger.error("Could not compile fragment shader: " + hurtEffectShader.getLog());
+        }
+
+        fogEffectShader = new ShaderProgram(
+            Gdx.files.internal("GameScreen/Shaders/FogEffect/fogEffect.vert"),
+            Gdx.files.internal("GameScreen/Shaders/FogEffect/fogEffect.frag")
+        );
+        if (!fogEffectShader.isCompiled()) {
+            Logger.error("Could not compile fragment shader: " + fogEffectShader.getLog());
         }
     }
 }

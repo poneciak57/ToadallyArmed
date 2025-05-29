@@ -99,7 +99,10 @@ public class HedgehogFactory implements Disposable {
         HealthComponent health =
             new HealthComponent(config.hp())
                 .setRemoveHealthAction(() -> state.getIsAttackedStateMachine().setNextTmpState(BooleanState.TRUE))
-                .setNoHealthAction(() -> state.getGeneralStateMachine().setNextTmpState(HedgehogState.DYING));
+                .setNoHealthAction(() -> {
+                    state.getIsAttackedStateMachine().setNextTmpState(BooleanState.TRUE);
+                    state.getGeneralStateMachine().setNextTmpState(HedgehogState.DYING);
+                });
         AliveEntityRenderableComponent<HedgehogState> renderable =
             new AliveEntityRenderableComponent<>(
                 transform,
