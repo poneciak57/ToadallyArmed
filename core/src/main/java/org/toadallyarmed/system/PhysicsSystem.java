@@ -12,6 +12,7 @@ public class PhysicsSystem implements System {
         Logger.trace("PhysicsSystem: tick");
         float currentNanoTime = java.lang.System.nanoTime();
         for (Entity entity : entities) {
+            if (entity.markedForRemoval()) continue;
             TransformComponent transformComponent = entity.get(TransformComponent.class).orElse(null);
             if (transformComponent == null) continue;
             transformComponent.setPosition(transformComponent.getAdvancedPosition(currentNanoTime), currentNanoTime);

@@ -19,6 +19,7 @@ public class RenderingSystem implements System {
         Logger.trace("RenderingSystem: tick");
         float currentNanoTime = java.lang.System.nanoTime();
         for (Entity entity : entities) {
+            if (entity.markedForRemoval()) continue;
             var renderableOptional = entity.get(RenderableComponent.class);
             if (renderableOptional.isEmpty())
                 continue;
