@@ -18,6 +18,7 @@ public class HeadgehogAttackCollisionAction implements Action<HeadgehogAttackCol
 
     @Override
     public void run(HeadgehogAttackCollisionActionPayload payload) {
+        if (payload.frogHealthComponent().getHealth() <= 0) return;
         payload.headgehogAttackTimerComponent().updateLastActionNano();
         payload.frogIsAttackedStateMachine().setNextTmpState(BooleanState.TRUE);
         payload.stateMachine().setNextTmpState(HedgehogState.ACTION);

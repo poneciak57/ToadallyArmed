@@ -117,7 +117,7 @@ public class HedgehogFactory implements Disposable {
                 new ThrottledCollisionActionEntry(
                     config.atk_speed(),
                     new BasicColliderActionEntry(
-                        new RectangleShape(1f, 0.5f, -0.5f, -0.25f),
+                        new RectangleShape(1f, 0.5f, 0.0f, -0.25f),
                         new HeadgehogAttackCollisionAction(config.damage()),
                         ColliderType.ACTION,
                         (otherType, otherColliderType) ->
