@@ -22,9 +22,10 @@ public class HeadgehogAttackCollisionAction implements Action<HeadgehogAttackCol
         payload.frogIsAttackedStateMachine().setNextTmpState(BooleanState.TRUE);
         payload.stateMachine().setNextTmpState(HedgehogState.ACTION);
         payload.frogHealthComponent().removeHealth(damage);
-        float curNano = java.lang.System.nanoTime();
-        payload.transformComponent().setPosition(payload.transformComponent().getAdvancedPosition(curNano), curNano);
-        payload.transformComponent().setVelocity(new Vector2(0f, 0f), curNano);
+        payload.transformComponent().setPosition(
+            payload.transformComponent().getAdvancedPosition(payload.currentNanoTime()),
+            payload.currentNanoTime());
+        payload.transformComponent().setVelocity(new Vector2(0f, 0f), payload.currentNanoTime());
     }
 
     @Override

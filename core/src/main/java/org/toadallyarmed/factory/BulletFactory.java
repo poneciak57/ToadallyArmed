@@ -75,7 +75,7 @@ public class BulletFactory implements Disposable {
         ColliderComponent colliders = new ColliderComponent(
             List.of(
                 new BasicColliderActionEntry(
-                    new RectangleShape(TILE_WIDTH, TILE_HEIGHT),
+                    new RectangleShape(TILE_WIDTH/2, TILE_HEIGHT/2, -TILE_WIDTH/4, -TILE_HEIGHT/4),
                     new BulletCollisionAction(damage, entity.getMarkForRemovalRunnable()),
                     ColliderType.ACTION,
                     new BasicCollisionActionFilter(targetEntityType, ColliderType.ENTITY)

@@ -18,7 +18,8 @@ public record HeadgehogAttackCollisionActionPayload(
     HealthComponent frogHealthComponent,
     HeadgehogAttackTimerComponent headgehogAttackTimerComponent,
     TransformComponent transformComponent,
-    StateMachine<HedgehogState> stateMachine
+    StateMachine<HedgehogState> stateMachine,
+    float currentNanoTime
 ) {
     public static final PayloadExtractor<HeadgehogAttackCollisionActionPayload, BasicCollisionActionPayload> EXTRACTOR =
         basicCollisionActionPayload -> {
@@ -49,7 +50,8 @@ public record HeadgehogAttackCollisionActionPayload(
                 healthComponent.get(),
                 headHogTimerComponent.get(),
                 transformComponent.get(),
-                headgehogESC.getGeneralStateMachine()
+                headgehogESC.getGeneralStateMachine(),
+                basicCollisionActionPayload.currentNanoTime()
             ));
         };
 }
