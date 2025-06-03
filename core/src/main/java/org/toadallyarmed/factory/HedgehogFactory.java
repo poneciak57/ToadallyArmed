@@ -90,16 +90,19 @@ public class HedgehogFactory implements Disposable {
         WorldTransformComponent transform = new WorldTransformComponent(pos, new Vector2(config.speed(), 0.f));
         AliveEntityStateComponent<HedgehogState> state = new AliveEntityStateComponent<>(
             new StateMachine<>(HedgehogState.WALKING)
-                .addState(HedgehogState.IDLE, HedgehogState.IDLE)
-                .addState(HedgehogState.WALKING, HedgehogState.WALKING)
-                .addState(HedgehogState.ACTION, HedgehogState.IDLE)
-                .addState(HedgehogState.DYING, HedgehogState.NONEXISTENT, entity.getMarkForRemovalRunnable())
-                .addState(HedgehogState.NONEXISTENT, HedgehogState.NONEXISTENT)
+                .addState(HedgehogState.IDLE, HedgehogState.IDLE, true)
+                .addState(HedgehogState.WALKING, HedgehogState.WALKING, true)
+                .addState(HedgehogState.ACTION, HedgehogState.IDLE, true)
+                .addState(HedgehogState.DYING, HedgehogState.NONEXISTENT, entity.getMarkForRemovalRunnable(), false)
+                .addState(HedgehogState.NONEXISTENT, HedgehogState.NONEXISTENT, false)
         );
         HealthComponent health =
             new HealthComponent(config.hp())
                 .setRemoveHealthAction(() -> state.getIsAttackedStateMachine().setNextTmpState(BooleanState.TRUE))
-                .setNoHealthAction(() -> state.getGeneralStateMachine().setNextTmpState(HedgehogState.DYING));
+                .setNoHealthAction(() -> {
+                    state.getIsAttackedStateMachine().setNextTmpState(BooleanState.TRUE);
+                    state.getGeneralStateMachine().setNextTmpState(HedgehogState.DYING);
+                });
         AliveEntityRenderableComponent<HedgehogState> renderable =
             new AliveEntityRenderableComponent<>(
                 transform,
@@ -141,10 +144,10 @@ public class HedgehogFactory implements Disposable {
 
     private AnimatedStateSprite<HedgehogState> createAnimatedStateSprite(Texture texture) {
         Map<HedgehogState, AnimatedSprite> animatedSprites = new HashMap<>();
-        animatedSprites.put(HedgehogState.IDLE, AnimationFactory.Animation(texture, 0, 4, 5));
-        animatedSprites.put(HedgehogState.WALKING, AnimationFactory.Animation(texture, 1, 0, 5));
-        animatedSprites.put(HedgehogState.ACTION, AnimationFactory.Animation(texture, 0, 4, 5));
-        animatedSprites.put(HedgehogState.DYING, AnimationFactory.Animation(texture, 3, 1, 5));
+        animatedSprites.put(HedgehogState.IDLE, AnimationFactory.Animation(texture, 0, 4, 6));
+        animatedSprites.put(HedgehogState.WALKING, AnimationFactory.Animation(texture, 1, 0, 6));
+        animatedSprites.put(HedgehogState.ACTION, AnimationFactory.Animation(texture, 0, 4, 6));
+        animatedSprites.put(HedgehogState.DYING, AnimationFactory.Animation(texture, 3, 1, 6));
         animatedSprites.put(HedgehogState.NONEXISTENT, AnimatedSprite.empty());
 
         return new AnimatedStateSprite<>(animatedSprites);

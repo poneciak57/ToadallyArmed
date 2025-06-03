@@ -139,11 +139,11 @@ public class FrogFactory implements Disposable {
         WorldTransformComponent transform = new WorldTransformComponent(pos, new Vector2(config.speed(), 0));
         AliveEntityStateComponent<FrogState> state = new AliveEntityStateComponent<>(
             new StateMachine<>(FrogState.IDLE)
-                .addState(FrogState.IDLE, FrogState.IDLE)
-                .addState(FrogState.ACTION, FrogState.IDLE)
-                .addState(FrogState.HOP, FrogState.IDLE)
-                .addState(FrogState.DYING, FrogState.NONEXISTENT, entity.getMarkForRemovalRunnable())
-                .addState(FrogState.NONEXISTENT, FrogState.NONEXISTENT)
+                .addState(FrogState.IDLE, FrogState.IDLE, true)
+                .addState(FrogState.ACTION, FrogState.IDLE, true)
+                .addState(FrogState.HOP, FrogState.IDLE, true)
+                .addState(FrogState.DYING, FrogState.NONEXISTENT, entity.getMarkForRemovalRunnable(), false)
+                .addState(FrogState.NONEXISTENT, FrogState.NONEXISTENT, false)
         );
         HealthComponent health =
             new HealthComponent(config.hp())
@@ -173,10 +173,10 @@ public class FrogFactory implements Disposable {
     private AnimatedStateSprite<FrogState> createAnimatedStateSprite(Texture texture) {
         Map<FrogState, AnimatedSprite> animatedSprites = new HashMap<>();
 
-        animatedSprites.put(FrogState.IDLE, animationFactory.Animation(texture, 0, 0, 7));
-        animatedSprites.put(FrogState.HOP, animationFactory.Animation(texture, 1, 0, 6));
-        animatedSprites.put(FrogState.ACTION, animationFactory.Animation(texture, 2, 0, 5));
-        animatedSprites.put(FrogState.DYING, animationFactory.Animation(texture, 4, 0, 8));
+        animatedSprites.put(FrogState.IDLE, animationFactory.Animation(texture, 0, 0, 8));
+        animatedSprites.put(FrogState.HOP, animationFactory.Animation(texture, 1, 0, 7));
+        animatedSprites.put(FrogState.ACTION, animationFactory.Animation(texture, 2, 0, 6));
+        animatedSprites.put(FrogState.DYING, animationFactory.Animation(texture, 4, 0, 9));
         animatedSprites.put(FrogState.NONEXISTENT, AnimatedSprite.empty());
         return new AnimatedStateSprite<>(animatedSprites);
     }

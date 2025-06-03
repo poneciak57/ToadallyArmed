@@ -10,8 +10,8 @@ public class AliveEntityStateComponent<State extends Enum<State>> extends BasicS
         super(generalStateMachine);
         this.isAttackedStateMachine
             = new StateMachine<>(BooleanState.FALSE)
-            .addState(BooleanState.FALSE, BooleanState.FALSE)
-            .addState(BooleanState.TRUE, BooleanState.FALSE);
+            .addState(BooleanState.FALSE, BooleanState.FALSE, true)
+            .addState(BooleanState.TRUE, BooleanState.FALSE, false);
     }
 
     public StateMachine<BooleanState> getIsAttackedStateMachine() {

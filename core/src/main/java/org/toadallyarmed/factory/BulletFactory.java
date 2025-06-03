@@ -69,8 +69,8 @@ public class BulletFactory implements Disposable {
         WorldTransformComponent transform = new WorldTransformComponent(pos, new Vector2(speed, 0));
         BasicStateComponent<BasicEntityState> state = new BasicStateComponent<>(
             new StateMachine<>(BasicEntityState.IDLE)
-                .addState(BasicEntityState.IDLE, BasicEntityState.IDLE)
-                .addState(BasicEntityState.NONEXISTENT, BasicEntityState.NONEXISTENT)
+                .addState(BasicEntityState.IDLE, BasicEntityState.IDLE, true)
+                .addState(BasicEntityState.NONEXISTENT, BasicEntityState.NONEXISTENT, false)
         );
         ColliderComponent colliders = new ColliderComponent(
             List.of(
@@ -97,7 +97,7 @@ public class BulletFactory implements Disposable {
     private AnimatedStateSprite<BasicEntityState> createAnimatedStateSprite(boolean real) {
         Map<BasicEntityState, AnimatedSprite> animatedSprites = new HashMap<>();
 
-        if (real) animatedSprites.put(BasicEntityState.IDLE, animationFactory.Animation(fireballTexture, 0, 0, 4));
+        if (real) animatedSprites.put(BasicEntityState.IDLE, animationFactory.Animation(fireballTexture, 0, 0, 5));
         else animatedSprites.put(BasicEntityState.IDLE, AnimatedSprite.empty());
         animatedSprites.put(BasicEntityState.NONEXISTENT, AnimatedSprite.empty());
 

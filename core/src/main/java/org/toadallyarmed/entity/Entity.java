@@ -59,7 +59,8 @@ public class Entity {
 
     /// Puts key and value
     /// Checks if key is in BASE_COMPONENTS
-    public <T1 extends Component, T2 extends T1> Entity put(Class<T1> clazz, T2 component) throws NotBaseComponentException {
+    public <T1 extends Component, T2 extends T1> Entity put(Class<T1> clazz, T2 component)
+        throws NotBaseComponentException {
         assertNotMarkedForRemoval();
         if (!BaseComponentsRegistry.BASE_COMPONENTS.contains(clazz))
             throw new NotBaseComponentException(clazz.getName());

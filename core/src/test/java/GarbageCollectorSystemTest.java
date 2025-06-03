@@ -90,9 +90,9 @@ public class GarbageCollectorSystemTest {
                 Entity entity = new Entity(EntityType.OTHER);
 
                 StateMachine<SimpleState> stateMachine = new StateMachine<>(SimpleState.IDLE);
-                stateMachine.addState(SimpleState.IDLE, SimpleState.IDLE);
-                stateMachine.addState(SimpleState.DYING, SimpleState.NONEXISTENT, entity.getMarkForRemovalRunnable());
-                stateMachine.addState(SimpleState.NONEXISTENT, SimpleState.NONEXISTENT);
+                stateMachine.addState(SimpleState.IDLE, SimpleState.IDLE, true);
+                stateMachine.addState(SimpleState.DYING, SimpleState.NONEXISTENT, entity.getMarkForRemovalRunnable(), false);
+                stateMachine.addState(SimpleState.NONEXISTENT, SimpleState.NONEXISTENT, false);
                 BasicStateComponent<SimpleState> stateComponent = new BasicStateComponent<>(stateMachine);
 
                 HealthComponent healthComponent = new HealthComponent(
@@ -106,7 +106,8 @@ public class GarbageCollectorSystemTest {
             Consumer<Entity> advanceState = (Entity entity) -> {
                 StateComponent stateComponent = entity.get(StateComponent.class).orElseThrow();
                 assertTrue(stateComponent instanceof BasicStateComponent<?>);
-                @SuppressWarnings("unchecked") BasicStateComponent<SimpleState> basicStateComponent = (BasicStateComponent<SimpleState>) stateComponent;
+                @SuppressWarnings("unchecked") BasicStateComponent<SimpleState> basicStateComponent
+                    = (BasicStateComponent<SimpleState>) stateComponent;
                 basicStateComponent.getGeneralStateMachine().advanceState();
             };
             entities.add(createEntity.get());

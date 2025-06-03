@@ -3,6 +3,7 @@ package org.toadallyarmed.util;
 import org.toadallyarmed.util.logger.Logger;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -13,15 +14,38 @@ public class StateMachine<State extends Enum<State>> {
     ) {}
 
     private static class StateNode<State extends Enum<State>> {
-        StateNode(State next, Runnable afterStateAction) {
+        public StateNode(State next, Runnable afterStateAction, boolean allowTmpNext) {
             this.next = next;
             this.afterStateAction = afterStateAction;
+            this.allowTmpNext = allowTmpNext;
         }
 
-        final State next;
-        final AtomicReference<TmpState<State>> tmpNext = new AtomicReference<>(null);
+        public State getNextState() {
+            return next;
+        }
 
-        final Runnable afterStateAction;
+        public void setTmpNextState(State from, State to, Runnable afterStateAction) {
+            if (!allowTmpNext) return;
+            var old = tmpNext.getAndSet(new TmpState<>(to, afterStateAction));
+            if (old != null)
+                Logger.warn("Temporary next state " + from + " overwritten before the consumption");
+        }
+
+        public Optional<TmpState<State>> useTmpNextIfAvailable() {
+            if (!allowTmpNext) return Optional.empty();
+            TmpState<State> tmpState = tmpNext.getAndSet(null);
+            if (tmpState != null) return Optional.of(tmpState);
+            else return Optional.empty();
+        }
+
+        void performAfterStateActionIfPresent() {
+            if (afterStateAction != null) afterStateAction.run();
+        }
+
+        private final State next;
+        private final boolean allowTmpNext;
+        private final AtomicReference<TmpState<State>> tmpNext = new AtomicReference<>(null);
+        private final Runnable afterStateAction;
     }
 
     private volatile State curState;
@@ -40,23 +64,24 @@ public class StateMachine<State extends Enum<State>> {
     public void advanceState() {
         Logger.trace("advanceState()");
         final StateNode<State> curStateNode = getStateNode(curState);
-        if (curStateNode.afterStateAction != null) curStateNode.afterStateAction.run();
+        curStateNode.performAfterStateActionIfPresent();
         var tmpRunnable = this.tmpRunnable.getAndSet(null);
         if (tmpRunnable != null) tmpRunnable.run();
-        var tmpNext = curStateNode.tmpNext.getAndSet(null);
-        if (tmpNext != null) {
-            curState = tmpNext.state();
-            this.tmpRunnable.set(tmpNext.action());
-        }
-        else curState = curStateNode.next;
+        curStateNode.useTmpNextIfAvailable().ifPresentOrElse(
+            tmpState -> {
+                curState = tmpState.state();
+                this.tmpRunnable.set(tmpState.action());
+            },
+            () -> curState = curStateNode.getNextState()
+        );
     }
 
-    public StateMachine<State> addState(State state, State next) {
-        return addState(state, next, null);
+    public StateMachine<State> addState(State state, State next, boolean allowTmpNext) {
+        return addState(state, next, null, allowTmpNext);
     }
 
-    public StateMachine<State> addState(State state, State next, Runnable afterStateAction) {
-        StateNode<State> newStateNode = new StateNode<>(next, afterStateAction);
+    public StateMachine<State> addState(State state, State next, Runnable afterStateAction, boolean allowTmpNext) {
+        StateNode<State> newStateNode = new StateNode<>(next, afterStateAction, allowTmpNext);
         if (states.putIfAbsent(state, newStateNode) != null) {
             Logger.error("State " + state + " already exists. Overwriting!!!");
             states.put(state, newStateNode);
@@ -67,9 +92,7 @@ public class StateMachine<State extends Enum<State>> {
     public void setNextTmpState(State from, State to, Runnable afterStateAction) {
         Logger.trace("setNextTmpStateFrom(" + from + ", " + to + ")");
         StateNode<State> fromStateNode = getStateNode(from);
-        var old = fromStateNode.tmpNext.getAndSet(new TmpState<>(to, afterStateAction));
-        if (old != null)
-            Logger.warn("Temporary next state " + from + " overwritten before the consumption");
+        fromStateNode.setTmpNextState(from, to, afterStateAction);
     }
 
     public void setNextTmpState(State from, State to) {

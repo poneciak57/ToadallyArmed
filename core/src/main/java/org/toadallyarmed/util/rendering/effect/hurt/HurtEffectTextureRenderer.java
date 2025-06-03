@@ -24,8 +24,6 @@ public class HurtEffectTextureRenderer implements TextureRenderer {
         Logger.errorIfNot(0f <= ratio && ratio <= 1f, "HurtEffectTextureRenderer: ratio should be between 0.0f and 1.0f.");
         this.renderer = renderer;
 
-        final Color start = renderer.getDefaultColor();
-        final Color end = DESTINATION_COLOR;
         this.ratio = ratio;
     }
 

@@ -60,8 +60,8 @@ public class CoinFactory implements Disposable {
         Logger.trace("Creating Coin Entity in factory");
         WorldTransformComponent transform = new WorldTransformComponent(pos, new Vector2());
         StateMachine<BasicEntityState> stateMachine = new StateMachine<>(BasicEntityState.IDLE);
-        stateMachine.addState(BasicEntityState.IDLE, BasicEntityState.IDLE);
-        stateMachine.addState(BasicEntityState.NONEXISTENT, BasicEntityState.NONEXISTENT);
+        stateMachine.addState(BasicEntityState.IDLE, BasicEntityState.IDLE, true);
+        stateMachine.addState(BasicEntityState.NONEXISTENT, BasicEntityState.NONEXISTENT, false);
         BasicStateComponent<BasicEntityState> state = new BasicStateComponent<>(stateMachine);
         BasicStatefulRenderableComponent<BasicEntityState> renderable =
             new BasicStatefulRenderableComponent<>(
@@ -76,14 +76,14 @@ public class CoinFactory implements Disposable {
 
     private AnimatedStateSprite<BasicEntityState> createAnimatedStateSprite(Texture texture) {
         Map<BasicEntityState, AnimatedSprite> animatedSprites=new HashMap<>();
-        animatedSprites.put(BasicEntityState.IDLE, coinAnimationFactory.Animation(texture, 0, 0, 5));
+        animatedSprites.put(BasicEntityState.IDLE, coinAnimationFactory.Animation(texture, 0, 0, 6));
         animatedSprites.put(BasicEntityState.NONEXISTENT, AnimatedSprite.empty());
         return new AnimatedStateSprite<>(animatedSprites);
     }
 
     private AnimatedStateSprite<BasicEntityState> createSpecialAnimatedStateSprite(Texture texture) {
         Map<BasicEntityState, AnimatedSprite> animatedSprites = new HashMap<>();
-        animatedSprites.put(BasicEntityState.IDLE, specialCoinAnimationFactory.Animation(texture, 0, 0, 5));
+        animatedSprites.put(BasicEntityState.IDLE, specialCoinAnimationFactory.Animation(texture, 0, 0, 6));
         animatedSprites.put(BasicEntityState.NONEXISTENT, AnimatedSprite.empty());
         return new AnimatedStateSprite<>(animatedSprites);
     }
