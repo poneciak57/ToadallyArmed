@@ -67,7 +67,7 @@ public class DifficultyFactory {
         ), new CharacterConfig(//healthy
             300, 20, 2, -10, 0, -1, null
         ),
-            50, 25
+            500, 25
         );
     }
     public static GameConfig medium(){
