@@ -12,21 +12,32 @@ import java.util.concurrent.ThreadLocalRandom;
 public class EnemySpawnerSystem implements System {
     HedgehogFactory hedgehogFactory;
     GameConfig config;
-    int remainingSpawns;
+    int spawnsPerWave, remainingSpawns, remainingWaves;
+    boolean placingTime=true;
 
     public EnemySpawnerSystem(HedgehogFactory hedgehogFactory, GameConfig config) {
         this.hedgehogFactory=hedgehogFactory;
         this.config=config;
-        this.remainingSpawns =config.EnemySpawnerSystemQuantity();
+        spawnsPerWave=config.EnemySpawnerSystemHedgehogsPerWave();
+        remainingSpawns=0;
+        remainingWaves=2*config.EnemySpawnerSystemWaveQuantity();
     }
 
     @Override
     public void tick(float deltaTime, ConcurrentLinkedQueue<Entity> entities) {
         Logger.trace("EnemySpawnerSystem: placing an enemy");
-        if (remainingSpawns>0) {
-            Vector2 pos = new Vector2(11, ThreadLocalRandom.current().nextInt(0, 5));
-            entities.add(hedgehogFactory.createRandomHedgehog(pos, config));
+        if(remainingWaves>0 || remainingSpawns>0){
+            if (remainingSpawns == 0) {
+                remainingSpawns = spawnsPerWave;
+                placingTime = !placingTime;
+                remainingWaves--;
+            }
             remainingSpawns--;
+            if (placingTime) {
+                Vector2 pos = new Vector2(11, ThreadLocalRandom.current().nextInt(0, 5));
+                entities.add(hedgehogFactory.createRandomHedgehog(pos, config));
+            }
         }
+        else Logger.info("No spawns to give");
     }
 }

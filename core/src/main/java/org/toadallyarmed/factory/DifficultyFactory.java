@@ -15,8 +15,8 @@ public class DifficultyFactory {
             10,
             5,
             0.1f,
-            2,
-            15,
+            3,
+            5,
             new CharacterConfig( //knight
                 300, 20, 4, 0, 75, 2, new BulletConfig(0.5f, 0f, 30)
             ), new CharacterConfig( //money
@@ -48,8 +48,8 @@ public class DifficultyFactory {
             10,
             5,
             0.1f,
-            2,
-            15,
+            3,
+            5,
             new CharacterConfig( //knight
                 300, 20, 4, 0, 75, 2, new BulletConfig(0.5f, 0f, 30)
             ), new CharacterConfig( //money
@@ -79,9 +79,9 @@ public class DifficultyFactory {
             5,
             10,
             5,
-            0.1f,
-            2,
-            15,
+            0.3f,
+            4,
+            8,
             new CharacterConfig( //knight
                 300, 20, 4, 0, 75, 2, new BulletConfig(0.5f, 0f, 30)
             ), new CharacterConfig( //money
@@ -111,9 +111,9 @@ public class DifficultyFactory {
             5,
             10,
             5,
-            0.1f,
-            2,
-            15,
+            0.3f,
+            5,
+            12,
             new CharacterConfig( //knight
                 300, 20, 4, 0, 75, 2, new BulletConfig(0.5f, 0f, 30)
             ), new CharacterConfig( //money
@@ -143,8 +143,8 @@ public class DifficultyFactory {
             5,
             10,
             5,
-            0.1f,
-            2,
+            0.5f,
+            5,
             15,
             new CharacterConfig( //knight
                 300, 20, 4, 0, 75, 2, new BulletConfig(0.5f, 0f, 30)

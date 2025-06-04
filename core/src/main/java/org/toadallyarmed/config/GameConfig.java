@@ -10,8 +10,8 @@ public record GameConfig(
     float BulletSystemTickRate,
     float ActionSystemTickRate,
     float EnemySpawnerSystemTickRate,
-    float EnemySpawnerSystemSleep,
-    int EnemySpawnerSystemQuantity,
+    int EnemySpawnerSystemWaveQuantity,
+    int EnemySpawnerSystemHedgehogsPerWave,
 
     // -- Values -- //
     CharacterConfig knightFrog,
