@@ -2,6 +2,7 @@ package org.toadallyarmed;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import org.toadallyarmed.gameplay.IntroScreen;
@@ -18,6 +19,7 @@ public class Main extends Game {
     public Renderer renderer;
     public BitmapFont font;
     public RenderingSystem renderingSystem;
+    private Music backgroundMusic;
 
     public void updateFontScale(Viewport viewport) {
         //font has 15pt, but we need to scale it to our viewport by ratio of viewport height to screen height
@@ -32,6 +34,10 @@ public class Main extends Game {
         font = new BitmapFont();
         renderingSystem = new RenderingSystem(renderer);
         setScreen(new IntroScreen(this));
+        backgroundMusic=Gdx.audio.newMusic(Gdx.files.internal("GameScreen/backgroundMusic.mp3"));
+        backgroundMusic.setLooping(true);
+        backgroundMusic.setVolume(0.5f);
+        backgroundMusic.play();
         // setScreen(new BulletDamageTestScreen(this));
     }
 
@@ -44,5 +50,6 @@ public class Main extends Game {
     public void dispose() {
         renderer.dispose();
         font.dispose();
+        backgroundMusic.dispose();
     }
 }

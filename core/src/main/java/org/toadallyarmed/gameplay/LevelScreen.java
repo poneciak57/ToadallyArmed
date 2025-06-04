@@ -42,7 +42,6 @@ public class LevelScreen implements Screen {
     AtomicInteger money;
 
     //--BUTTONS--//
-    Texture buttonTexture;
     Rectangle buttonBoundsWizard, buttonBoundsBard, buttonBoundsKnight, buttonBoundsTank;
     FrogType bought=FrogType.NONE;
     final ConcurrentLinkedQueue<Entity> entities;
@@ -91,7 +90,6 @@ public class LevelScreen implements Screen {
         font.setUseIntegerPositions(false);
     }
     private void setButtons(){
-        buttonTexture=new Texture("GameScreen/button.png");
         buttonBoundsWizard =new Rectangle(10.66F-1.5F, 5, 1.5F, 1);
         buttonBoundsKnight =new Rectangle(10.66F-3F, 5, 1.5F, 1);
         buttonBoundsBard =new Rectangle(10.66F-4.5F, 5, 1.5F, 1);
@@ -221,7 +219,6 @@ public class LevelScreen implements Screen {
         Logger.info("disposing a gameplay screen");
         // Destroy screen's assets here.
         backgroundTexture.dispose();
-        buttonTexture.dispose();
         systemsManager.stop();
     }
 }
