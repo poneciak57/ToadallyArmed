@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import org.toadallyarmed.gameplay.IntroScreen;
 import org.toadallyarmed.system.RenderingSystem;
-import org.toadallyarmed.testscreens.BulletDamageTestScreen;
 import org.toadallyarmed.util.rendering.Renderer;
 import org.toadallyarmed.util.logger.LogLevel;
 import org.toadallyarmed.util.logger.Logger;
