@@ -14,7 +14,7 @@ public class EnemySpawnerSystem implements System {
     HedgehogFactory hedgehogFactory;
     GameConfig config;
     int spawnsPerWave, remainingSpawns, remainingWaves;
-    boolean placingTime=true;
+    boolean placingTime=true, first=true;
 
     public EnemySpawnerSystem(HedgehogFactory hedgehogFactory, GameConfig config) {
         this.hedgehogFactory=hedgehogFactory;
@@ -26,6 +26,11 @@ public class EnemySpawnerSystem implements System {
 
     @Override
     public void tick(float deltaTime, ConcurrentLinkedQueue<Entity> entities) {
+        if (first) {
+            first=false;
+            return;
+        }
+
         Logger.trace("EnemySpawnerSystem: placing an enemy");
         if(remainingWaves>0 || remainingSpawns>0){
             if (remainingSpawns == 0) {

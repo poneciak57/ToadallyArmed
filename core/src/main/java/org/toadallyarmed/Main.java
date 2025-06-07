@@ -6,7 +6,6 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import org.toadallyarmed.gameplay.IntroScreen;
-import org.toadallyarmed.gameplay.LevelVictoryScreen;
 import org.toadallyarmed.system.RenderingSystem;
 import org.toadallyarmed.util.rendering.Renderer;
 import org.toadallyarmed.util.logger.LogLevel;
@@ -39,7 +38,6 @@ public class Main extends Game {
         backgroundMusic.setLooping(true);
         backgroundMusic.setVolume(0.5f);
         backgroundMusic.play();
-        //setScreen(new LevelVictoryScreen(this));
     }
 
     @Override

@@ -5,7 +5,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import org.toadallyarmed.Main;
@@ -16,9 +15,7 @@ public class StoryScreen implements Screen {
     final FitViewport viewport;
 
     final Texture backgroundTexture;
-
     Rectangle nextButton;
-
 
     public StoryScreen(Main main) {
         Logger.info("Story screen");
