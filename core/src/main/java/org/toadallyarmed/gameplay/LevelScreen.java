@@ -184,8 +184,12 @@ public class LevelScreen implements Screen {
         if (Gdx.input.justTouched())
             analyzeTouch(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
         for (Entity entity : entities)
-            if (!entity.isMarkedForRemoval() && entity.type() == EntityType.valueOf("WINNING"))
-                main.setScreen(new LevelVictoryScreen(main));
+            if (!entity.isMarkedForRemoval()) {
+                if (entity.type() == EntityType.WINNING)
+                    main.setScreen(new LevelVictoryScreen(main));
+                else if (entity.type() == EntityType.LOOSING)
+                    main.setScreen(new LevelFailScreen(main));
+            }
 
         money = wallet.access();
         pixelFont.draw(main.renderer.getSpriteBatch(), Integer.toString(money.get()), 1, 6);

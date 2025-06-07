@@ -2,6 +2,7 @@ package org.toadallyarmed.system;
 
 import org.toadallyarmed.component.interfaces.TransformComponent;
 import org.toadallyarmed.entity.Entity;
+import org.toadallyarmed.entity.EntityType;
 import org.toadallyarmed.util.logger.Logger;
 
 import java.util.Optional;
@@ -18,6 +19,7 @@ public class PhysicsSystem implements System {
             if (transformComponentOpt.isEmpty()) continue;
             TransformComponent transformComponent = transformComponentOpt.get();
             transformComponent.setPosition(transformComponent.getAdvancedPosition(currentNanoTime), currentNanoTime);
+            if (transformComponent.getAdvancedPosition(currentNanoTime).x<-0.5f) entities.add(new Entity(EntityType.LOOSING));
         }
     }
 }
