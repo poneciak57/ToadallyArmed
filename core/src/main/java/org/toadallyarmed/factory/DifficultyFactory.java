@@ -1,13 +1,13 @@
 package org.toadallyarmed.factory;
 
+import org.toadallyarmed.Main;
 import org.toadallyarmed.config.BulletConfig;
 import org.toadallyarmed.config.CharacterConfig;
 import org.toadallyarmed.config.GameConfig;
 
 public class DifficultyFactory {
     public static GameConfig defaultGameConfig() {
-        return new GameConfig(
-            60,
+        return new GameConfig( 60,
             0.1f,
             5f,
             1f,
@@ -48,8 +48,8 @@ public class DifficultyFactory {
             10,
             5,
             0.1f,
-            3,
-            5,
+            1,
+            1,
             new CharacterConfig( //knight
                 300, 20, 4, 0, 75, 2, new BulletConfig(0.5f, 0f, 30)
             ), new CharacterConfig( //money

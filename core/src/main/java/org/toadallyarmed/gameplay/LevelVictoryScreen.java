@@ -19,7 +19,7 @@ public class LevelVictoryScreen implements Screen {
     Rectangle startButtonBounds;
 
     public LevelVictoryScreen(Main main) {
-        Logger.info("Introduction screen");
+        Logger.info("Victory screen");
         this.main = main;
 
         viewport = new FitViewport(10.66F, 6);

@@ -6,7 +6,7 @@ This project uses the following third-party assets. All assets have been verifie
 
 ## 1. Toxic Frog Animations (Pixel Art 2D)
 - **Author**: Eduard Scarpato
-- **Source**: [itch.io page](https://eduardscarpato.itch.io/toxic-frog-animations-pixel-art-2d)
+- **Source**: [itch.io page](https://eduardscarpato.itch.io/toxic-frog-animations-pixel-art-2d-free)
 - **License**: Free for commercial and non-commercial use; no attribution required. Redistribution or resale of the asset files themselves is not allowed.
 - **Notes**: Used under the terms provided on the asset page.
 
@@ -44,7 +44,14 @@ This project uses the following third-party assets. All assets have been verifie
 
 ---
 
-## 6. Custom graphic made especially for this project
+## 6. Retro Foret - Forest exploring 8bit RPG music.
+- **Author**: David Fesliyan
+- **Source**: [fesliyanstudios page](https://www.fesliyanstudios.com/royalty-free-music/download/retro-forest/451)
+- **License**: Free to use anywhere; attribution not required but appreciated. Redistribution or resale of the asset files themselves is not allowed.
+- **Notes**: Used under the terms provided on the asset page.
+---
+
+## 7. Custom graphic made especially for this project
 - **Author**: Natalia Ignatowicz
 - **Source**: private
 - **Licence**: Free to use

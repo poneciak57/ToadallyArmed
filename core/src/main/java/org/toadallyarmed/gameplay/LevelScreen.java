@@ -16,6 +16,7 @@ import org.toadallyarmed.component.WalletComponent;
 import org.toadallyarmed.component.frog.FrogType;
 import org.toadallyarmed.config.GameConfig;
 import org.toadallyarmed.entity.Entity;
+import org.toadallyarmed.entity.EntityType;
 import org.toadallyarmed.factory.*;
 import org.toadallyarmed.system.SystemsManager;
 import org.toadallyarmed.util.logger.Logger;
@@ -47,7 +48,6 @@ public class LevelScreen implements Screen {
     final ConcurrentLinkedQueue<Entity> entities;
     final Set<Vector2> taken=new HashSet<>();
 
-
     public LevelScreen(Main main, GameConfig config) {
         Logger.info("Placeable Frogs screen");
         this.main = main;
@@ -68,6 +68,7 @@ public class LevelScreen implements Screen {
         wallet=gameState.getWallet();
         systemsManager = SystemsManagerFactory.getSystemsManagerForGameplay(gameState);
         entities = gameState.getEntities();
+
 
         entities.add(coinFactory.createSpecialCoin(new Vector2(0, 5)));
 
@@ -182,6 +183,9 @@ public class LevelScreen implements Screen {
 
         if (Gdx.input.justTouched())
             analyzeTouch(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+        for (Entity entity : entities)
+            if (!entity.isMarkedForRemoval() && entity.type() == EntityType.valueOf("WINNING"))
+                main.setScreen(new LevelVictoryScreen(main));
 
         money = wallet.access();
         pixelFont.draw(main.renderer.getSpriteBatch(), Integer.toString(money.get()), 1, 6);

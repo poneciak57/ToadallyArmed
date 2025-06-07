@@ -3,6 +3,7 @@ package org.toadallyarmed.system;
 import com.badlogic.gdx.math.Vector2;
 import org.toadallyarmed.config.GameConfig;
 import org.toadallyarmed.entity.Entity;
+import org.toadallyarmed.entity.EntityType;
 import org.toadallyarmed.factory.HedgehogFactory;
 import org.toadallyarmed.util.logger.Logger;
 
@@ -38,6 +39,13 @@ public class EnemySpawnerSystem implements System {
                 entities.add(hedgehogFactory.createRandomHedgehog(pos, config));
             }
         }
-        else Logger.info("No spawns to give");
+        else {
+            for (Entity entity : entities)
+                if (!entity.isMarkedForRemoval() && entity.type() == EntityType.valueOf("HEDGEHOG"))
+                    if (entity.isActive()) return;
+
+            Logger.info("It's all done");
+            entities.add(new Entity(EntityType.valueOf("WINNING")));
+        }
     }
 }

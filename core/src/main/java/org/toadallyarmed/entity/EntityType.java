@@ -5,5 +5,7 @@ public enum EntityType {
     BULLET,
     HEDGEHOG,
     COIN,
+    WINNING,
+    LOOSING,
     OTHER
 }

@@ -1,5 +1,7 @@
 package org.toadallyarmed.config;
 
+import org.toadallyarmed.Main;
+
 public record GameConfig(
     // -- TickRates -- //
     float SystemManagerTickRate,
