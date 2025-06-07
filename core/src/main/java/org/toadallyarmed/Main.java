@@ -50,5 +50,6 @@ public class Main extends Game {
         renderer.dispose();
         font.dispose();
         backgroundMusic.dispose();
+        System.exit(0);
     }
 }
