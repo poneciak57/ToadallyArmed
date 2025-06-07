@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 
 import static org.toadallyarmed.config.GameConfig.TILE_HEIGHT;
-import static org.toadallyarmed.config.GameConfig.TILE_WIDTH;
 
 public class FrogFactory implements Disposable {
     private static final FrogFactory factoryInstance = new FrogFactory();
@@ -70,7 +69,7 @@ public class FrogFactory implements Disposable {
     public Entity createKnightFrog(Vector2 pos, CharacterConfig config) {
         List<ColliderActionEntry> colliders = new ArrayList<>(List.of(
             new ThrottledCollisionActionEntry(
-                config.atk_speed(),
+                config.action_speed(),
                 new BasicColliderActionEntry(
                     new RectangleShape(config.attackRange(), TILE_HEIGHT / 2, 0.f, -TILE_HEIGHT / 4),
                     new FrogAttackCollisionAction(
@@ -93,7 +92,7 @@ public class FrogFactory implements Disposable {
         var entity= createFrog(bardFrogAnimatedStateSprite, pos, config, new ArrayList<>());
 
         entity.put(ActionComponent.class, new ThrottledActionComponent(
-            config.atk_speed(), new BardAction()
+            config.action_speed(), new BardAction()
         ));
 
         return entity;
@@ -102,7 +101,7 @@ public class FrogFactory implements Disposable {
     public Entity createWizardFrog(Vector2 pos, CharacterConfig config) {
         List<ColliderActionEntry> colliders = new ArrayList<>(List.of(
             new ThrottledCollisionActionEntry(
-                config.atk_speed(),
+                config.action_speed(),
                 new BasicColliderActionEntry(
                     new RectangleShape(config.attackRange(), TILE_HEIGHT / 2, 0.f, -TILE_HEIGHT / 4),
                     new FrogAttackCollisionAction(

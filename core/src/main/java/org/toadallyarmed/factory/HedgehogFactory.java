@@ -115,7 +115,7 @@ public class HedgehogFactory implements Disposable {
                     ColliderType.ENTITY
                 ),
                 new ThrottledCollisionActionEntry(
-                    config.atk_speed(),
+                    config.action_speed(),
                     new BasicColliderActionEntry(
                         new RectangleShape(1f, 0.5f, 0.0f, -0.25f),
                         new HeadgehogAttackCollisionAction(config.damage()),
@@ -128,7 +128,7 @@ public class HedgehogFactory implements Disposable {
         );
         var timerAction = new HeadgehogAttackTimerComponent();
         var actionReset = new HeadgehogAttackResetAction(
-            (long) (1_000_000_000 * config.atk_speed() * 1.2),
+            (long) (1_000_000_000 * config.action_speed() * 1.2),
                 new Vector2(config.speed(), 0)
         );
         entity
