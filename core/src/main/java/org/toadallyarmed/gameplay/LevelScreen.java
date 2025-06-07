@@ -187,7 +187,7 @@ public class LevelScreen implements Screen {
             if (!entity.isMarkedForRemoval()) {
                 if (entity.type() == EntityType.WINNING)
                     main.setScreen(new LevelVictoryScreen(main));
-                else if (entity.type() == EntityType.LOOSING)
+                else if (entity.type() == EntityType.LOSING)
                     main.setScreen(new LevelFailScreen(main));
             }
 

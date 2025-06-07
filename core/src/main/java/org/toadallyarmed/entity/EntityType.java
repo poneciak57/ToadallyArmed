@@ -6,6 +6,6 @@ public enum EntityType {
     HEDGEHOG,
     COIN,
     WINNING,
-    LOOSING,
+    LOSING,
     OTHER
 }
