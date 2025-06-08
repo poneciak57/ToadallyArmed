@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import org.toadallyarmed.gameplay.IntroScreen;
 import org.toadallyarmed.system.RenderingSystem;
+import org.toadallyarmed.testscreens.Test1Screen;
 import org.toadallyarmed.util.rendering.Renderer;
 import org.toadallyarmed.util.logger.LogLevel;
 import org.toadallyarmed.util.logger.Logger;
@@ -33,7 +34,11 @@ public class Main extends Game {
         renderer = new Renderer();
         font = new BitmapFont();
         renderingSystem = new RenderingSystem(renderer);
-        setScreen(new IntroScreen(this));
+        if ("1".equals(System.getenv("DEBUG"))) {
+            setScreen(new Test1Screen(this));
+        } else {
+            setScreen(new IntroScreen(this));
+        }
         backgroundMusic=Gdx.audio.newMusic(Gdx.files.internal("GameScreen/backgroundMusic.mp3"));
         backgroundMusic.setLooping(true);
         backgroundMusic.setVolume(0.5f);
