@@ -33,4 +33,6 @@ public record GameConfig(
     public static final float VELOCITY_SCALE = 0.05f;
     public static final float TILE_WIDTH = 1f;
     public static final float TILE_HEIGHT = 1f;
+    public static final float BOARD_WIDTH = 11f;
+    public static final float  BOARD_HEIGHT = 5f;
 }
