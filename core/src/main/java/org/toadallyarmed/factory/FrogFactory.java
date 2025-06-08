@@ -13,6 +13,7 @@ import org.toadallyarmed.config.CharacterConfig;
 import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.entity.EntityType;
 import org.toadallyarmed.util.StateMachine;
+import org.toadallyarmed.util.action.ThrottledAction;
 import org.toadallyarmed.util.collision.RectangleShape;
 import org.toadallyarmed.util.rendering.AnimatedSprite;
 import org.toadallyarmed.util.rendering.AnimatedStateSprite;
@@ -91,8 +92,9 @@ public class FrogFactory implements Disposable {
     public Entity createBardFrog(Vector2 pos, CharacterConfig config) {
         var entity= createFrog(bardFrogAnimatedStateSprite, pos, config, new ArrayList<>());
 
-        entity.put(ActionComponent.class, new ThrottledActionComponent(
-            config.action_speed(), new BardAction()
+        entity.put(ActionComponent.class, new SingleActionComponent(
+            new ThrottledAction<>(
+                config.action_speed(), new BardAction())
         ));
 
         return entity;
