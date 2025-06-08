@@ -7,12 +7,14 @@ import org.toadallyarmed.util.logger.Logger;
 
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
 
 public class Entity {
     private final EntityType type;
     private volatile boolean markedForRemoval = false;
     private final ConcurrentHashMap<Class<? extends Component>, Component> components =
         new ConcurrentHashMap<>();
+    private Runnable onRemovalAction;
 
     public Entity(final EntityType type) {
         this.type = type;
@@ -23,11 +25,16 @@ public class Entity {
         return type;
     }
 
+    public void setOnRemoveAction(final Runnable action) {
+        this.onRemovalAction = action;
+    }
+
     /// Marks entity for removal, but does
     /// not perform the removal operation itself.
     /// It should be done externally.
     public void markForRemoval() {
         markedForRemoval = true;
+        onRemovalAction.run();
     }
 
     public Runnable getMarkForRemovalRunnable() {

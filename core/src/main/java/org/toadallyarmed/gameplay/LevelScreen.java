@@ -155,6 +155,7 @@ public class LevelScreen implements Screen {
                         case KNIGHT -> frogFactory.createKnightFrog(gridPos, config.knightFrog());
                         default -> frogFactory.createWizardFrog(gridPos, config.wizardFrog());
                     };
+                    entity.setOnRemoveAction(() -> taken.remove(gridPos));
                     entities.add(entity);
                     taken.add(gridPos);
                     bought = FrogType.NONE;
