@@ -1,7 +1,9 @@
 package org.toadallyarmed.system;
 
 import org.toadallyarmed.component.interfaces.RenderableComponent;
+import org.toadallyarmed.component.interfaces.TransformComponent;
 import org.toadallyarmed.entity.Entity;
+import org.toadallyarmed.entity.EntityType;
 import org.toadallyarmed.util.logger.Logger;
 import org.toadallyarmed.util.rendering.Renderer;
 
@@ -21,6 +23,23 @@ public class RenderingSystem implements System {
         float currentNanoTime = java.lang.System.nanoTime();
         entities.stream()
             .filter(Entity::isActive)
+            .sorted((a, b) -> {
+                final EntityType typeA = a.type();
+                final EntityType typeB = b.type();
+                final int typesComparison = Integer.compare(typeA.renderOrder(), typeB.renderOrder());
+                if (typesComparison != 0) return typesComparison;
+
+                final var transformAOpt = a.get(TransformComponent.class);
+                final var transformBOpt = b.get(TransformComponent.class);
+                if (transformAOpt.isEmpty() || transformBOpt.isEmpty()) return 0;
+
+                final TransformComponent transformA = transformAOpt.get();
+                final TransformComponent transformB = transformBOpt.get();
+
+                return Float.compare(
+                    transformB.getAdvancedPosition(currentNanoTime).y,
+                    transformA.getAdvancedPosition(currentNanoTime).y);
+            })
             .map(entity -> entity.get(RenderableComponent.class))
             .filter(Optional::isPresent)
             .map(Optional::get)
