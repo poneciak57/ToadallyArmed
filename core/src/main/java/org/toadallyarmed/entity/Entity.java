@@ -34,7 +34,8 @@ public class Entity {
     /// It should be done externally.
     public void markForRemoval() {
         markedForRemoval = true;
-        onRemovalAction.run();
+        if (onRemovalAction != null)
+            onRemovalAction.run();
     }
 
     public Runnable getMarkForRemovalRunnable() {
