@@ -187,7 +187,7 @@ public class LevelScreen implements Screen {
             analyzeTouch(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
         for (Entity entity : entities)
             if (!entity.isMarkedForRemoval()) {
-                if (Debugging.debuggingMode()) {
+                if (!Debugging.debuggingMode()) {
                     if (entity.type() == EntityType.WINNING)
                         main.setScreen(new LevelVictoryScreen(main));
                     else if (entity.type() == EntityType.LOSING)
