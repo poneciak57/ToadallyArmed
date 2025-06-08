@@ -1,6 +1,12 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="ToadallyArmed:lwjgl3 [run] Usual Mode" type="GradleRunConfiguration" factoryName="Gradle">
+  <configuration default="false" name="ToadallyArmed Stress Test" type="GradleRunConfiguration" factoryName="Gradle">
     <ExternalSystemSettings>
+      <option name="env">
+        <map>
+          <entry key="DEBUG" value="1" />
+          <entry key="STRESS_TEST" value="1" />
+        </map>
+      </option>
       <option name="executionName" />
       <option name="externalProjectPath" value="$PROJECT_DIR$/lwjgl3" />
       <option name="externalSystemIdString" value="GRADLE" />

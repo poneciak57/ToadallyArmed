@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="ToadallyArmed [lwjgl3:run] Debugging Mode" type="GradleRunConfiguration" factoryName="Gradle">
+  <configuration default="false" name="ToadallyArmed Debugging Mode" type="GradleRunConfiguration" factoryName="Gradle">
     <ExternalSystemSettings>
       <option name="env">
         <map>
@@ -7,7 +7,7 @@
         </map>
       </option>
       <option name="executionName" />
-      <option name="externalProjectPath" value="$PROJECT_DIR$" />
+      <option name="externalProjectPath" value="$PROJECT_DIR$/lwjgl3" />
       <option name="externalSystemIdString" value="GRADLE" />
       <option name="scriptParameters" value="" />
       <option name="taskDescriptions">
@@ -15,7 +15,7 @@
       </option>
       <option name="taskNames">
         <list>
-          <option value="lwjgl3:run" />
+          <option value="run" />
         </list>
       </option>
       <option name="vmOptions" />

@@ -10,6 +10,7 @@ import org.toadallyarmed.factory.DifficultyFactory;
 import org.toadallyarmed.gameplay.IntroScreen;
 import org.toadallyarmed.gameplay.LevelScreen;
 import org.toadallyarmed.system.RenderingSystem;
+import org.toadallyarmed.testscreens.Test2Screen;
 import org.toadallyarmed.util.Debugging;
 import org.toadallyarmed.util.rendering.Renderer;
 import org.toadallyarmed.util.logger.LogLevel;
@@ -37,7 +38,9 @@ public class Main extends Game {
         renderer = new Renderer();
         font = new BitmapFont();
         renderingSystem = new RenderingSystem(renderer);
-        if (Debugging.debuggingMode()) {
+        if (Debugging.stressTestMode()) {
+            setScreen(new Test2Screen(this));
+        } else if (Debugging.debuggingMode()) {
             GameConfig config = DifficultyFactory.debug();
             setScreen(new LevelScreen(this, config));
         } else {
