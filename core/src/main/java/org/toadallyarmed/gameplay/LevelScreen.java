@@ -19,6 +19,7 @@ import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.entity.EntityType;
 import org.toadallyarmed.factory.*;
 import org.toadallyarmed.system.SystemsManager;
+import org.toadallyarmed.util.Debugging;
 import org.toadallyarmed.util.logger.Logger;
 
 import java.util.HashSet;
@@ -72,6 +73,10 @@ public class LevelScreen implements Screen {
 
         setFonts();
         setButtons();
+
+        if (Debugging.debuggingMode()) {
+            wallet.access().addAndGet(1000);
+        }
 
         Logger.info("Created a new gameplay screen successfully");
     }
@@ -181,10 +186,12 @@ public class LevelScreen implements Screen {
             analyzeTouch(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
         for (Entity entity : entities)
             if (!entity.isMarkedForRemoval()) {
-                if (entity.type() == EntityType.WINNING)
-                    main.setScreen(new LevelVictoryScreen(main));
-                else if (entity.type() == EntityType.LOSING)
-                    main.setScreen(new LevelFailScreen(main));
+                if (Debugging.debuggingMode()) {
+                    if (entity.type() == EntityType.WINNING)
+                        main.setScreen(new LevelVictoryScreen(main));
+                    else if (entity.type() == EntityType.LOSING)
+                        main.setScreen(new LevelFailScreen(main));
+                }
             }
 
         money = wallet.access();

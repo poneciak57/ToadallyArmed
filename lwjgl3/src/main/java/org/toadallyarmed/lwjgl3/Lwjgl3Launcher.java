@@ -3,6 +3,7 @@ package org.toadallyarmed.lwjgl3;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import org.toadallyarmed.Main;
+import org.toadallyarmed.util.Debugging;
 
 /** Launches the desktop (LWJGL3) application. */
 public class Lwjgl3Launcher {
@@ -29,7 +30,7 @@ public class Lwjgl3Launcher {
         //// useful for testing performance, but can also be very stressful to some hardware.
         //// You may also need to configure GPU drivers to fully disable Vsync; this can cause screen tearing.
 
-        if ("1".equals(System.getenv("DEBUG"))) {
+        if (Debugging.debuggingMode()) {
             configuration.setWindowedMode(960, 480);
         } else {
             configuration.setWindowedMode(1728, 972);
