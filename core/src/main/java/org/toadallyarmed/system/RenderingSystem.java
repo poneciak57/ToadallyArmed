@@ -31,7 +31,9 @@ public class RenderingSystem implements System {
 
                 final var transformAOpt = a.get(TransformComponent.class);
                 final var transformBOpt = b.get(TransformComponent.class);
-                if (transformAOpt.isEmpty() || transformBOpt.isEmpty()) return 0;
+                if (transformAOpt.isEmpty() && transformBOpt.isEmpty()) return 0;
+                if (transformAOpt.isEmpty()) return 1;
+                if (transformBOpt.isEmpty()) return -1;
 
                 final TransformComponent transformA = transformAOpt.get();
                 final TransformComponent transformB = transformBOpt.get();
