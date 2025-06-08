@@ -7,6 +7,7 @@ import org.toadallyarmed.state.BooleanState;
 import org.toadallyarmed.state.HedgehogState;
 import org.toadallyarmed.util.action.Action;
 import org.toadallyarmed.util.action.PayloadExtractor;
+import org.toadallyarmed.util.logger.Logger;
 
 public class HeadgehogAttackCollisionAction implements Action<HeadgehogAttackCollisionActionPayload, BasicCollisionActionPayload> {
 
@@ -18,7 +19,10 @@ public class HeadgehogAttackCollisionAction implements Action<HeadgehogAttackCol
 
     @Override
     public void run(HeadgehogAttackCollisionActionPayload payload) {
-        if (payload.frogHealthComponent().getHealth() <= 0) return;
+//        if (payload.frogHealthComponent().getHealth() <= 0) {
+//            Logger.error("Attacking dead frog");
+//            return;
+//        }
         payload.headgehogAttackTimerComponent().updateLastActionNano();
         payload.frogIsAttackedStateMachine().setNextTmpState(BooleanState.TRUE);
         payload.stateMachine().setNextTmpState(HedgehogState.ACTION);
