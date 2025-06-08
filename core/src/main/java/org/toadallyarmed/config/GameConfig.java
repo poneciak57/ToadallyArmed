@@ -1,6 +1,6 @@
 package org.toadallyarmed.config;
 
-import org.toadallyarmed.Main;
+import org.toadallyarmed.system.level.Level;
 
 public record GameConfig(
     // -- TickRates -- //
@@ -28,11 +28,13 @@ public record GameConfig(
 
     // how much player will earn periodically
     int StartingMoney,
-    int GlobalIncomeDelta
+    int GlobalIncomeDelta,
+
+    Level level
 ) {
     public static final float VELOCITY_SCALE = 0.05f;
     public static final float TILE_WIDTH = 1f;
     public static final float TILE_HEIGHT = 1f;
-    public static final float BOARD_WIDTH = 11f;
-    public static final float  BOARD_HEIGHT = 5f;
+    public static final int BOARD_WIDTH = 11;
+    public static final int BOARD_HEIGHT = 5;
 }

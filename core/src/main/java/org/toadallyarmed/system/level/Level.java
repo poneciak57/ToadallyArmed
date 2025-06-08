@@ -1,10 +1,11 @@
 package org.toadallyarmed.system.level;
 
+import java.util.LinkedList;
 import java.util.Optional;
 import java.util.Queue;
 
 public class Level {
-    Queue<LevelAction<?>> actions;
+    Queue<LevelAction<?>> actions = new LinkedList<>();
 
     public Level addAction(LevelAction<?> action) {
         actions.add(action);

@@ -25,8 +25,9 @@ public class Entity {
         return type;
     }
 
-    public void setOnRemoveAction(final Runnable action) {
+    public Entity setOnRemoveAction(final Runnable action) {
         this.onRemovalAction = action;
+        return this;
     }
 
     /// Marks entity for removal, but does

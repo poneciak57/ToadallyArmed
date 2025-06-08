@@ -46,8 +46,8 @@ public class EnemySpawnerSystem implements System {
         }
         else {
             for (Entity entity : entities)
-                if (!entity.isMarkedForRemoval() && entity.type() == EntityType.HEDGEHOG)
-                    if (entity.isActive()) return;
+                if (entity.isActive() && entity.type() == EntityType.HEDGEHOG)
+                    return;
 
             Logger.info("It's all done");
             entities.add(new Entity(EntityType.WINNING));
