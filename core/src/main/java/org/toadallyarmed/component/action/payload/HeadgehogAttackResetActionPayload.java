@@ -2,6 +2,7 @@ package org.toadallyarmed.component.action.payload;
 
 import org.toadallyarmed.component.AliveEntityStateComponent;
 import org.toadallyarmed.component.HeadgehogAttackTimerComponent;
+import org.toadallyarmed.component.HedgehogStateComponent;
 import org.toadallyarmed.component.interfaces.StateComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
 import org.toadallyarmed.state.HedgehogState;
@@ -29,7 +30,7 @@ public record HeadgehogAttackResetActionPayload(
             /// If some entity requires this payload extractor it should be headgehog so it should have
             /// StateMachine<Headgehog> compoennt if not it is critical error
             @SuppressWarnings("unchecked")
-            AliveEntityStateComponent<HedgehogState> headgehogESC = (AliveEntityStateComponent<HedgehogState>) stateComponent.get();
+            HedgehogStateComponent headgehogESC = (HedgehogStateComponent) stateComponent.get();
 
             return Optional.of(new HeadgehogAttackResetActionPayload(
                 timer.get(),

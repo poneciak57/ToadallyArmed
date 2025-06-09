@@ -8,6 +8,7 @@ import org.toadallyarmed.component.action.*;
 import org.toadallyarmed.component.interfaces.*;
 import org.toadallyarmed.config.GameConfig;
 import org.toadallyarmed.state.BooleanState;
+import org.toadallyarmed.state.FadeOutState;
 import org.toadallyarmed.state.HedgehogState;
 import org.toadallyarmed.config.AnimationConfig;
 import org.toadallyarmed.config.CharacterConfig;
@@ -88,7 +89,7 @@ public class HedgehogFactory implements Disposable {
         Logger.trace("Creating Hedgehog Entity in factory");
         Entity entity = new Entity(EntityType.HEDGEHOG);
         WorldTransformComponent transform = new WorldTransformComponent(pos, new Vector2(config.speed(), 0.f));
-        AliveEntityStateComponent<HedgehogState> state = new AliveEntityStateComponent<>(
+        HedgehogStateComponent state = new HedgehogStateComponent(
             new StateMachine<>(HedgehogState.WALKING)
                 .addState(HedgehogState.IDLE, HedgehogState.IDLE, true)
                 .addState(HedgehogState.WALKING, HedgehogState.WALKING, true)
@@ -102,9 +103,10 @@ public class HedgehogFactory implements Disposable {
                 .setNoHealthAction(() -> {
                     state.getIsAttackedStateMachine().setNextTmpState(BooleanState.TRUE);
                     state.getGeneralStateMachine().setNextTmpState(HedgehogState.DYING);
+                    state.getFadeOutStateMachine().setNextTmpState(FadeOutState.FADES);
                 });
-        AliveEntityRenderableComponent<HedgehogState> renderable =
-            new AliveEntityRenderableComponent<>(
+        HedgehogRenderableComponent renderable =
+            new HedgehogRenderableComponent(
                 transform,
                 state,
                 animatedStateSprite);

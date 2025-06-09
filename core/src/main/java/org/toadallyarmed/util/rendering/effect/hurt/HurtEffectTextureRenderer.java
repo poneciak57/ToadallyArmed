@@ -15,16 +15,26 @@ public class HurtEffectTextureRenderer implements TextureRenderer {
     static final Color DESTINATION_COLOR = Color.RED;
 
     final Renderer renderer;
-    final float ratio;
+    final float hurtRatio;
+    float fadeRatio;
 
     /**
-     * @param ratio Value between 0f and 1f determining how much has the hurt effect advanced.
+     * @param hurtRatio Value between 0f and 1f determining how much has the hurt effect advanced.
      */
-    public HurtEffectTextureRenderer(Renderer renderer, float ratio) {
-        Logger.errorIfNot(0f <= ratio && ratio <= 1f, "HurtEffectTextureRenderer: ratio should be between 0.0f and 1.0f.");
+    public HurtEffectTextureRenderer(Renderer renderer, float hurtRatio) {
+        Logger.errorIfNot(0f <= hurtRatio && hurtRatio <= 1f, "HurtEffectTextureRenderer: hurtRatio should be between 0.0f and 1.0f.");
         this.renderer = renderer;
 
-        this.ratio = ratio;
+        this.hurtRatio = hurtRatio;
+        this.fadeRatio = 0f;
+    }
+
+    public HurtEffectTextureRenderer(Renderer renderer, float hurtRatio, float fadeRatio) {
+        Logger.errorIfNot(0f <= hurtRatio && hurtRatio <= 1f, "HurtEffectTextureRenderer: hurtRatio should be between 0.0f and 1.0f.");
+        this.renderer = renderer;
+
+        this.hurtRatio = hurtRatio;
+        this.fadeRatio = fadeRatio;
     }
 
     @Override
@@ -32,8 +42,10 @@ public class HurtEffectTextureRenderer implements TextureRenderer {
         SpriteBatch spriteBatch = renderer.getSpriteBatch();
         ShaderProgram shader = renderer.getHurtEffectShader();
 
+        shader.pedantic = false;
         spriteBatch.setShader(shader);
-        shader.setUniformf("ratio", ratio);
+        shader.setUniformf("hurtRatio", hurtRatio);
+        shader.setUniformf("fadeRatio", fadeRatio);
         spriteBatch.draw(region, x, y, width, height);
 
         spriteBatch.setShader(renderer.getDefaultShader());
