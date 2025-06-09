@@ -16,6 +16,7 @@ import org.toadallyarmed.util.action.PayloadExtractor;
 public class BardAction implements Action<BardActionPayload, BasicActionPayload> {
     boolean firstTime = true;
     @Override
+    @SuppressWarnings("deprecated")
     public void run(BardActionPayload payload) {
         if (!firstTime){
             payload.stateMachine().setNextTmpState(FrogState.IDLE, FrogState.HOP, () -> {

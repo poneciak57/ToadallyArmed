@@ -11,8 +11,11 @@ And so, the frogs leapt into battle to defend their tadpoles, etching their saga
 * *Kacper Poneta*
 * *Kacper Orszulak*
 
+![Gameplay](gameplay.png)
+![Gameplay](gameplay2.png)
+
 ### Code architecture
 For reference to the code design, patterns applied and plans refer to [the GitHub project Wiki](https://github.com/poneciak57/ToadallyArmed/wiki).
 
 ### Assets
-For reference to the assets used in this project refer to [assets info](https://github.com/poneciak57/ToadallyArmed/blob/main/assets_and_their_licences.md)
+For reference to the assets used in this project refer to [assets info](https://github.com/poneciak57/ToadallyArmed/blob/main/assets_and_their_licences.md).
