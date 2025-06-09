@@ -34,7 +34,7 @@ public class Main extends Game {
 
     @Override
     public void create() {
-        Logger.init(List.of(new TerminalLoggerBackend(LogLevel.INFO)), LogLevel.INFO);
+        Logger.init(List.of(new TerminalLoggerBackend(LogLevel.ERROR)), LogLevel.ERROR);
         renderer = new Renderer();
         font = new BitmapFont();
         renderingSystem = new RenderingSystem(renderer);
