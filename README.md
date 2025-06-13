@@ -19,3 +19,14 @@ For reference to the code design, patterns applied and plans refer to [the GitHu
 
 ### Assets
 For reference to the assets used in this project refer to [assets info](https://github.com/poneciak57/ToadallyArmed/blob/main/assets_and_their_licences.md).
+
+### How to Build It?
+#### Linux
+```bash
+./gradlew lwjgl3:run
+```
+
+#### Windows
+```batch
+gradlew.bat lwjgl3:run
+```
