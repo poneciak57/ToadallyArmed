@@ -19,6 +19,7 @@ public class HeadgehogAttackCollisionAction implements Action<HeadgehogAttackCol
 
     @Override
     public void run(HeadgehogAttackCollisionActionPayload payload) {
+//        Nie dziala :c
 //        if (payload.frogHealthComponent().getHealth() <= 0) {
 //            Logger.error("Attacking dead frog");
 //            return;
