@@ -10,21 +10,21 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import org.toadallyarmed.Main;
 import org.toadallyarmed.util.logger.Logger;
 
-public class StoryScreen implements Screen {
+public class FrogIntroScreen implements Screen {
     final Main main;
     final FitViewport viewport;
 
     final Texture backgroundTexture;
     Rectangle nextButton;
 
-    public StoryScreen(Main main) {
+    public FrogIntroScreen(Main main) {
         Logger.info("Story screen");
         this.main = main;
 
         viewport = new FitViewport(10.66F, 6);
         this.main.updateFontScale(viewport);
 
-        backgroundTexture = new Texture("GameScreen/story_background.jpg");
+        backgroundTexture = new Texture("GameScreen/frog_intro_background.jpg");
         setButtons();
 
         Logger.info("Created a new gameplay screen successfully");
@@ -51,7 +51,7 @@ public class StoryScreen implements Screen {
         main.renderer.getSpriteBatch().draw(backgroundTexture, 0, 0, worldWidth, worldHeight);
 
         if (Gdx.input.justTouched())
-            main.setScreen(new FrogIntroScreen(main));
+            main.setScreen(new LevelChoosingScreen(main));
 
         main.renderer.getSpriteBatch().end();
     }
