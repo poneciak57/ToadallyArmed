@@ -8,6 +8,10 @@ buildscript {
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
     maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots/' }
   }
+  dependencies {
+
+
+  }
 }
 
 allprojects {
@@ -25,7 +29,7 @@ allprojects {
 
 configure(subprojects) {
   apply plugin: 'java-library'
-  sourceCompatibility = 17
+  sourceCompatibility = 16
 
   // Add the JUnit dependency for testing
   dependencies {
