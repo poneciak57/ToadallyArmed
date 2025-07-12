@@ -45,8 +45,8 @@ public class Renderer implements Disposable {
 
     private void setupShaders() {
         hurtEffectShader = new ShaderProgram(
-            Gdx.files.internal("GameScreen/Shaders/HurtEffect/hurtEffect.vert"),
-            Gdx.files.internal("GameScreen/Shaders/HurtEffect/hurtEffect.frag")
+            Gdx.files.internal("GameScreen/Shaders/AliveEntity/AliveEntity.vert"),
+            Gdx.files.internal("GameScreen/Shaders/AliveEntity/AliveEntity.frag")
         );
         if (!hurtEffectShader.isCompiled()) {
             Logger.error("Could not compile fragment shader: " + hurtEffectShader.getLog());
