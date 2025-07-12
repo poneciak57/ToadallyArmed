@@ -21,7 +21,7 @@ public class BardAction implements Action<BardActionPayload, BasicActionPayload>
         if (!firstTime){
             payload.stateMachine().setNextTmpState(FrogState.IDLE, FrogState.HOP, () -> {
                 Entity coin= CoinFactory.get().createCoin(payload.pos().getPosition());
-                payload.walletComponent().access().addAndGet(payload.bardIncomeDelta());//upload money
+                payload.walletComponent().increase(payload.bardIncomeDelta());//upload money
                 payload.entities().add(coin);
 
                 StateMachine<BasicEntityState> stateMachine;

@@ -5,6 +5,7 @@ import org.toadallyarmed.component.interfaces.ActionComponent;
 import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.gameplay.GlobalGameState;
 
+import java.util.Collection;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ActionSystem implements System {
@@ -15,7 +16,7 @@ public class ActionSystem implements System {
     }
 
     @Override
-    public void tick(float deltaTime, ConcurrentLinkedQueue<Entity> entities) {
+    public void tick(float deltaTime, Collection<Entity> entities) {
         float currentNano = java.lang.System.nanoTime();
         for (Entity entity : entities) {
             if (entity.isMarkedForRemoval()) continue;

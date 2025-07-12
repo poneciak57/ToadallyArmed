@@ -9,6 +9,7 @@ import org.toadallyarmed.gameplay.GlobalGameState;
 import org.toadallyarmed.util.collision.GJK;
 import org.toadallyarmed.util.logger.Logger;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -21,7 +22,7 @@ public class CollisionSystem implements System {
     }
 
     @Override
-    public void tick(float deltaTime, ConcurrentLinkedQueue<Entity> entities) {
+    public void tick(float deltaTime, Collection<Entity> entities) {
         Logger.trace("CollisionSystem: tick");
         float currentNanoTime = java.lang.System.nanoTime();
         entities.stream()
@@ -47,8 +48,8 @@ public class CollisionSystem implements System {
                         otherEntity,
                         currentNanoTime
                     );
-                    for (ColliderActionEntry entry : colliderComponent.get().getEntries()) {
-                        for (ColliderActionEntry otherEntry : otherColliderComponent.get().getEntries()) {
+                    for (ColliderActionEntry entry : colliderComponent.get().entries()) {
+                        for (ColliderActionEntry otherEntry : otherColliderComponent.get().entries()) {
                             if (!entry.filter(otherEntity.type(), otherEntry.getColliderType())) continue;
                             boolean intersecting = GJK.intersects(
                                 entry.getShape()

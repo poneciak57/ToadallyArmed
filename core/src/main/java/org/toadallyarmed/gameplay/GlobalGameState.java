@@ -5,6 +5,7 @@ import org.toadallyarmed.config.GameConfig;
 import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.factory.HedgehogFactory;
 
+import java.util.Collection;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class GlobalGameState {
@@ -29,7 +30,7 @@ public class GlobalGameState {
 
     public HedgehogFactory getEnemyFactory() {return enemySpawner;}
 
-    public ConcurrentLinkedQueue<Entity> getEntities() {
+    public Collection<Entity> getEntities() {
         return entities;
     }
 }

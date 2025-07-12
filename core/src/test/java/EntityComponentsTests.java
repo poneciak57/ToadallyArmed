@@ -5,7 +5,7 @@ import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.entity.EntityType;
 import org.toadallyarmed.exception.NotBaseComponentException;
 
-import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -20,8 +20,8 @@ public class EntityComponentsTests {
 
     @Test
     public void testNotBaseComponent() {
-        List<Class<? extends Component>> components = BaseComponentsRegistry.BASE_COMPONENTS;
-        BaseComponentsRegistry.BASE_COMPONENTS = List.of();
+        Set<Class<? extends Component>> components = BaseComponentsRegistry.BASE_COMPONENTS;
+        BaseComponentsRegistry.BASE_COMPONENTS = Set.of();
         Entity e = new Entity(EntityType.OTHER);
         TestComponent1 c = new TestComponent1();
         assertThrows(NotBaseComponentException.class ,() -> e.put(TestComponent1.class, c));
@@ -30,8 +30,8 @@ public class EntityComponentsTests {
 
     @Test
     public void testSimpleCase() {
-        List<Class<? extends Component>> components = BaseComponentsRegistry.BASE_COMPONENTS;
-        BaseComponentsRegistry.BASE_COMPONENTS = List.of(Component.class);
+        Set<Class<? extends Component>> components = BaseComponentsRegistry.BASE_COMPONENTS;
+        BaseComponentsRegistry.BASE_COMPONENTS = Set.of(Component.class);
         Entity e = new Entity(EntityType.OTHER);
         Component c = new Component() {};
         e.put(Component.class, c);
@@ -42,8 +42,8 @@ public class EntityComponentsTests {
 
     @Test
     public void testMoreAdvancedCase() {
-        List<Class<? extends Component>> components = BaseComponentsRegistry.BASE_COMPONENTS;
-        BaseComponentsRegistry.BASE_COMPONENTS = List.of(TestComponent1.class, TestComponent2.class);
+        Set<Class<? extends Component>> components = BaseComponentsRegistry.BASE_COMPONENTS;
+        BaseComponentsRegistry.BASE_COMPONENTS = Set.of(TestComponent1.class, TestComponent2.class);
         Entity e = new Entity(EntityType.OTHER);
         TestComponent1 c1 = new TestComponent1();
         TestComponent2 c2 = new TestComponent2();
@@ -56,8 +56,8 @@ public class EntityComponentsTests {
 
     @Test
     public void testAdvancedCase() {
-        List<Class<? extends Component>> components = BaseComponentsRegistry.BASE_COMPONENTS;
-        BaseComponentsRegistry.BASE_COMPONENTS = List.of(SuperComponent.class);
+        Set<Class<? extends Component>> components = BaseComponentsRegistry.BASE_COMPONENTS;
+        BaseComponentsRegistry.BASE_COMPONENTS = Set.of(SuperComponent.class);
         Entity e = new Entity(EntityType.OTHER);
         TestSuperComponent1 c1 = new TestSuperComponent1();
         TestSuperComponent2 c2 = new TestSuperComponent2();

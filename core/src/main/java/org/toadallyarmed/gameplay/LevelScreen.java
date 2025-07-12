@@ -22,6 +22,7 @@ import org.toadallyarmed.system.SystemsManager;
 import org.toadallyarmed.util.Debugging;
 import org.toadallyarmed.util.logger.Logger;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -46,7 +47,7 @@ public class LevelScreen implements Screen {
     //--BUTTONS--//
     Rectangle buttonBoundsWizard, buttonBoundsBard, buttonBoundsKnight, buttonBoundsTank;
     FrogType bought=FrogType.NONE;
-    final ConcurrentLinkedQueue<Entity> entities;
+    final Collection<Entity> entities;
     final Set<Vector2> taken=new HashSet<>();
 
     public LevelScreen(Main main, GameConfig config) {
@@ -75,7 +76,7 @@ public class LevelScreen implements Screen {
         setButtons();
 
         if (Debugging.debuggingMode()) {
-            wallet.access().addAndGet(1000);
+            wallet.increase(1000);
         }
 
         Logger.info("Created a new gameplay screen successfully");
@@ -109,28 +110,28 @@ public class LevelScreen implements Screen {
         if (bought == FrogType.NONE && onButton) {//bought a frog
             if (hitWizard) {
                 int cost = config.wizardFrog().cost();
-                if (cost <= wallet.access().get()) {
+                if (cost <= wallet.currentMoney()) {
                     wallet.pay(cost);
                     Logger.info("Wizard bought");
                     bought = FrogType.WIZARD;
                 }
             } else if (hitBard) {
                 int cost = config.bardFrog().cost();
-                if (cost <= wallet.access().get()) {
+                if (cost <= wallet.currentMoney()) {
                     wallet.pay(cost);
                     Logger.info("Bard bought");
                     bought = FrogType.BARD;
                 }
             } else if (hitKnight) {
                 int cost = config.knightFrog().cost();
-                if (cost <= wallet.access().get()) {
+                if (cost <= wallet.currentMoney()) {
                     wallet.pay(cost);
                     Logger.info("Knight bought");
                     bought = FrogType.KNIGHT;
                 }
             } else {
                 int cost = config.tankFrog().cost();
-                if (cost <= wallet.access().get()) {
+                if (cost <= wallet.currentMoney()) {
                     wallet.pay(cost);
                     Logger.info("Tank bought");
                     bought = FrogType.TANK;
@@ -195,8 +196,7 @@ public class LevelScreen implements Screen {
                 }
             }
 
-        money = wallet.access();
-        pixelFont.draw(main.renderer.getSpriteBatch(), Integer.toString(money.get()), 1, 6);
+        pixelFont.draw(main.renderer.getSpriteBatch(), Integer.toString(wallet.currentMoney()), 1, 6);
         main.renderer.getSpriteBatch().end();
     }
 

@@ -17,6 +17,7 @@ import org.toadallyarmed.factory.*;
 import org.toadallyarmed.system.SystemsManager;
 import org.toadallyarmed.util.logger.Logger;
 
+import java.util.Collection;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class IntroScreen implements Screen {
@@ -32,7 +33,7 @@ public class IntroScreen implements Screen {
 
     //--BUTTONS--//
     Rectangle startButtonBounds;
-    final ConcurrentLinkedQueue<Entity> entities;
+    final Collection<Entity> entities;
 
 
     public IntroScreen(Main main) {

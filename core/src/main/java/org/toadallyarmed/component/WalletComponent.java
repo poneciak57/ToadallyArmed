@@ -11,8 +11,7 @@ public class WalletComponent implements Component {
         counter = new AtomicInteger(initialValue);
     }
 
-    public AtomicInteger access() {
-        return counter;
-    }
+    public int currentMoney() { return counter.get(); }
+    public void increase(int amount) { counter.addAndGet(amount); }
     public void pay(int amount) {counter.addAndGet(-amount);}
 }

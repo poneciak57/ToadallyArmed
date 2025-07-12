@@ -4,6 +4,7 @@ import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.util.logger.Logger;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.LockSupport;
@@ -12,14 +13,14 @@ public class SystemsManager {
     private final List<System> systems;
     private final float tickRate;
     private final ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-    private final ConcurrentLinkedQueue<Entity> entities;
+    private final Collection<Entity> entities;
 
     private volatile boolean running = false;
     private volatile boolean paused = false;
 
     private Thread tickThread;
 
-    SystemsManager(float tickRate, List<System> systems, ConcurrentLinkedQueue<Entity> entities) {
+    SystemsManager(float tickRate, List<System> systems, Collection<Entity> entities) {
         this.entities = entities;
         this.systems = systems;
         this.tickRate = tickRate;
@@ -119,7 +120,7 @@ public class SystemsManager {
             return this;
         }
 
-        public SystemsManager build(ConcurrentLinkedQueue<Entity> entities) {
+        public SystemsManager build(Collection<Entity> entities) {
             return new SystemsManager(tickRate, systems, entities);
         }
     }

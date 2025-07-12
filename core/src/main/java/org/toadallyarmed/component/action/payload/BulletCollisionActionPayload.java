@@ -12,9 +12,6 @@ public record BulletCollisionActionPayload (
     public static final PayloadExtractor<BulletCollisionActionPayload, BasicCollisionActionPayload> EXTRACTOR = basicCollisionActionPayload -> {
         Entity other = basicCollisionActionPayload.other();
         var healthComponentOpt = other.get(HealthComponent.class);
-        if (healthComponentOpt.isEmpty())
-            return Optional.empty();
-        else
-            return Optional.of(new BulletCollisionActionPayload(healthComponentOpt.get()));
+        return healthComponentOpt.map(BulletCollisionActionPayload::new);
     };
 }

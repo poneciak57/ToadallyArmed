@@ -2,7 +2,8 @@ import org.junit.Test;
 import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.system.System;
 import org.toadallyarmed.system.SystemsManager;
-import java.util.concurrent.ConcurrentLinkedQueue;
+
+import java.util.Collection;
 
 import static org.junit.Assert.assertEquals;
 
@@ -11,7 +12,7 @@ public class SystemsManagerTests {
         public int counter = 0;
 
         @Override
-        public void tick(float deltaTime, ConcurrentLinkedQueue<Entity> __) {
+        public void tick(float deltaTime, Collection<Entity> __) {
             counter++;
         }
     }
@@ -20,7 +21,7 @@ public class SystemsManagerTests {
         public int counter = 0;
 
         @Override
-        public void tick(float deltaTime, ConcurrentLinkedQueue<Entity> __) {
+        public void tick(float deltaTime, Collection<Entity> __) {
             counter++;
             try {
                 Thread.sleep(500);
@@ -33,7 +34,7 @@ public class SystemsManagerTests {
     public static class TestRenderSystem implements System {
         public int counter = 0;
         @Override
-        public void tick(float deltaTime, ConcurrentLinkedQueue<Entity> __) {
+        public void tick(float deltaTime, Collection<Entity> __) {
             counter++;
         }
     }

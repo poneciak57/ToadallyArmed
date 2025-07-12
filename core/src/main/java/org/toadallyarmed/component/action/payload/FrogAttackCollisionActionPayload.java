@@ -9,13 +9,14 @@ import org.toadallyarmed.state.FrogState;
 import org.toadallyarmed.util.StateMachine;
 import org.toadallyarmed.util.action.PayloadExtractor;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public record FrogAttackCollisionActionPayload(
     Vector2 pos,
     StateMachine<FrogState> stateMachine,
-    ConcurrentLinkedQueue<Entity> entities
+    Collection<Entity> entities
 ) {
     public static final PayloadExtractor<FrogAttackCollisionActionPayload, BasicCollisionActionPayload> EXTRACTOR =
         basicCollisionActionPayload -> {

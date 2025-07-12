@@ -58,7 +58,7 @@ public class Test1Screen implements Screen {
         entities.add(frogFactory.createWizardFrog(new Vector2(0, 1), config.wizardFrog()));
         entities.add(frogFactory.createWizardFrog(new Vector2(0, 0), config.wizardFrog()));
 
-        wallet.access().addAndGet(1000);
+        wallet.increase(1000);
 
         Logger.info("Created a new gameplay screen successfully");
     }

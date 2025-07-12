@@ -4,10 +4,10 @@ import org.toadallyarmed.component.ColliderComponent;
 import org.toadallyarmed.component.HeadgehogAttackTimerComponent;
 import org.toadallyarmed.component.HealthComponent;
 
-import java.util.List;
+import java.util.Set;
 
 public class BaseComponentsRegistry {
-    public static List<Class<? extends Component>> BASE_COMPONENTS = List.of(
+    public static Set<Class<? extends Component>> BASE_COMPONENTS = Set.of(
         StateComponent.class,
         RenderableComponent.class,
         TransformComponent.class,

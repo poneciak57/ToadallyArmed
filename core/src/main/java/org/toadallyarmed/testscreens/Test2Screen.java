@@ -59,7 +59,7 @@ public class Test2Screen implements Screen {
             Vector2 pos = new Vector2(11.f + 0.01f * i, ThreadLocalRandom.current().nextInt(0, 5));
             entities.add(hedgehogFactory.createHealthyHedgehog(pos, config.healthyHedgehog()));
         }
-        wallet.access().addAndGet(1000);
+        wallet.increase(1000);
 
         Logger.info("Created a new gameplay screen successfully");
     }

@@ -7,6 +7,7 @@ import org.toadallyarmed.entity.EntityType;
 import org.toadallyarmed.util.logger.Logger;
 import org.toadallyarmed.util.rendering.Renderer;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -18,7 +19,7 @@ public class RenderingSystem implements System {
     }
 
     @Override
-    public void tick(float deltaTime, ConcurrentLinkedQueue<Entity> entities) {
+    public void tick(float deltaTime, Collection<Entity> entities) {
         Logger.trace("RenderingSystem: tick");
         float currentNanoTime = java.lang.System.nanoTime();
         entities.stream()

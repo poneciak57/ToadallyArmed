@@ -4,6 +4,7 @@ import org.toadallyarmed.component.WalletComponent;
 import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.util.logger.Logger;
 
+import java.util.Collection;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class GlobalIncomeSystem implements System {
@@ -16,8 +17,8 @@ public class GlobalIncomeSystem implements System {
     }
 
     @Override
-    public void tick(float deltaTime, ConcurrentLinkedQueue<Entity> entities) {
+    public void tick(float deltaTime, Collection<Entity> entities) {
         Logger.trace("GlobalIncomeSystem: tick");
-        globalWallet.access().addAndGet(globalIncomeDelta);
+        globalWallet.increase(globalIncomeDelta);
     }
 }

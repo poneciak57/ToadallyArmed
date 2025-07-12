@@ -7,6 +7,7 @@ import org.toadallyarmed.entity.EntityType;
 import org.toadallyarmed.factory.HedgehogFactory;
 import org.toadallyarmed.util.logger.Logger;
 
+import java.util.Collection;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -25,7 +26,7 @@ public class EnemySpawnerSystem implements System {
     }
 
     @Override
-    public void tick(float deltaTime, ConcurrentLinkedQueue<Entity> entities) {
+    public void tick(float deltaTime, Collection<Entity> entities) {
         if (first) {
             first=false;
             return;
