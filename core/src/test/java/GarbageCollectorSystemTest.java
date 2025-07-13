@@ -1,13 +1,13 @@
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
-import org.toadallyarmed.component.BasicStateComponent;
-import org.toadallyarmed.component.HealthComponent;
-import org.toadallyarmed.component.interfaces.StateComponent;
-import org.toadallyarmed.entity.Entity;
-import org.toadallyarmed.entity.EntityType;
-import org.toadallyarmed.system.GarbageCollectorSystem;
-import org.toadallyarmed.util.StateMachine;
+import org.toadallyarmed.base.state.BasicStateComponent;
+import org.toadallyarmed.base.health.HealthComponent;
+import org.toadallyarmed.base.state.StateComponent;
+import org.toadallyarmed.base.entity.Entity;
+import org.toadallyarmed.base.entity.EntityType;
+import org.toadallyarmed.base.system.GarbageCollectorSystem;
+import org.toadallyarmed.util.state.StateMachine;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;

@@ -1,9 +1,9 @@
 import org.junit.Test;
-import org.toadallyarmed.component.interfaces.BaseComponentsRegistry;
-import org.toadallyarmed.component.interfaces.Component;
-import org.toadallyarmed.entity.Entity;
-import org.toadallyarmed.entity.EntityType;
-import org.toadallyarmed.exception.NotBaseComponentException;
+import org.toadallyarmed.base.component.BaseComponentsRegistry;
+import org.toadallyarmed.base.component.Component;
+import org.toadallyarmed.base.entity.Entity;
+import org.toadallyarmed.base.entity.EntityType;
+import org.toadallyarmed.util.exception.NotBaseComponentException;
 
 import java.util.Set;
 

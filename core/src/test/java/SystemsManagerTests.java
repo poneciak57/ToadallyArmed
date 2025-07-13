@@ -1,7 +1,7 @@
 import org.junit.Test;
-import org.toadallyarmed.entity.Entity;
-import org.toadallyarmed.system.System;
-import org.toadallyarmed.system.SystemsManager;
+import org.toadallyarmed.base.entity.Entity;
+import org.toadallyarmed.base.system.System;
+import org.toadallyarmed.base.system.SystemsManager;
 
 import java.util.Collection;
 

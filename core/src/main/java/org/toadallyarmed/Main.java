@@ -5,17 +5,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import org.toadallyarmed.config.GameConfig;
-import org.toadallyarmed.factory.DifficultyFactory;
-import org.toadallyarmed.gameplay.IntroScreen;
-import org.toadallyarmed.gameplay.LevelScreen;
-import org.toadallyarmed.system.RenderingSystem;
-import org.toadallyarmed.testscreens.Test2Screen;
-import org.toadallyarmed.util.Debugging;
-import org.toadallyarmed.util.rendering.Renderer;
-import org.toadallyarmed.util.logger.LogLevel;
-import org.toadallyarmed.util.logger.Logger;
-import org.toadallyarmed.util.logger.TerminalLoggerBackend;
+import org.toadallyarmed.scene.gameplay.GameConfig;
+import org.toadallyarmed.scene.gameplay.DifficultyFactory;
+import org.toadallyarmed.scene.menu.IntroScreen;
+import org.toadallyarmed.scene.gameplay.LevelScreen;
+import org.toadallyarmed.base.render.RenderingSystem;
+import org.toadallyarmed.scene.test.Test2Screen;
+import org.toadallyarmed.util.debug.Debugging;
+import org.toadallyarmed.util.render.Renderer;
+import org.toadallyarmed.util.log.LogLevel;
+import org.toadallyarmed.util.log.Logger;
+import org.toadallyarmed.util.log.TerminalLoggerBackend;
 
 import java.util.List;
 

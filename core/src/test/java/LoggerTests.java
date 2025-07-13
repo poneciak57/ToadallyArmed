@@ -1,7 +1,7 @@
 import org.junit.Test;
-import org.toadallyarmed.util.logger.LogLevel;
-import org.toadallyarmed.util.logger.Logger;
-import org.toadallyarmed.util.logger.TerminalLoggerBackend;
+import org.toadallyarmed.util.log.LogLevel;
+import org.toadallyarmed.util.log.Logger;
+import org.toadallyarmed.util.log.TerminalLoggerBackend;
 
 import java.lang.reflect.Field;
 import java.util.List;

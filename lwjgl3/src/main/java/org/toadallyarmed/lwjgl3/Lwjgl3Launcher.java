@@ -3,7 +3,7 @@ package org.toadallyarmed.lwjgl3;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import org.toadallyarmed.Main;
-import org.toadallyarmed.util.Debugging;
+import org.toadallyarmed.util.debug.Debugging;
 
 /** Launches the desktop (LWJGL3) application. */
 public class Lwjgl3Launcher {
