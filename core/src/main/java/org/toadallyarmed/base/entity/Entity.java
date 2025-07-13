@@ -54,7 +54,7 @@ public class Entity {
 
     public void assertNotMarkedForRemoval() {
         if (isMarkedForRemoval()) {
-            Logger.error("Illegal usage of marked-for-removal entity!");
+            Logger.warn("Illegal usage of marked-for-removal entity!");
         }
     }
 

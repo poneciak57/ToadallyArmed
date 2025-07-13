@@ -42,6 +42,7 @@ public class RenderingSystem implements System {
                     transformB.getAdvancedPosition(currentNanoTime).y,
                     transformA.getAdvancedPosition(currentNanoTime).y);
             })
+            .filter(Entity::isActive)
             .map(entity -> entity.get(RenderableComponent.class))
             .filter(Optional::isPresent)
             .map(Optional::get)
