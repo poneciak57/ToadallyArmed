@@ -46,7 +46,7 @@ public class Main extends Game {
         } else {
             setScreen(new IntroScreen(this));
         }
-        backgroundMusic=Gdx.audio.newMusic(Gdx.files.internal("GameScreen/backgroundMusic.mp3"));
+        backgroundMusic=Gdx.audio.newMusic(Gdx.files.internal("assets/Scenes/backgroundMusic.mp3"));
         backgroundMusic.setLooping(true);
         backgroundMusic.setVolume(0.5f);
         backgroundMusic.play();

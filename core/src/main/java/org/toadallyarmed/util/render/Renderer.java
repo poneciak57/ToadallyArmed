@@ -1,7 +1,6 @@
 package org.toadallyarmed.util.render;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Disposable;
@@ -9,13 +8,11 @@ import org.toadallyarmed.util.log.Logger;
 
 public class Renderer implements Disposable {
     private final SpriteBatch spriteBatch;
-    private final Color defaultColor;
     private final ShaderProgram defaultShader;
-    private ShaderProgram hurtEffectShader;
+    private ShaderProgram aliveEntityShader;
 
     public Renderer() {
         this.spriteBatch = new SpriteBatch();
-        this.defaultColor = Color.WHITE;
         this.defaultShader = spriteBatch.getShader();
 
         setupShaders();
@@ -25,31 +22,27 @@ public class Renderer implements Disposable {
         return spriteBatch;
     }
 
-    public Color getDefaultColor() {
-        return defaultColor;
-    }
-
     public ShaderProgram getDefaultShader() {
         return defaultShader;
     }
 
-    public ShaderProgram getHurtEffectShader() {
-        return hurtEffectShader;
+    public ShaderProgram getAliveEntityShader() {
+        return aliveEntityShader;
     }
 
     @Override
     public void dispose() {
         spriteBatch.dispose();
-        hurtEffectShader.dispose();
+        aliveEntityShader.dispose();
     }
 
     private void setupShaders() {
-        hurtEffectShader = new ShaderProgram(
-            Gdx.files.internal("GameScreen/Shaders/AliveEntity/AliveEntity.vert"),
-            Gdx.files.internal("GameScreen/Shaders/AliveEntity/AliveEntity.frag")
+        aliveEntityShader = new ShaderProgram(
+            Gdx.files.internal("assets/AliveEntity/AliveEntity.vert"),
+            Gdx.files.internal("assets/AliveEntity/AliveEntity.frag")
         );
-        if (!hurtEffectShader.isCompiled()) {
-            Logger.error("Could not compile fragment shader: " + hurtEffectShader.getLog());
+        if (!aliveEntityShader.isCompiled()) {
+            Logger.error("Could not compile fragment shader: " + aliveEntityShader.getLog());
         }
     }
 }

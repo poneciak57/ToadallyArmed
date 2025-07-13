@@ -24,7 +24,7 @@ public class FrogIntroScreen implements Screen {
         viewport = new FitViewport(10.66F, 6);
         this.main.updateFontScale(viewport);
 
-        backgroundTexture = new Texture("GameScreen/frog_intro_background.jpg");
+        backgroundTexture = new Texture("assets/Scenes/frog_intro_background.jpg");
         setButtons();
 
         Logger.info("Created a new gameplay screen successfully");

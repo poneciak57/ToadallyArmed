@@ -29,7 +29,7 @@ public class LevelChoosingScreen implements Screen {
         viewport = new FitViewport(10.66F, 6);
         this.main.updateFontScale(viewport);
 
-        backgroundTexture = new Texture("GameScreen/level_choosing_background.jpg");
+        backgroundTexture = new Texture("assets/Scenes/level_choosing_background.jpg");
         setButtons();
 
         Logger.info("Created a level choosing screen successfully");

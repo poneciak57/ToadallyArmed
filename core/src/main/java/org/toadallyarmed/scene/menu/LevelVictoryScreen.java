@@ -24,7 +24,7 @@ public class LevelVictoryScreen implements Screen {
 
         viewport = new FitViewport(10.66F, 6);
         this.main.updateFontScale(viewport);
-        backgroundTexture = new Texture("GameScreen/level_victory_background.jpg");
+        backgroundTexture = new Texture("assets/Scenes/level_victory_background.jpg");
         startButtonBounds =new Rectangle(4f, 1, 3, 1);
 
         Logger.info("Created a new gameplay screen successfully");

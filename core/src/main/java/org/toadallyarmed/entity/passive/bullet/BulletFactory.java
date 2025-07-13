@@ -43,7 +43,7 @@ public class BulletFactory implements Disposable {
     private BulletFactory(){
         Logger.trace("Initializing BulletFactory");
 
-        fireballTexture  = new Texture("GameScreen/Fireball/fireball.png");
+        fireballTexture  = new Texture("assets/Fireball/fireball.png");
         bulletAnimatedStateSprite = createAnimatedStateSprite(false);
         fireballAnimatedStateSprite=createAnimatedStateSprite(true);
         Logger.debug("Initialized BulletFactory successfully");
@@ -96,7 +96,7 @@ public class BulletFactory implements Disposable {
     private AnimatedStateSprite<BasicEntityState> createAnimatedStateSprite(boolean real) {
         Map<BasicEntityState, AnimatedSprite> animatedSprites = new HashMap<>();
 
-        if (real) animatedSprites.put(BasicEntityState.IDLE, animationFactory.Animation(fireballTexture, 0, 0, 5));
+        if (real) animatedSprites.put(BasicEntityState.IDLE, animationFactory.animation(fireballTexture, 0, 0, 5));
         else animatedSprites.put(BasicEntityState.IDLE, AnimatedSprite.empty());
         animatedSprites.put(BasicEntityState.NONEXISTENT, AnimatedSprite.empty());
 

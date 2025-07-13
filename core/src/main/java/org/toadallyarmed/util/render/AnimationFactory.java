@@ -22,7 +22,7 @@ public class AnimationFactory {
         reverse=config.reversed();
     }
 
-    public AnimatedSprite Animation(Texture texture, int index, int from, int to){
+    public AnimatedSprite animation(Texture texture, int index, int from, int to){
         TextureRegion[][] framesGrid;
         TextureRegion[] frames;
         Animation<TextureRegion> animation;

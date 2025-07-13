@@ -45,7 +45,7 @@ public class IntroScreen implements Screen {
         viewport = new FitViewport(10.66F, 6);
         this.main.updateFontScale(viewport);
 
-        backgroundTexture = new Texture("GameScreen/intro_background.jpg");
+        backgroundTexture = new Texture("assets/Scenes/intro_background.jpg");
 
         frogFactory = FrogFactory.get();
         gameState = new GlobalGameState(

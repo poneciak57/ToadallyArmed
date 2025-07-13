@@ -35,7 +35,7 @@ public class AliveEntityTextureRenderer implements TextureRenderer {
     @Override
     public void draw(TextureRegion region, float x, float y, float width, float height) {
         SpriteBatch spriteBatch = renderer.getSpriteBatch();
-        ShaderProgram shader = renderer.getHurtEffectShader();
+        ShaderProgram shader = renderer.getAliveEntityShader();
 
         spriteBatch.setShader(shader);
         shader.setUniformf("hurtRatio", hurtRatio);

@@ -48,10 +48,10 @@ public class HedgehogFactory implements Disposable {
     private HedgehogFactory() {
         Logger.trace("Initializing HedgehogFactory");
 
-        basicHedgehogTexture    = new Texture("GameScreen/Hedgehogs/basicHedgehog.png");
-        fastHedgehogTexture     = new Texture("GameScreen/Hedgehogs/fastHedgehog.png");
-        strongHedgehogTexture   = new Texture("GameScreen/Hedgehogs/strongHedgehog.png");
-        healthyHedgehogTexture  = new Texture("GameScreen/Hedgehogs/healthyHedgehog.png");
+        basicHedgehogTexture    = new Texture("assets/Hedgehogs/basicHedgehog.png");
+        fastHedgehogTexture     = new Texture("assets/Hedgehogs/fastHedgehog.png");
+        strongHedgehogTexture   = new Texture("assets/Hedgehogs/strongHedgehog.png");
+        healthyHedgehogTexture  = new Texture("assets/Hedgehogs/healthyHedgehog.png");
 
         basicHedgehogAnimatedStateSprite   = createAnimatedStateSprite(basicHedgehogTexture);
         fastHedgehogAnimatedStateSprite    = createAnimatedStateSprite(fastHedgehogTexture);
@@ -151,10 +151,10 @@ public class HedgehogFactory implements Disposable {
 
     private AnimatedStateSprite<HedgehogState> createAnimatedStateSprite(Texture texture) {
         Map<HedgehogState, AnimatedSprite> animatedSprites = new HashMap<>();
-        animatedSprites.put(HedgehogState.IDLE, AnimationFactory.Animation(texture, 0, 4, 6));
-        animatedSprites.put(HedgehogState.WALKING, AnimationFactory.Animation(texture, 1, 0, 6));
-        animatedSprites.put(HedgehogState.ACTION, AnimationFactory.Animation(texture, 0, 4, 6));
-        animatedSprites.put(HedgehogState.DYING, AnimationFactory.Animation(texture, 3, 1, 6));
+        animatedSprites.put(HedgehogState.IDLE, AnimationFactory.animation(texture, 0, 4, 6));
+        animatedSprites.put(HedgehogState.WALKING, AnimationFactory.animation(texture, 1, 0, 6));
+        animatedSprites.put(HedgehogState.ACTION, AnimationFactory.animation(texture, 0, 4, 6));
+        animatedSprites.put(HedgehogState.DYING, AnimationFactory.animation(texture, 3, 1, 6));
         animatedSprites.put(HedgehogState.NONEXISTENT, AnimatedSprite.empty());
 
         return new AnimatedStateSprite<>(animatedSprites);

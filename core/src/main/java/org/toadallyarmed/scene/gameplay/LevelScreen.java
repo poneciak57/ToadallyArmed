@@ -59,7 +59,7 @@ public class LevelScreen implements Screen {
         viewport = new FitViewport(10.66F, 6);
         this.main.updateFontScale(viewport);
 
-        backgroundTexture = new Texture("GameScreen/level_background.jpg");
+        backgroundTexture = new Texture("assets/Scenes/level_background.jpg");
 
         frogFactory = FrogFactory.get();
         coinFactory = CoinFactory.get();
@@ -84,7 +84,7 @@ public class LevelScreen implements Screen {
     }
     private void setFonts(){
         font=new BitmapFont();
-        pixelFont=new BitmapFont(Gdx.files.internal("GameScreen/Fonts/font.fnt"));
+        pixelFont=new BitmapFont(Gdx.files.internal("assets/Fonts/font.fnt"));
         float targetFontHeight = 0.7F;
         float scale = targetFontHeight/pixelFont.getCapHeight();
         pixelFont.getData().setScale(scale);
@@ -232,6 +232,8 @@ public class LevelScreen implements Screen {
         Logger.info("disposing a gameplay screen");
         // Destroy screen's assets here.
         backgroundTexture.dispose();
+        pixelFont.dispose();
+        font.dispose();
         systemsManager.stop();
     }
 }

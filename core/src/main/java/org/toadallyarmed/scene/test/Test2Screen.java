@@ -35,7 +35,7 @@ public class Test2Screen implements Screen {
         viewport = new FitViewport(10.66F, 6);
         this.main.updateFontScale(viewport);
 
-        backgroundTexture = new Texture("GameScreen/level_background.jpg");
+        backgroundTexture = new Texture("assets/Scenes/level_background.jpg");
 
         final var frogFactory = FrogFactory.get();
         gameState = new GlobalGameState(

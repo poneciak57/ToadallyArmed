@@ -24,7 +24,7 @@ public class StoryScreen implements Screen {
         viewport = new FitViewport(10.66F, 6);
         this.main.updateFontScale(viewport);
 
-        backgroundTexture = new Texture("GameScreen/story_background.jpg");
+        backgroundTexture = new Texture("assets/Scenes/story_background.jpg");
         setButtons();
 
         Logger.info("Created a new gameplay screen successfully");

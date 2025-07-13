@@ -36,7 +36,7 @@ public class CoinFactory implements Disposable {
     private CoinFactory() {
         Logger.trace("Initializing CoinFactory");
 
-        coinTexture  = new Texture("GameScreen/Coins/coin.png");
+        coinTexture  = new Texture("assets/Coins/coin.png");
         coinAnimatedStateSprite = createAnimatedStateSprite(coinTexture);
         specialCoinAnimatedStateSprite = createSpecialAnimatedStateSprite(coinTexture);
 
@@ -77,14 +77,14 @@ public class CoinFactory implements Disposable {
 
     private AnimatedStateSprite<BasicEntityState> createAnimatedStateSprite(Texture texture) {
         Map<BasicEntityState, AnimatedSprite> animatedSprites=new HashMap<>();
-        animatedSprites.put(BasicEntityState.IDLE, coinAnimationFactory.Animation(texture, 0, 0, 6));
+        animatedSprites.put(BasicEntityState.IDLE, coinAnimationFactory.animation(texture, 0, 0, 6));
         animatedSprites.put(BasicEntityState.NONEXISTENT, AnimatedSprite.empty());
         return new AnimatedStateSprite<>(animatedSprites);
     }
 
     private AnimatedStateSprite<BasicEntityState> createSpecialAnimatedStateSprite(Texture texture) {
         Map<BasicEntityState, AnimatedSprite> animatedSprites = new HashMap<>();
-        animatedSprites.put(BasicEntityState.IDLE, specialCoinAnimationFactory.Animation(texture, 0, 0, 6));
+        animatedSprites.put(BasicEntityState.IDLE, specialCoinAnimationFactory.animation(texture, 0, 0, 6));
         animatedSprites.put(BasicEntityState.NONEXISTENT, AnimatedSprite.empty());
         return new AnimatedStateSprite<>(animatedSprites);
     }
