@@ -120,7 +120,7 @@ public class HedgehogFactory implements Disposable {
                     config.action_speed(),
                     new BasicColliderActionEntry(
                         new RectangleShape(1f, 0.5f, 0.0f, -0.25f),
-                        new HeadgehogAttackCollisionAction(config.damage()),
+                        new HedgehogAttackCollisionActionPerformer(config.damage()),
                         ColliderType.ACTION,
                         (otherType, otherColliderType) ->
                             otherType.equals(EntityType.FROG) && otherColliderType.equals(ColliderType.ENTITY)
@@ -129,7 +129,7 @@ public class HedgehogFactory implements Disposable {
             )
         );
         var timerAction = new HeadgehogAttackTimerComponent();
-        var actionReset = new HeadgehogAttackResetAction(
+        var actionReset = new HedgehogAttackResetActionPerformer(
             (long) (1_000_000_000 * config.action_speed() * 1.2),
                 new Vector2(config.speed(), 0)
         );

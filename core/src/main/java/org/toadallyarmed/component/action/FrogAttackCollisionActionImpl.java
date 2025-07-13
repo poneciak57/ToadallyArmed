@@ -1,22 +1,27 @@
 package org.toadallyarmed.component.action;
 
 import com.badlogic.gdx.math.Vector2;
-import org.toadallyarmed.component.action.payload.BasicCollisionActionPayload;
-import org.toadallyarmed.component.action.payload.FrogAttackCollisionActionPayload;
 import org.toadallyarmed.component.interfaces.TransformComponent;
 import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.state.FrogState;
+import org.toadallyarmed.util.StateMachine;
 import org.toadallyarmed.util.action.Action;
-import org.toadallyarmed.util.action.PayloadExtractor;
 import org.toadallyarmed.util.logger.Logger;
 
+import java.util.Collection;
 import java.util.function.Function;
 
-public class FrogAttackCollisionAction implements Action<FrogAttackCollisionActionPayload, BasicCollisionActionPayload> {
+record FrogAttackCollisionActionPayload(
+    Vector2 pos,
+    StateMachine<FrogState> stateMachine,
+    Collection<Entity> entities
+) {
+}
 
+class FrogAttackCollisionActionImpl implements Action<FrogAttackCollisionActionPayload> {
     private final Function<Vector2, Entity> bulletProduce;
 
-    public FrogAttackCollisionAction(Function<Vector2, Entity> bulletProducer) {
+    public FrogAttackCollisionActionImpl(Function<Vector2, Entity> bulletProducer) {
         this.bulletProduce = bulletProducer;
     }
 
@@ -27,15 +32,10 @@ public class FrogAttackCollisionAction implements Action<FrogAttackCollisionActi
             var pos = bullet.get(TransformComponent.class);
             float currentNano = java.lang.System.nanoTime();
             /// We need to shift spawn origin of bullet to make it spawn in fron of a frog for better UI
-            if (pos.isEmpty()) Logger.error("Bullet has no position at FrogAttackCollisionAction");
+            if (pos.isEmpty()) Logger.error("Bullet has no position at FrogAttackCollisionActionPerformer");
             else pos.get().setPosition(pos.get().getAdvancedPosition(currentNano), currentNano);
 
             payload.entities().add(bullet);
         });
-    }
-
-    @Override
-    public PayloadExtractor<FrogAttackCollisionActionPayload, BasicCollisionActionPayload> extractor() {
-        return FrogAttackCollisionActionPayload.EXTRACTOR;
     }
 }

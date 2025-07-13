@@ -5,14 +5,14 @@ import org.toadallyarmed.component.interfaces.ActionComponent;
 import org.toadallyarmed.util.action.Action;
 
 public class SingleActionComponent implements ActionComponent {
-    private final Action<?, BasicActionPayload> action;
+    private final Action<BasicActionPayload> action;
 
-    public SingleActionComponent(Action<?, BasicActionPayload> action) {
+    public SingleActionComponent(Action<BasicActionPayload> action) {
         this.action = action;
     }
 
     @Override
     public void run(float deltaTime, BasicActionPayload rawPayload) {
-        action.extract_run(rawPayload);
+        action.run(rawPayload);
     }
 }

@@ -1,22 +1,32 @@
 package org.toadallyarmed.component.action;
 
 import org.toadallyarmed.component.BasicStateComponent;
-import org.toadallyarmed.component.action.payload.BardActionPayload;
-import org.toadallyarmed.component.action.payload.BasicActionPayload;
+import org.toadallyarmed.component.WalletComponent;
 import org.toadallyarmed.component.interfaces.StateComponent;
+import org.toadallyarmed.component.interfaces.TransformComponent;
 import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.factory.CoinFactory;
 import org.toadallyarmed.state.BasicEntityState;
 import org.toadallyarmed.state.FrogState;
 import org.toadallyarmed.util.StateMachine;
 import org.toadallyarmed.util.action.Action;
-import org.toadallyarmed.util.action.PayloadExtractor;
 
+import java.util.Collection;
 
-public class BardAction implements Action<BardActionPayload, BasicActionPayload> {
+record BardActionPayload(
+    TransformComponent pos,
+    StateMachine<FrogState> stateMachine,
+    Collection<Entity> entities,
+    WalletComponent walletComponent,
+    int bardIncomeDelta
+) {
+}
+
+class BardActionImpl implements Action<BardActionPayload> {
     boolean firstTime = true;
-    @Override
+
     @SuppressWarnings("deprecated")
+    @Override
     public void run(BardActionPayload payload) {
         if (!firstTime){
             payload.stateMachine().setNextTmpState(FrogState.IDLE, FrogState.HOP, () -> {
@@ -32,10 +42,5 @@ public class BardAction implements Action<BardActionPayload, BasicActionPayload>
             });
         }
         firstTime = false;
-    }
-
-    @Override
-    public PayloadExtractor<BardActionPayload, BasicActionPayload> extractor() {
-        return BardActionPayload.EXTRACTOR;
     }
 }

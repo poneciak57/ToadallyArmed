@@ -72,7 +72,7 @@ public class FrogFactory implements Disposable {
                 config.action_speed(),
                 new BasicColliderActionEntry(
                     new RectangleShape(config.attackRange(), TILE_HEIGHT / 2, 0.f, -TILE_HEIGHT / 4),
-                    new FrogAttackCollisionAction(
+                    new FrogAttackCollisionActionPerformer(
                         vector2 -> BulletFactory.get().createBullet(
                             vector2.add(config.bulletConfig().offsetX(), config.bulletConfig().offsetY()),
                             config.bulletConfig().speed(),
@@ -92,7 +92,7 @@ public class FrogFactory implements Disposable {
         var entity= createFrog(bardFrogAnimatedStateSprite, pos, config, new ArrayList<>());
 
         entity.put(ActionComponent.class, new ThrottledActionComponent(
-            config.action_speed(), new BardAction()
+            config.action_speed(), new BardActionPerformer()
         ));
 
         return entity;
@@ -104,7 +104,7 @@ public class FrogFactory implements Disposable {
                 config.action_speed(),
                 new BasicColliderActionEntry(
                     new RectangleShape(config.attackRange(), TILE_HEIGHT / 2, 0.f, -TILE_HEIGHT / 4),
-                    new FrogAttackCollisionAction(
+                    new FrogAttackCollisionActionPerformer(
                         vector2 -> BulletFactory.get().createFireball(
                             vector2.add(config.bulletConfig().offsetX(), config.bulletConfig().offsetY()),
                             config.bulletConfig().speed(),

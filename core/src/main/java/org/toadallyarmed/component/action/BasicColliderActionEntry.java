@@ -10,14 +10,14 @@ import org.toadallyarmed.component.interfaces.ColliderActionEntry;
 
 public class BasicColliderActionEntry implements ColliderActionEntry {
     private final ConvexShape shape;
-    private final Action<?, BasicCollisionActionPayload> action;
+    private final Action<BasicCollisionActionPayload> action;
     private final ColliderType colliderType;
     private final CollisionActionFilter collisionActionFilter;
 
 
     public BasicColliderActionEntry(
         ConvexShape shape,
-        Action<?, BasicCollisionActionPayload> action,
+        Action<BasicCollisionActionPayload> action,
         ColliderType colliderType,
         CollisionActionFilter collisionActionFilter
     ) {
@@ -44,6 +44,6 @@ public class BasicColliderActionEntry implements ColliderActionEntry {
 
     @Override
     public void run(float currentNano, BasicCollisionActionPayload payload) {
-        action.extract_run(payload);
+        action.run(payload);
     }
 }

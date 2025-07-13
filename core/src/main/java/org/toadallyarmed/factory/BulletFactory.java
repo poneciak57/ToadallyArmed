@@ -9,7 +9,7 @@ import org.toadallyarmed.component.ColliderComponent;
 import org.toadallyarmed.component.WorldTransformComponent;
 import org.toadallyarmed.component.action.BasicColliderActionEntry;
 import org.toadallyarmed.component.action.BasicCollisionActionFilter;
-import org.toadallyarmed.component.action.BulletCollisionAction;
+import org.toadallyarmed.component.action.BulletCollisionActionPerformer;
 import org.toadallyarmed.component.interfaces.ColliderType;
 import org.toadallyarmed.state.BasicEntityState;
 import org.toadallyarmed.component.interfaces.RenderableComponent;
@@ -76,7 +76,7 @@ public class BulletFactory implements Disposable {
             List.of(
                 new BasicColliderActionEntry(
                     new RectangleShape(TILE_WIDTH/2, TILE_HEIGHT/2, -TILE_WIDTH/4, -TILE_HEIGHT/4),
-                    new BulletCollisionAction(damage, entity.getMarkForRemovalRunnable()),
+                    new BulletCollisionActionPerformer(damage, entity.getMarkForRemovalRunnable()),
                     ColliderType.ACTION,
                     new BasicCollisionActionFilter(targetEntityType, ColliderType.ENTITY)
                 )

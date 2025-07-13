@@ -1,26 +1,18 @@
-package org.toadallyarmed.component.action.payload;
+package org.toadallyarmed.component.action;
 
 import org.toadallyarmed.component.AliveEntityStateComponent;
-import org.toadallyarmed.component.WalletComponent;
+import org.toadallyarmed.component.action.payload.BasicActionPayload;
 import org.toadallyarmed.component.interfaces.StateComponent;
 import org.toadallyarmed.component.interfaces.TransformComponent;
-import org.toadallyarmed.entity.Entity;
 import org.toadallyarmed.state.FrogState;
-import org.toadallyarmed.util.StateMachine;
+import org.toadallyarmed.util.action.ActionAdapter;
 import org.toadallyarmed.util.action.PayloadExtractor;
 
-import java.util.Collection;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
-public record BardActionPayload(
-    TransformComponent pos,
-    StateMachine<FrogState> stateMachine,
-    Collection<Entity> entities,
-    WalletComponent walletComponent,
-    int bardIncomeDelta
-) {
-    public static final PayloadExtractor<BardActionPayload, BasicActionPayload> EXTRACTOR = rawPayload -> {
+public class BardActionPerformer extends ActionAdapter<BardActionPayload, BasicActionPayload> {
+    static final PayloadExtractor<BardActionPayload, BasicActionPayload>
+        EXTRACTOR = rawPayload -> {
         var pos= rawPayload.entity().get(TransformComponent.class);
         var stateComponent = rawPayload.entity().get(StateComponent.class);
         if (stateComponent.isEmpty()) return Optional.empty();
@@ -35,4 +27,8 @@ public record BardActionPayload(
             rawPayload.gameState().getGameConfig().bardFrog().damage()
         ));
     };
+
+    public BardActionPerformer() {
+        super(new BardActionImpl(), EXTRACTOR);
+    }
 }
