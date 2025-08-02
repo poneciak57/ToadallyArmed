@@ -47,15 +47,19 @@ public class LevelChoosingScreen implements Screen {
         if (clicked){
             Logger.info("Clicked");
             GameConfig config=DifficultyFactory.defaultGameConfig();
-            if (easyButtonBounds.contains(touchPos.x, touchPos.y))
-                config=DifficultyFactory.easy();
-            else if (mediumButtonBounds.contains(touchPos.x, touchPos.y))
-                config=DifficultyFactory.medium();
-            else if (hardButtonBounds.contains(touchPos.x, touchPos.y))
-                config=DifficultyFactory.hard();
-            else if (devilishButtonBounds.contains(touchPos.x, touchPos.y))
-                config=DifficultyFactory.devilish();
-            main.setScreen(new LevelScreen(main, config));
+            if (easyButtonBounds.contains(touchPos.x, touchPos.y)) {
+                config = DifficultyFactory.easy();
+                main.setScreen(new StoryScreen(main));
+            }
+            else {
+                if (mediumButtonBounds.contains(touchPos.x, touchPos.y))
+                    config = DifficultyFactory.medium();
+                else if (hardButtonBounds.contains(touchPos.x, touchPos.y))
+                    config = DifficultyFactory.hard();
+                else if (devilishButtonBounds.contains(touchPos.x, touchPos.y))
+                    config = DifficultyFactory.devilish();
+                main.setScreen(new LevelScreen(main, config));
+            }
         }
     }
 

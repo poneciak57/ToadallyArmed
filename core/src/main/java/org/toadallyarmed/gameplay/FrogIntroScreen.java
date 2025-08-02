@@ -51,7 +51,7 @@ public class FrogIntroScreen implements Screen {
         main.renderer.getSpriteBatch().draw(backgroundTexture, 0, 0, worldWidth, worldHeight);
 
         if (Gdx.input.justTouched())
-            main.setScreen(new LevelChoosingScreen(main));
+            main.setScreen(new ManualScreen(main));
 
         main.renderer.getSpriteBatch().end();
     }
